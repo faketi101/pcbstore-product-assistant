@@ -33,7 +33,7 @@ const DateRangeReport = () => {
       const aggregated = {
         description: { generated: 0, added: 0 },
         faq: { generated: 0, added: 0 },
-        keywords: { generated: 0, added: 0 },
+        keyFeatures: { generated: 0, added: 0 },
         specifications: { generated: 0, added: 0 },
         metaTitleDescription: { generated: 0, added: 0 },
         warrantyClaimReasons: { generated: 0, added: 0 },
@@ -90,7 +90,7 @@ const DateRangeReport = () => {
 
     addLine("description", aggregatedData.description);
     addLine("FAQ", aggregatedData.faq);
-    addLine("key words", aggregatedData.keywords);
+    addLine("key features", aggregatedData.keyFeatures);
     addLine("specifications", aggregatedData.specifications);
     addLine("meta title and description", aggregatedData.metaTitleDescription);
     addLine("warranty claim reasons", aggregatedData.warrantyClaimReasons);

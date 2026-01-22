@@ -47,7 +47,7 @@ const formatReportForWhatsApp = (reportData, type = "hourly", date = "") => {
 
   pushLine("description", data.description);
   pushLine("FAQ", data.faq);
-  pushLine("key words", data.keywords);
+  pushLine("key features", data.keyFeatures);
   pushLine("specifications", data.specifications);
   pushLine("meta title and description", data.metaTitleDescription);
   pushLine("warranty claim reasons", data.warrantyClaimReasons);
@@ -98,7 +98,7 @@ const aggregateDailyReport = (hourlyReports) => {
   const aggregated = {
     description: { generated: 0, added: 0 },
     faq: { generated: 0, added: 0 },
-    keywords: { generated: 0, added: 0 },
+    keyFeatures: { generated: 0, added: 0 },
     specifications: { generated: 0, added: 0 },
     metaTitleDescription: { generated: 0, added: 0 },
     warrantyClaimReasons: { generated: 0, added: 0 },

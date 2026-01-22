@@ -15,10 +15,16 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
 
   const getInitialFormData = () => {
     if (editingReport) {
+      // Handle migration from old 'keywords' field to 'keyFeatures'
+      const data = editingReport.data;
+      const keyFeatures = data.keyFeatures ||
+        data.keywords || { generated: 0, added: 0 };
+
       return {
         date: editingReport.date,
         time: editingReport.time,
-        ...editingReport.data,
+        ...data,
+        keyFeatures: keyFeatures,
       };
     }
 
@@ -26,7 +32,17 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
     const savedData = localStorage.getItem(STORAGE_KEY);
     if (savedData) {
       try {
-        return JSON.parse(savedData);
+        const parsedData = JSON.parse(savedData);
+        // Handle migration from old 'keywords' field to 'keyFeatures'
+        if (parsedData.keywords && !parsedData.keyFeatures) {
+          parsedData.keyFeatures = parsedData.keywords;
+          delete parsedData.keywords;
+        }
+        // Ensure keyFeatures exists
+        if (!parsedData.keyFeatures) {
+          parsedData.keyFeatures = { generated: 0, added: 0 };
+        }
+        return parsedData;
       } catch (error) {
         console.error("Failed to parse saved form data:", error);
       }
@@ -38,7 +54,7 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
       time: `${new Date().getHours().toString().padStart(2, "0")}:00`,
       description: { generated: 0, added: 0 },
       faq: { generated: 0, added: 0 },
-      keywords: { generated: 0, added: 0 },
+      keyFeatures: { generated: 0, added: 0 },
       specifications: { generated: 0, added: 0 },
       metaTitleDescription: { generated: 0, added: 0 },
       titleFixed: { fixed: 0, added: 0 },
@@ -131,7 +147,7 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
         data: {
           description: formData.description,
           faq: formData.faq,
-          keywords: formData.keywords,
+          keyFeatures: formData.keyFeatures,
           specifications: formData.specifications,
           metaTitleDescription: formData.metaTitleDescription,
           titleFixed: formData.titleFixed,
@@ -241,10 +257,12 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
       />
 
       <FieldGroup
-        label="Keywords"
+        label="Key Features"
         fields={["generated", "added"]}
-        values={formData.keywords}
-        onChange={(field, value) => handleFieldChange("keywords", field, value)}
+        values={formData.keyFeatures}
+        onChange={(field, value) =>
+          handleFieldChange("keyFeatures", field, value)
+        }
       />
 
       <FieldGroup

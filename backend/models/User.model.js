@@ -16,7 +16,7 @@ const reportSchema = new mongoose.Schema({
       generated: { type: Number, default: 0 },
       added: { type: Number, default: 0 },
     },
-    keywords: {
+    keyFeatures: {
       generated: { type: Number, default: 0 },
       added: { type: Number, default: 0 },
     },

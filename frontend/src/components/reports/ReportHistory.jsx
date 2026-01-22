@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import reportService from "../../services/reportService";
 
-const ReportHistory = ({ onEdit }) => {
+const ReportHistory = ({ onEdit, lastEditedReportId, onClearLastEdited }) => {
   const [hourlyReports, setHourlyReports] = useState([]);
   const [filterStartDate, setFilterStartDate] = useState("");
   const [filterEndDate, setFilterEndDate] = useState("");
@@ -70,7 +70,7 @@ const ReportHistory = ({ onEdit }) => {
 
     addLine("Description", data.description || {});
     addLine("FAQ", data.faq || {});
-    addLine("Keywords", data.keywords || {});
+    addLine("Key Features", data.keyFeatures || data.keywords || {});
     addLine("Specifications", data.specifications || {});
     addLine("Meta Title & Description", data.metaTitleDescription || {});
     addLine("Title", data.titleFixed || {});
@@ -214,6 +214,20 @@ const ReportHistory = ({ onEdit }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Navigate to the page containing the last edited report
+  useEffect(() => {
+    if (lastEditedReportId && hourlyReports.length > 0) {
+      const editedIndex = hourlyReports.findIndex(
+        (report) => report.id === lastEditedReportId,
+      );
+      if (editedIndex !== -1) {
+        const pageContainingReport = Math.floor(editedIndex / itemsPerPage) + 1;
+        setCurrentPage(pageContainingReport);
+        onClearLastEdited();
+      }
+    }
+  }, [lastEditedReportId, hourlyReports, itemsPerPage, onClearLastEdited]);
+
   // Pagination logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -318,8 +332,11 @@ const ReportHistory = ({ onEdit }) => {
                         </span>
                       ) : null;
                     }
+                    // Ensure value is an object before calculating total
+                    if (!value || typeof value !== "object") return null;
+
                     const total = Object.values(value).reduce(
-                      (a, b) => a + b,
+                      (a, b) => (a || 0) + (b || 0),
                       0,
                     );
                     return total > 0 ? (

@@ -7,6 +7,7 @@ import ReportHistory from "../components/reports/ReportHistory";
 const Reports = () => {
   const [activeTab, setActiveTab] = useState("create");
   const [editingReport, setEditingReport] = useState(null);
+  const [lastEditedReportId, setLastEditedReportId] = useState(null);
 
   useEffect(() => {
     const titles = {
@@ -20,13 +21,15 @@ const Reports = () => {
 
   const handleEditReport = (report) => {
     setEditingReport(report);
+    setLastEditedReportId(report.id);
     setActiveTab("create");
   };
 
   const handleReportSuccess = () => {
-    if (activeTab === "create") {
-      // Optionally switch to history tab after creating
-      // setActiveTab('history');
+    if (activeTab === "create" && editingReport) {
+      // After editing, switch back to history tab
+      setActiveTab("history");
+      setEditingReport(null);
     }
   };
 
@@ -109,7 +112,11 @@ const Reports = () => {
           {activeTab === "daily" && <DailyReportView />}
           {activeTab === "dateRange" && <DateRangeReport />}
           {activeTab === "history" && (
-            <ReportHistory onEdit={handleEditReport} />
+            <ReportHistory
+              onEdit={handleEditReport}
+              lastEditedReportId={lastEditedReportId}
+              onClearLastEdited={() => setLastEditedReportId(null)}
+            />
           )}
         </div>
       </div>
