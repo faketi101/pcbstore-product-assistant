@@ -397,6 +397,16 @@ const ProductPrompt = () => {
             >
               Copy 2nd Prompt
             </button>
+            <button
+              className="px-6 py-3 text-sm font-semibold rounded-lg bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 transition-all cursor-pointer"
+              onClick={() => {
+                setFormData({ ...formData, productName: "", productSpecs: "" });
+                setPrompt("");
+                toast.success("Form reset successfully");
+              }}
+            >
+              Reset Form
+            </button>
           </div>
 
           <div className="mt-8">

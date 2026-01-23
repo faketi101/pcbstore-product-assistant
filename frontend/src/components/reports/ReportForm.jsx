@@ -35,6 +35,7 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
         const parsedData = JSON.parse(savedData);
         // Handle migration from old 'keyFeatures' field to 'keyFeatures'
         if (parsedData.keyFeatures && !parsedData.keyFeatures) {
+          // eslint-disable-next-line
           parsedData.keyFeatures = parsedData.keyFeatures;
           delete parsedData.keyFeatures;
         }
@@ -49,6 +50,9 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
         ) {
           parsedData.customFields = [];
         }
+        // Update date and time to current when loading from localStorage
+        parsedData.date = new Date().toISOString().split("T")[0];
+        parsedData.time = `${new Date().getHours().toString().padStart(2, "0")}:00`;
         return parsedData;
       } catch (error) {
         console.error("Failed to parse saved form data:", error);
@@ -66,6 +70,7 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
       metaTitleDescription: { generated: 0, added: 0 },
       titleFixed: { fixed: 0, added: 0 },
       imageRenamed: { fixed: 0 },
+      productReCheck: { check: 0, fixed: 0 },
       category: { added: 0 },
       attributes: { added: 0 },
       deliveryCharge: { added: 0 },
@@ -144,6 +149,7 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
       metaTitleDescription: { generated: 0, added: 0 },
       titleFixed: { fixed: 0, added: 0 },
       imageRenamed: { fixed: 0 },
+      productReCheck: { check: 0, fixed: 0 },
       category: { added: 0 },
       attributes: { added: 0 },
       deliveryCharge: { added: 0 },
@@ -175,6 +181,7 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
           metaTitleDescription: formData.metaTitleDescription,
           titleFixed: formData.titleFixed,
           imageRenamed: formData.imageRenamed,
+          productReCheck: formData.productReCheck,
           category: formData.category,
           attributes: formData.attributes,
           deliveryCharge: formData.deliveryCharge,
@@ -321,6 +328,15 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
         values={formData.imageRenamed}
         onChange={(field, value) =>
           handleFieldChange("imageRenamed", field, value)
+        }
+      />
+
+      <FieldGroup
+        label="Product ReCheck"
+        fields={["check", "fixed"]}
+        values={formData.productReCheck}
+        onChange={(field, value) =>
+          handleFieldChange("productReCheck", field, value)
         }
       />
 

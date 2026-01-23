@@ -67,6 +67,18 @@ const formatReportForWhatsApp = (reportData, type = "hourly", date = "") => {
     lines.push(`- image renamed and fixed ${data.imageRenamed.fixed}`);
   }
 
+  // Handle productReCheck with check and fixed
+  if (data.productReCheck) {
+    const actions = [];
+    if (data.productReCheck.check > 0)
+      actions.push(`checked ${data.productReCheck.check}`);
+    if (data.productReCheck.fixed > 0)
+      actions.push(`fixed ${data.productReCheck.fixed}`);
+    if (actions.length) {
+      lines.push(`- product recheck ${actions.join(", ")}`);
+    }
+  }
+
   if (data.category?.added > 0)
     lines.push(`- category added ${data.category.added}`);
   if (data.attributes?.added > 0)
@@ -104,6 +116,7 @@ const aggregateDailyReport = (hourlyReports) => {
     warrantyClaimReasons: { generated: 0, added: 0 },
     titleFixed: { fixed: 0, added: 0 },
     imageRenamed: { fixed: 0 },
+    productReCheck: { check: 0, fixed: 0 },
     category: { added: 0 },
     attributes: { added: 0 },
     deliveryCharge: { added: 0 },

@@ -35,6 +35,10 @@ const reportSchema = new mongoose.Schema({
     imageRenamed: {
       fixed: { type: Number, default: 0 },
     },
+    productReCheck: {
+      check: { type: Number, default: 0 },
+      fixed: { type: Number, default: 0 },
+    },
     category: {
       added: { type: Number, default: 0 },
     },
