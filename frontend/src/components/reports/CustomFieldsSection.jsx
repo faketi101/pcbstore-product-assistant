@@ -14,7 +14,18 @@ const CustomFieldsSection = ({
       toast.error("Please enter a field name");
       return;
     }
+    if (customFieldValue === "" || customFieldValue === null) {
+      toast.error("Please enter a value");
+      return;
+    }
     onAdd();
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleAdd();
+    }
   };
 
   return (
@@ -26,6 +37,7 @@ const CustomFieldsSection = ({
           placeholder="Field name"
           value={customFieldName}
           onChange={(e) => setCustomFieldName(e.target.value)}
+          onKeyPress={handleKeyPress}
           className="flex-1 px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all"
         />
         <input
@@ -33,6 +45,7 @@ const CustomFieldsSection = ({
           placeholder="Value"
           value={customFieldValue}
           onChange={(e) => setCustomFieldValue(e.target.value)}
+          onKeyPress={handleKeyPress}
           min="0"
           className="w-32 px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all"
         />

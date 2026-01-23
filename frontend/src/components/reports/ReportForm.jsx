@@ -42,6 +42,13 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
         if (!parsedData.keyFeatures) {
           parsedData.keyFeatures = { generated: 0, added: 0 };
         }
+        // Ensure customFields exists and is an array
+        if (
+          !parsedData.customFields ||
+          !Array.isArray(parsedData.customFields)
+        ) {
+          parsedData.customFields = [];
+        }
         return parsedData;
       } catch (error) {
         console.error("Failed to parse saved form data:", error);
@@ -73,7 +80,7 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
   const [formData, setFormData] = useState(getInitialFormData);
 
   const [customFieldName, setCustomFieldName] = useState("");
-  const [customFieldValue, setCustomFieldValue] = useState(0);
+  const [customFieldValue, setCustomFieldValue] = useState("");
 
   // Save to localStorage whenever formData changes (but not when editing)
   useEffect(() => {
@@ -93,15 +100,29 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
   };
 
   const addCustomField = () => {
+    if (!customFieldName.trim()) {
+      toast.error("Please enter a field name");
+      return;
+    }
+
+    if (customFieldValue === "" || customFieldValue === null) {
+      toast.error("Please enter a value");
+      return;
+    }
+
     setFormData((prev) => ({
       ...prev,
       customFields: [
-        ...prev.customFields,
-        { name: customFieldName, value: parseInt(customFieldValue) || 0 },
+        ...(prev.customFields || []),
+        {
+          name: customFieldName.trim(),
+          value: parseInt(customFieldValue) || 0,
+        },
       ],
     }));
+
     setCustomFieldName("");
-    setCustomFieldValue(0);
+    setCustomFieldValue("");
     toast.success("Custom field added");
   };
 
@@ -133,6 +154,8 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
       customFields: [],
     };
     setFormData(emptyForm);
+    setCustomFieldName("");
+    setCustomFieldValue("");
     localStorage.removeItem(STORAGE_KEY);
     toast.success("Form reset successfully");
   };
@@ -377,15 +400,15 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
             className="px-6 py-2 bg-gray-200 text-gray-800 text-sm font-medium rounded-md hover:bg-gray-300 transition-colors"
           >
             Cancel Edit
-            {!editingReport && (
-              <button
-                type="button"
-                onClick={resetForm}
-                className="px-6 py-2 bg-gray-200 text-gray-800 text-sm font-medium rounded-md hover:bg-gray-300 transition-colors"
-              >
-                Reset Form
-              </button>
-            )}
+          </button>
+        )}
+        {!editingReport && (
+          <button
+            type="button"
+            onClick={resetForm}
+            className="px-6 py-2 bg-gray-200 text-gray-800 text-sm font-medium rounded-md hover:bg-gray-300 transition-colors"
+          >
+            Reset Form
           </button>
         )}
         <button

@@ -56,7 +56,12 @@ const reportSchema = new mongoose.Schema({
     price: {
       added: { type: Number, default: 0 },
     },
-    customFields: [mongoose.Schema.Types.Mixed],
+    customFields: [
+      {
+        name: { type: String, required: true },
+        value: { type: Number, required: true },
+      },
+    ],
   },
 });
 
