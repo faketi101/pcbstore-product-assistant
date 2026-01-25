@@ -100,7 +100,6 @@ const ReportHistory = ({ onEdit, lastEditedReportId, onClearLastEdited }) => {
     return text;
   };
 
-
   const copyHourlyReportToClipboard = (report) => {
     const text = formatHourlyReportForWhatsApp(report);
     navigator.clipboard
