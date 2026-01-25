@@ -60,6 +60,9 @@ const reportSchema = new mongoose.Schema({
     price: {
       added: { type: Number, default: 0 },
     },
+    internalLink: {
+      added: { type: Number, default: 0 },
+    },
     customFields: [
       {
         name: { type: String, required: true },

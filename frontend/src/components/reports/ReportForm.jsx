@@ -93,6 +93,12 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
   const [customFieldName, setCustomFieldName] = useState("");
   const [customFieldValue, setCustomFieldValue] = useState("");
 
+  // Update form data when editingReport changes
+  useEffect(() => {
+    setFormData(getInitialFormData());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editingReport]);
+
   // Save to localStorage whenever formData changes (but not when editing)
   useEffect(() => {
     if (!editingReport) {

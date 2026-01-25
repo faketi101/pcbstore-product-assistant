@@ -82,6 +82,7 @@ const ReportHistory = ({ onEdit, lastEditedReportId, onClearLastEdited }) => {
     addLine("Warranty Claim Reasons", data.warrantyClaimReasons || {});
     addLine("Brand", data.brand || {});
     addLine("Price", data.price || {});
+    addLine("Internal Link", data.internalLink || {});
 
     if (data.customFields?.length) {
       data.customFields.forEach((field) => {
