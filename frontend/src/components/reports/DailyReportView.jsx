@@ -2,7 +2,10 @@ import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { BarChart3, Copy, RefreshCw, FileText } from "lucide-react";
 import reportService from "../../services/reportService";
-import { copyToClipboard } from "../../utils/formatReportForWhatsApp";
+import {
+  formatReportForWhatsApp,
+  copyToClipboard,
+} from "../../utils/formatReportForWhatsApp";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -46,8 +49,12 @@ const DailyReportView = () => {
   };
 
   const handleCopyToClipboard = () => {
-    if (dailyReport?.formattedText) {
-      copyToClipboard(dailyReport.formattedText, toast);
+    if (dailyReport?.data) {
+      const formattedText = formatReportForWhatsApp(dailyReport.data, {
+        type: "daily",
+        date: selectedDate,
+      });
+      copyToClipboard(formattedText, toast);
     }
   };
 
@@ -131,7 +138,10 @@ const DailyReportView = () => {
 
             <div className="bg-gradient-to-br from-muted/30 to-muted/50 rounded-xl p-4 sm:p-5 border overflow-x-auto">
               <pre className="whitespace-pre-wrap text-xs sm:text-sm text-foreground/80 font-mono leading-relaxed">
-                {dailyReport.formattedText}
+                {formatReportForWhatsApp(dailyReport.data, {
+                  type: "daily",
+                  date: selectedDate,
+                })}
               </pre>
             </div>
           </div>

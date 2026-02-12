@@ -58,12 +58,12 @@ export const formatReportForWhatsApp = (data, options = {}) => {
   };
 
   // Standard fields with generated/added
-  pushLine("description", data.description);
-  pushLine("FAQ", data.faq);
-  pushLine("key features", data.keyFeatures);
-  pushLine("specifications", data.specifications);
-  pushLine("meta title and description", data.metaTitleDescription);
-  pushLine("warranty claim reasons", data.warrantyClaimReasons);
+  pushLine("Description:", data.description);
+  pushLine("FAQ:", data.faq);
+  pushLine("Key Features:", data.keyFeatures);
+  pushLine("Specifications:", data.specifications);
+  pushLine("Meta Title and Description:", data.metaTitleDescription);
+  pushLine("Warranty Claim Reasons:", data.warrantyClaimReasons);
 
   // Title field with fixed/added
   if (data.titleFixed) {
@@ -73,13 +73,13 @@ export const formatReportForWhatsApp = (data, options = {}) => {
     if (data.titleFixed.added > 0)
       actions.push(`added ${data.titleFixed.added}`);
     if (actions.length) {
-      lines.push(`- title ${actions.join(", ")}`);
+      lines.push(`- Title: ${actions.join(", ")}`);
     }
   }
 
   // Image renamed field
   if (data.imageRenamed?.fixed > 0) {
-    lines.push(`- image renamed and fixed ${data.imageRenamed.fixed}`);
+    lines.push(`- Image Renamed and Fixed: ${data.imageRenamed.fixed}`);
   }
 
   // Product recheck with check and fixed
@@ -90,29 +90,29 @@ export const formatReportForWhatsApp = (data, options = {}) => {
     if (data.productReCheck.fixed > 0)
       actions.push(`fixed ${data.productReCheck.fixed}`);
     if (actions.length) {
-      lines.push(`- product recheck ${actions.join(", ")}`);
+      lines.push(`- Product Recheck: ${actions.join(", ")}`);
     }
   }
 
   // Simple added-only fields
   if (data.category?.added > 0)
-    lines.push(`- category added ${data.category.added}`);
+    lines.push(`- Category Added: ${data.category.added}`);
   if (data.attributes?.added > 0)
-    lines.push(`- attributes added ${data.attributes.added}`);
+    lines.push(`- Attributes Added: ${data.attributes.added}`);
   if (data.deliveryCharge?.added > 0)
-    lines.push(`- delivery charge added ${data.deliveryCharge.added}`);
+    lines.push(`- Delivery Charge Added: ${data.deliveryCharge.added}`);
   if (data.warranty?.added > 0)
-    lines.push(`- warranty added ${data.warranty.added}`);
-  if (data.brand?.added > 0) lines.push(`- brand added ${data.brand.added}`);
-  if (data.price?.added > 0) lines.push(`- price added ${data.price.added}`);
+    lines.push(`- Warranty Added: ${data.warranty.added}`);
+  if (data.brand?.added > 0) lines.push(`- Brand Added: ${data.brand.added}`);
+  if (data.price?.added > 0) lines.push(`- Price Added: ${data.price.added}`);
   if (data.internalLink?.added > 0)
-    lines.push(`- internal link added ${data.internalLink.added}`);
+    lines.push(`- Internal Link Added: ${data.internalLink.added}`);
 
   // Custom fields
   if (data.customFields?.length) {
     data.customFields.forEach((field) => {
       if (field.value > 0) {
-        lines.push(`- ${field.name} ${field.value}`);
+        lines.push(`- ${field.name}: ${field.value}`);
       }
     });
   }
