@@ -1,4 +1,8 @@
+import { Plus, X, Sparkles } from "lucide-react";
 import toast from "react-hot-toast";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 
 const CustomFieldsSection = ({
   customFields,
@@ -30,32 +34,33 @@ const CustomFieldsSection = ({
 
   return (
     <div className="mt-6">
-      <h3 className="text-lg font-medium text-gray-900 mb-4">Custom Fields</h3>
-      <div className="flex gap-3 mb-4">
-        <input
+      <h3 className="text-lg font-medium mb-4 flex items-center gap-2">
+        <Sparkles className="h-5 w-5 text-primary" />
+        Custom Fields
+      </h3>
+      <div className="flex flex-col sm:flex-row gap-3 mb-4">
+        <Input
           type="text"
           placeholder="Field name"
           value={customFieldName}
           onChange={(e) => setCustomFieldName(e.target.value)}
           onKeyPress={handleKeyPress}
-          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all"
+          className="flex-1"
         />
-        <input
+        <Input
           type="number"
           placeholder="Value"
           value={customFieldValue}
           onChange={(e) => setCustomFieldValue(e.target.value)}
           onKeyPress={handleKeyPress}
           min="0"
-          className="w-32 px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all"
+          className="w-full sm:w-32"
         />
-        <button
-          type="button"
-          onClick={handleAdd}
-          className="px-6 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-lg hover:bg-indigo-700 transition-all shadow-sm hover:shadow"
-        >
-          Add Field
-        </button>
+        <Button type="button" onClick={handleAdd}>
+          <Plus className="h-4 w-4 mr-2" />
+          <span className="hidden sm:inline">Add Field</span>
+          <span className="sm:hidden">Add</span>
+        </Button>
       </div>
 
       {customFields.length > 0 && (
@@ -63,19 +68,21 @@ const CustomFieldsSection = ({
           {customFields.map((field, index) => (
             <div
               key={index}
-              className="flex items-center justify-between px-4 py-2.5 bg-gray-50 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"
+              className="flex items-center justify-between px-4 py-2.5 bg-muted/50 rounded-lg border hover:border-primary/30 transition-colors"
             >
-              <span className="text-sm text-gray-700">
-                <strong className="font-semibold">{field.name}:</strong>{" "}
-                <span className="ml-1">{field.value}</span>
-              </span>
-              <button
+              <div className="flex items-center gap-2">
+                <span className="font-medium">{field.name}</span>
+                <Badge variant="secondary">{field.value}</Badge>
+              </div>
+              <Button
                 type="button"
+                variant="ghost"
+                size="sm"
                 onClick={() => onRemove(index)}
-                className="text-red-600 hover:text-red-800 font-semibold text-lg leading-none transition-colors"
+                className="text-destructive hover:text-destructive hover:bg-destructive/10"
               >
-                ×
-              </button>
+                <X className="h-4 w-4" />
+              </Button>
             </div>
           ))}
         </div>

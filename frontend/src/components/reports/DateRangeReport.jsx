@@ -1,20 +1,30 @@
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import {
+  Calendar,
+  BarChart3,
+  Copy,
+  FileText,
+  List,
+  FileBarChart,
+} from "lucide-react";
 import reportService from "../../services/reportService";
 import {
   formatReportForWhatsApp,
   copyToClipboard,
 } from "../../utils/formatReportForWhatsApp";
+import { Button } from "@/components/ui/button";
 import {
-  Button,
   Card,
   CardHeader,
+  CardTitle,
+  CardDescription,
   CardContent,
-  Input,
-  Badge,
-  EmptyState,
-  LoadingOverlay,
-} from "../ui";
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { Spinner, EmptyState, LoadingOverlay } from "@/components/ui/loading";
 
 const DateRangeReport = () => {
   const [startDate, setStartDate] = useState("");
@@ -126,95 +136,62 @@ const DateRangeReport = () => {
     copyToClipboard(getFormattedWhatsAppMessage(), toast);
   };
 
-  const DocumentIcon = () => (
-    <svg
-      className="h-12 w-12"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={1.5}
-        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-      />
-    </svg>
-  );
-
-  const CalendarIcon = () => (
-    <svg
-      className="h-5 w-5 text-gray-400"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-      />
-    </svg>
-  );
-
   return (
     <div className="space-y-6">
       {/* Date Selection Card */}
       <Card>
         <CardHeader>
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-indigo-100 rounded-lg">
-              <CalendarIcon />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+              <Calendar className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-gray-900">
-                Generate Date Range Report
-              </h2>
-              <p className="text-sm text-gray-500 mt-0.5">
+              <CardTitle>Generate Date Range Report</CardTitle>
+              <CardDescription>
                 Select a date range to generate an aggregated report
-              </p>
+              </CardDescription>
             </div>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Input
-              type="date"
-              label="Start Date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-            />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="start-date">Start Date</Label>
+              <Input
+                id="start-date"
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+              />
+            </div>
 
-            <Input
-              type="date"
-              label="End Date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-            />
+            <div className="space-y-2">
+              <Label htmlFor="end-date">End Date</Label>
+              <Input
+                id="end-date"
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+              />
+            </div>
 
-            <div className="flex items-end">
+            <div className="flex items-end sm:col-span-2 lg:col-span-1">
               <Button
                 onClick={handleGenerate}
-                loading={loading}
+                disabled={loading}
                 className="w-full"
-                leftIcon={
-                  <svg
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                    />
-                  </svg>
-                }
               >
-                {loading ? "Generating..." : "Generate Report"}
+                {loading ? (
+                  <>
+                    <Spinner size="sm" className="mr-2" />
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    <FileBarChart className="h-4 w-4 mr-2" />
+                    Generate Report
+                  </>
+                )}
               </Button>
             </div>
           </div>
@@ -226,108 +203,52 @@ const DateRangeReport = () => {
         <Card className="relative">
           <LoadingOverlay show={loading} message="Generating report..." />
           <CardHeader>
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-emerald-100 rounded-lg">
-                  <svg
-                    className="h-5 w-5 text-emerald-600"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                    />
-                  </svg>
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100 dark:bg-green-900/30">
+                  <BarChart3 className="h-5 w-5 text-green-600 dark:text-green-400" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-gray-900">
-                    Aggregated Report
-                  </h3>
-                  <p className="text-sm text-gray-500">
+                  <CardTitle>Aggregated Report</CardTitle>
+                  <CardDescription>
                     {reports.length} day{reports.length !== 1 ? "s" : ""} of
                     data combined
-                  </p>
+                  </CardDescription>
                 </div>
               </div>
-              <Button
-                variant="success"
-                onClick={handleCopyToClipboard}
-                leftIcon={
-                  <svg
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
-                    />
-                  </svg>
-                }
-              >
-                Copy for WhatsApp
+              <Button variant="success" onClick={handleCopyToClipboard}>
+                <Copy className="h-4 w-4 mr-2" />
+                <span className="hidden sm:inline">Copy for WhatsApp</span>
+                <span className="sm:hidden">Copy</span>
               </Button>
             </div>
           </CardHeader>
-          <CardContent>
-            <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-5 border border-gray-200">
-              <pre className="whitespace-pre-wrap text-sm text-gray-700 font-mono leading-relaxed">
+          <CardContent className="space-y-6">
+            <div className="bg-gradient-to-br from-muted/30 to-muted/50 rounded-xl p-4 sm:p-5 border overflow-x-auto">
+              <pre className="whitespace-pre-wrap text-xs sm:text-sm text-foreground/80 font-mono leading-relaxed">
                 {getFormattedWhatsAppMessage()}
               </pre>
             </div>
 
             {/* Daily Breakdown */}
-            <div className="mt-6">
-              <h4 className="text-md font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <svg
-                  className="h-5 w-5 text-gray-500"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 10h16M4 14h16M4 18h16"
-                  />
-                </svg>
+            <div>
+              <h4 className="text-md font-semibold mb-4 flex items-center gap-2">
+                <List className="h-5 w-5 text-muted-foreground" />
                 Daily Breakdown
               </h4>
               <div className="grid gap-3">
                 {reports.map((report, index) => (
                   <div
                     key={index}
-                    className="flex justify-between items-center p-4 bg-white rounded-lg border border-gray-200 hover:border-indigo-200 hover:shadow-sm transition-all"
+                    className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 p-4 bg-card rounded-lg border hover:border-primary/50 hover:shadow-sm transition-all"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="p-2 bg-indigo-50 rounded-lg">
-                        <svg
-                          className="h-4 w-4 text-indigo-600"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                          />
-                        </svg>
+                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+                        <Calendar className="h-4 w-4 text-primary" />
                       </div>
-                      <span className="font-medium text-gray-900">
-                        {report.date}
-                      </span>
+                      <span className="font-medium">{report.date}</span>
                     </div>
-                    <Badge variant="primary">
+                    <Badge variant="secondary">
                       {report.hourlyReportsCount} hourly report
                       {report.hourlyReportsCount !== 1 ? "s" : ""}
                     </Badge>
@@ -342,9 +263,9 @@ const DateRangeReport = () => {
       {/* Empty State */}
       {!aggregatedData && !loading && (
         <Card>
-          <CardContent>
+          <CardContent className="pt-6">
             <EmptyState
-              icon={<DocumentIcon />}
+              icon={<FileText className="h-12 w-12" />}
               title="No report generated yet"
               description="Select a date range above and click 'Generate Report' to see aggregated data"
             />

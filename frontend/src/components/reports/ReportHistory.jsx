@@ -5,16 +5,30 @@ import {
   formatReportForWhatsApp,
   copyToClipboard,
 } from "../../utils/formatReportForWhatsApp";
+import { Button } from "@/components/ui/button";
 import {
-  Button,
   Card,
   CardHeader,
+  CardTitle,
+  CardDescription,
   CardContent,
-  Input,
-  Badge,
-  EmptyState,
-  Spinner,
-} from "../ui";
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { Spinner, EmptyState } from "@/components/ui/loading";
+import {
+  Clock,
+  Calendar,
+  Copy,
+  Pencil,
+  Trash2,
+  ChevronLeft,
+  ChevronRight,
+  FileText,
+  Filter,
+  X,
+} from "lucide-react";
 
 const ReportHistory = ({ onEdit, lastEditedReportId, onClearLastEdited }) => {
   const [hourlyReports, setHourlyReports] = useState([]);
@@ -37,7 +51,6 @@ const ReportHistory = ({ onEdit, lastEditedReportId, onClearLastEdited }) => {
       if (filterEndDate) filters.endDate = filterEndDate;
 
       const response = await reportService.getHourlyReports(filters);
-      // Sort by date and time descending (newest first)
       const sortedReports = [...response.reports].sort((a, b) => {
         const dateA = new Date(`${a.date}T${a.time || "00:00"}`);
         const dateB = new Date(`${b.date}T${b.time || "00:00"}`);
@@ -69,7 +82,6 @@ const ReportHistory = ({ onEdit, lastEditedReportId, onClearLastEdited }) => {
     }
   };
 
-  // Format report for WhatsApp using shared utility
   const copyHourlyReportToClipboard = (report) => {
     const text = formatReportForWhatsApp(report.data, {
       type: "hourly",
@@ -78,15 +90,11 @@ const ReportHistory = ({ onEdit, lastEditedReportId, onClearLastEdited }) => {
     copyToClipboard(text, toast);
   };
 
-  // Format parts for display
   const formatParts = (parts) => {
-    return (
-      Object.entries(parts)
-        // eslint-disable-next-line no-unused-vars
-        .filter(([_, value]) => value > 0)
-        .map(([key, value]) => `${capitalize(key)} ${value}`)
-        .join(", ")
-    );
+    return Object.entries(parts)
+      .filter(([, value]) => value > 0)
+      .map(([key, value]) => `${capitalize(key)} ${value}`)
+      .join(", ");
   };
 
   const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
@@ -96,7 +104,6 @@ const ReportHistory = ({ onEdit, lastEditedReportId, onClearLastEdited }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Navigate to the page containing the last edited report
   useEffect(() => {
     if (lastEditedReportId && hourlyReports.length > 0) {
       const editedIndex = hourlyReports.findIndex(
@@ -110,7 +117,6 @@ const ReportHistory = ({ onEdit, lastEditedReportId, onClearLastEdited }) => {
     }
   }, [lastEditedReportId, hourlyReports, itemsPerPage, onClearLastEdited]);
 
-  // Pagination logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = hourlyReports.slice(indexOfFirstItem, indexOfLastItem);
@@ -118,176 +124,146 @@ const ReportHistory = ({ onEdit, lastEditedReportId, onClearLastEdited }) => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  const DocumentIcon = () => (
-    <svg
-      className="h-12 w-12"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={1.5}
-        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-      />
-    </svg>
-  );
-
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="pb-4">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-indigo-100 rounded-lg">
-            <svg
-              className="h-5 w-5 text-indigo-600"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
+          <div className="p-2 bg-primary/10 rounded-lg">
+            <Clock className="h-5 w-5 text-primary" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-gray-900">Report History</h2>
-            <p className="text-sm text-gray-500">
+            <CardTitle className="text-lg sm:text-xl">Report History</CardTitle>
+            <CardDescription>
               View and manage your hourly reports
-            </p>
+            </CardDescription>
           </div>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-4">
         {/* Filters */}
-        <div className="flex flex-wrap gap-4 mb-6 p-4 bg-gray-50 rounded-xl border border-gray-100">
-          <div className="flex-1 min-w-[180px]">
-            <Input
-              type="date"
-              label="Start Date"
-              value={filterStartDate}
-              onChange={(e) => setFilterStartDate(e.target.value)}
-            />
+        <div className="p-3 sm:p-4 bg-muted/50 rounded-lg border">
+          <div className="flex items-center gap-2 mb-3">
+            <Filter className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm font-medium">Filters</span>
           </div>
-          <div className="flex-1 min-w-[180px]">
-            <Input
-              type="date"
-              label="End Date"
-              value={filterEndDate}
-              onChange={(e) => setFilterEndDate(e.target.value)}
-            />
-          </div>
-          <div className="flex items-end gap-2">
-            <Button onClick={fetchHourlyReports} loading={loading}>
-              {loading ? "Loading..." : "Apply Filter"}
-            </Button>
-            <Button
-              variant="secondary"
-              onClick={() => {
-                setFilterStartDate("");
-                setFilterEndDate("");
-              }}
-            >
-              Clear
-            </Button>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="startDate" className="text-xs">
+                Start Date
+              </Label>
+              <Input
+                id="startDate"
+                type="date"
+                value={filterStartDate}
+                onChange={(e) => setFilterStartDate(e.target.value)}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="endDate" className="text-xs">
+                End Date
+              </Label>
+              <Input
+                id="endDate"
+                type="date"
+                value={filterEndDate}
+                onChange={(e) => setFilterEndDate(e.target.value)}
+              />
+            </div>
+            <div className="flex items-end gap-2 col-span-1 sm:col-span-2 lg:col-span-2">
+              <Button
+                onClick={fetchHourlyReports}
+                loading={loading}
+                className="flex-1 sm:flex-none"
+              >
+                {loading ? "Loading..." : "Apply"}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setFilterStartDate("");
+                  setFilterEndDate("");
+                }}
+              >
+                <X className="h-4 w-4 sm:mr-1" />
+                <span className="hidden sm:inline">Clear</span>
+              </Button>
+            </div>
           </div>
         </div>
 
         {/* Loading State */}
         {loading && hourlyReports.length === 0 && (
           <div className="flex flex-col items-center justify-center py-12">
-            <Spinner size="lg" className="text-indigo-600" />
-            <p className="mt-4 text-sm text-gray-500">Loading reports...</p>
+            <Spinner size="lg" className="text-primary" />
+            <p className="mt-4 text-sm text-muted-foreground">
+              Loading reports...
+            </p>
           </div>
         )}
 
         {/* Reports List */}
         {!loading && currentItems.length > 0 && (
           <>
-            <div className="space-y-4 mb-6">
+            <div className="space-y-3">
               {currentItems.map((report) => (
                 <div
                   key={report.id}
-                  className={`border rounded-xl p-5 transition-all hover:shadow-md ${
+                  className={`border rounded-lg p-3 sm:p-4 transition-all hover:shadow-md ${
                     deletingId === report.id
                       ? "opacity-50 pointer-events-none"
-                      : "border-gray-200 hover:border-indigo-200"
+                      : "hover:border-primary/30"
                   }`}
                 >
-                  <div className="flex justify-between items-start mb-4">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-3">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 bg-gray-100 rounded-lg">
-                        <svg
-                          className="h-5 w-5 text-gray-600"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                          />
-                        </svg>
+                      <div className="p-2 bg-muted rounded-lg shrink-0">
+                        <Calendar className="h-4 w-4 text-muted-foreground" />
                       </div>
                       <div>
-                        <h4 className="text-lg font-semibold text-gray-900">
+                        <h4 className="font-semibold text-foreground">
                           {report.date}
                         </h4>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-muted-foreground">
                           at {report.time}
                         </p>
                       </div>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 flex-wrap sm:flex-nowrap">
                       <Button
                         variant="success"
                         size="sm"
                         onClick={() => copyHourlyReportToClipboard(report)}
-                        leftIcon={
-                          <svg
-                            className="h-4 w-4"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
-                            />
-                          </svg>
-                        }
+                        className="flex-1 sm:flex-none"
                       >
-                        Copy
+                        <Copy className="h-3.5 w-3.5 sm:mr-1" />
+                        <span className="hidden xs:inline">Copy</span>
                       </Button>
                       <Button
-                        variant="primary"
+                        variant="default"
                         size="sm"
                         onClick={() => onEdit(report)}
+                        className="flex-1 sm:flex-none"
                       >
-                        Edit
+                        <Pencil className="h-3.5 w-3.5 sm:mr-1" />
+                        <span className="hidden xs:inline">Edit</span>
                       </Button>
                       <Button
-                        variant="danger"
+                        variant="destructive"
                         size="sm"
                         loading={deletingId === report.id}
                         onClick={() => handleDeleteReport(report.id)}
+                        className="flex-1 sm:flex-none"
                       >
-                        Delete
+                        <Trash2 className="h-3.5 w-3.5 sm:mr-1" />
+                        <span className="hidden xs:inline">Delete</span>
                       </Button>
                     </div>
                   </div>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-1.5">
                     {Object.entries(report.data).map(([key, value]) => {
                       if (key === "customFields") {
                         return value.length > 0 ? (
-                          <Badge key={key} variant="purple">
+                          <Badge key={key} variant="purple" className="text-xs">
                             Custom:{" "}
                             {value
                               .map((f) => `${f.name} (${f.value})`)
@@ -295,12 +271,14 @@ const ReportHistory = ({ onEdit, lastEditedReportId, onClearLastEdited }) => {
                           </Badge>
                         ) : null;
                       }
-                      // Ensure value is an object before formatting
                       if (!value || typeof value !== "object") return null;
-
                       const formatted = formatParts(value);
                       return formatted ? (
-                        <Badge key={key} variant="primary">
+                        <Badge
+                          key={key}
+                          variant="secondary"
+                          className="text-xs"
+                        >
                           {capitalize(key)}: {formatted}
                         </Badge>
                       ) : null;
@@ -312,30 +290,26 @@ const ReportHistory = ({ onEdit, lastEditedReportId, onClearLastEdited }) => {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-between border-t border-gray-200 pt-4">
-                <div className="text-sm text-gray-600">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t">
+                <p className="text-sm text-muted-foreground order-2 sm:order-1">
                   Showing{" "}
-                  <span className="font-semibold">{indexOfFirstItem + 1}</span>{" "}
-                  to{" "}
-                  <span className="font-semibold">
+                  <span className="font-medium">{indexOfFirstItem + 1}</span> to{" "}
+                  <span className="font-medium">
                     {Math.min(indexOfLastItem, hourlyReports.length)}
                   </span>{" "}
-                  of{" "}
-                  <span className="font-semibold">{hourlyReports.length}</span>{" "}
-                  reports
-                </div>
-                <div className="flex gap-2">
+                  of <span className="font-medium">{hourlyReports.length}</span>
+                </p>
+                <div className="flex gap-1.5 order-1 sm:order-2">
                   <Button
-                    variant="secondary"
+                    variant="outline"
                     size="sm"
                     onClick={() => paginate(currentPage - 1)}
                     disabled={currentPage === 1}
                   >
-                    Previous
+                    <ChevronLeft className="h-4 w-4" />
                   </Button>
                   {[...Array(totalPages)].map((_, index) => {
                     const pageNumber = index + 1;
-                    // Show first, last, current, and adjacent pages
                     if (
                       pageNumber === 1 ||
                       pageNumber === totalPages ||
@@ -346,10 +320,11 @@ const ReportHistory = ({ onEdit, lastEditedReportId, onClearLastEdited }) => {
                         <Button
                           key={pageNumber}
                           variant={
-                            currentPage === pageNumber ? "primary" : "secondary"
+                            currentPage === pageNumber ? "default" : "outline"
                           }
                           size="sm"
                           onClick={() => paginate(pageNumber)}
+                          className="w-9"
                         >
                           {pageNumber}
                         </Button>
@@ -361,7 +336,7 @@ const ReportHistory = ({ onEdit, lastEditedReportId, onClearLastEdited }) => {
                       return (
                         <span
                           key={pageNumber}
-                          className="px-2 text-gray-400 self-center"
+                          className="px-1 text-muted-foreground self-center"
                         >
                           ...
                         </span>
@@ -370,12 +345,12 @@ const ReportHistory = ({ onEdit, lastEditedReportId, onClearLastEdited }) => {
                     return null;
                   })}
                   <Button
-                    variant="secondary"
+                    variant="outline"
                     size="sm"
                     onClick={() => paginate(currentPage + 1)}
                     disabled={currentPage === totalPages}
                   >
-                    Next
+                    <ChevronRight className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
@@ -386,7 +361,7 @@ const ReportHistory = ({ onEdit, lastEditedReportId, onClearLastEdited }) => {
         {/* Empty State */}
         {!loading && currentItems.length === 0 && (
           <EmptyState
-            icon={<DocumentIcon />}
+            icon={FileText}
             title="No hourly reports found"
             description="Create your first hourly report to get started"
           />

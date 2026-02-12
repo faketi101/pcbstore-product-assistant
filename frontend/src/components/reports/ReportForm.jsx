@@ -1,16 +1,21 @@
 import { useState, useEffect } from "react";
+import { Plus, Pencil, ClipboardList, Check, RotateCcw, X } from "lucide-react";
 import FieldGroup from "./FieldGroup";
 import CustomFieldsSection from "./CustomFieldsSection";
 import toast from "react-hot-toast";
 import reportService from "../../services/reportService";
+import { Button } from "@/components/ui/button";
 import {
-  Button,
   Card,
   CardHeader,
+  CardTitle,
+  CardDescription,
   CardContent,
   CardFooter,
-  Input,
-} from "../ui";
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/loading";
 
 const STORAGE_KEY = "pcb_automation_report_form";
 
@@ -268,103 +273,86 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
       <CardHeader>
         <div className="flex items-center gap-3">
           <div
-            className={`p-2 rounded-lg ${editingReport ? "bg-amber-100" : "bg-indigo-100"}`}
+            className={`flex h-10 w-10 items-center justify-center rounded-lg ${editingReport ? "bg-amber-100 dark:bg-amber-900/30" : "bg-primary/10"}`}
           >
-            <svg
-              className={`h-5 w-5 ${editingReport ? "text-amber-600" : "text-indigo-600"}`}
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d={
-                  editingReport
-                    ? "M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                    : "M12 4v16m8-8H4"
-                }
-              />
-            </svg>
+            {editingReport ? (
+              <Pencil className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+            ) : (
+              <Plus className="h-5 w-5 text-primary" />
+            )}
           </div>
           <div>
-            <h2 className="text-xl font-bold text-gray-900">
+            <CardTitle>
               {editingReport ? "Edit Report" : "Create Hourly Report"}
-            </h2>
-            <p className="text-sm text-gray-500">
+            </CardTitle>
+            <CardDescription>
               {editingReport
                 ? `Editing report from ${editingReport.date} at ${editingReport.time}`
                 : "Track your hourly work progress"}
-            </p>
+            </CardDescription>
           </div>
         </div>
       </CardHeader>
       <CardContent>
         <form id="report-form" onSubmit={handleSubmitWithLoading}>
           {/* Indicator Legend */}
-          <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl">
-            <h4 className="text-sm font-semibold text-blue-900 mb-3">
+          <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 border border-blue-200 dark:border-blue-800 rounded-xl">
+            <h4 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-3">
               Field Type Indicators
             </h4>
-            <div className="flex flex-wrap gap-6 text-sm">
+            <div className="flex flex-wrap gap-4 sm:gap-6 text-xs sm:text-sm">
               <div className="flex items-center gap-2">
                 <span className="inline-block w-3 h-3 bg-emerald-500 rounded-full shadow-sm"></span>
-                <span className="text-gray-700">
-                  <strong>Generated:</strong> AI/automated content
+                <span className="text-muted-foreground">
+                  <strong className="text-foreground">Generated:</strong>{" "}
+                  AI/automated
                 </span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="inline-block w-3 h-3 bg-blue-500 rounded-full shadow-sm"></span>
-                <span className="text-gray-700">
-                  <strong>Added:</strong> Manually added
+                <span className="text-muted-foreground">
+                  <strong className="text-foreground">Added:</strong> Manual
                 </span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="inline-block w-3 h-3 bg-orange-500 rounded-full shadow-sm"></span>
-                <span className="text-gray-700">
-                  <strong>Fixed:</strong> Corrected/modified
+                <span className="text-muted-foreground">
+                  <strong className="text-foreground">Fixed:</strong> Corrected
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 mb-6">
-            <Input
-              type="date"
-              label="Date"
-              value={formData.date}
-              onChange={(e) =>
-                setFormData({ ...formData, date: e.target.value })
-              }
-              required
-            />
-            <Input
-              type="time"
-              label="Time"
-              value={formData.time}
-              onChange={(e) =>
-                setFormData({ ...formData, time: e.target.value })
-              }
-              required
-            />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            <div className="space-y-2">
+              <Label htmlFor="report-date">Date</Label>
+              <Input
+                id="report-date"
+                type="date"
+                value={formData.date}
+                onChange={(e) =>
+                  setFormData({ ...formData, date: e.target.value })
+                }
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="report-time">Time</Label>
+              <Input
+                id="report-time"
+                type="time"
+                value={formData.time}
+                onChange={(e) =>
+                  setFormData({ ...formData, time: e.target.value })
+                }
+                required
+              />
+            </div>
           </div>
 
           <div className="mb-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <svg
-                className="h-5 w-5 text-indigo-600"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                />
-              </svg>
+            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <ClipboardList className="h-5 w-5 text-primary" />
               Product Work
             </h3>
           </div>
@@ -523,7 +511,7 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
         </form>
       </CardContent>
       <CardFooter>
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
           {editingReport && (
             <Button
               type="button"
@@ -533,42 +521,37 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
                 resetForm();
               }}
             >
-              Cancel Edit
+              <X className="h-4 w-4 mr-2" />
+              Cancel
             </Button>
           )}
           {!editingReport && (
             <Button type="button" variant="secondary" onClick={resetForm}>
-              Reset Form
+              <RotateCcw className="h-4 w-4 mr-2" />
+              Reset
             </Button>
           )}
           <Button
             type="submit"
             form="report-form"
-            loading={submitting}
-            variant={editingReport ? "warning" : "primary"}
-            leftIcon={
-              <svg
-                className="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d={editingReport ? "M5 13l4 4L19 7" : "M12 4v16m8-8H4"}
-                />
-              </svg>
-            }
+            disabled={submitting}
+            variant={editingReport ? "warning" : "default"}
           >
-            {submitting
-              ? editingReport
-                ? "Updating..."
-                : "Creating..."
-              : editingReport
-                ? "Update Report"
-                : "Create Report"}
+            {submitting ? (
+              <>
+                <Spinner size="sm" className="mr-2" />
+                {editingReport ? "Updating..." : "Creating..."}
+              </>
+            ) : (
+              <>
+                {editingReport ? (
+                  <Check className="h-4 w-4 mr-2" />
+                ) : (
+                  <Plus className="h-4 w-4 mr-2" />
+                )}
+                {editingReport ? "Update Report" : "Create Report"}
+              </>
+            )}
           </Button>
         </div>
       </CardFooter>

@@ -1,6 +1,41 @@
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import {
+  Copy,
+  Sparkles,
+  RotateCcw,
+  Pencil,
+  Save,
+  X,
+  RefreshCw,
+  FolderOpen,
+  ListChecks,
+} from "lucide-react";
 import authService from "../services/api";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/loading";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
+
+// Textarea component
+const Textarea = ({ className, ...props }) => (
+  <textarea
+    className={cn(
+      "flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+      className,
+    )}
+    {...props}
+  />
+);
 
 const CategoryPrompt = () => {
   const [formData, setFormData] = useState({
@@ -56,9 +91,12 @@ const CategoryPrompt = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-100 flex items-center justify-center">
-        <div className="text-xl font-semibold text-emerald-600 animate-pulse">
-          Loading Category Prompts...
+      <div className="min-h-[calc(100vh-4rem)] bg-background flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <Spinner size="lg" className="text-primary" />
+          <p className="text-lg font-medium text-muted-foreground animate-pulse">
+            Loading Category Prompts...
+          </p>
         </div>
       </div>
     );
@@ -292,356 +330,359 @@ const CategoryPrompt = () => {
 
   if (isEditing) {
     return (
-      <div className="min-h-screen bg-slate-100 text-gray-800 p-8 font-sans">
-        <div className="max-w-6xl mx-auto bg-white rounded-xl shadow-lg p-8">
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold text-gray-900">
-              Edit Category Prompt Templates
-            </h1>
-            <div className="flex gap-4">
-              <button
-                className="px-4 py-2 text-sm font-semibold text-red-600 bg-red-50 rounded-lg hover:bg-red-100"
-                onClick={handleResetAll}
-              >
-                Reset All to Default
-              </button>
-              <div>
-                <button
-                  className="px-4 py-2 text-sm font-semibold text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 mr-4"
-                  onClick={cancelEditing}
+      <div className="min-h-[calc(100vh-4rem)] bg-background p-4 sm:p-8">
+        <Card className="max-w-6xl mx-auto">
+          <CardHeader>
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-900/30">
+                  <Pencil className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                </div>
+                <CardTitle>Edit Category Prompt Templates</CardTitle>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={handleResetAll}
                 >
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Reset All
+                </Button>
+                <Button variant="outline" size="sm" onClick={cancelEditing}>
+                  <X className="h-4 w-4 mr-2" />
                   Cancel
-                </button>
-                <button
-                  className="px-4 py-2 text-sm font-semibold text-white bg-emerald-600 rounded-lg hover:bg-emerald-700 shadow-md"
-                  onClick={saveEdits}
-                >
+                </Button>
+                <Button size="sm" variant="success" onClick={saveEdits}>
+                  <Save className="h-4 w-4 mr-2" />
                   Save Changes
-                </button>
+                </Button>
               </div>
             </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-              <div className="flex justify-between items-center mb-2">
-                <label className="block text-sm font-semibold">
-                  SEO Category Content Prompt
-                </label>
-                <button
-                  className="px-3 py-1 text-xs font-semibold text-orange-600 bg-orange-50 rounded hover:bg-orange-100"
-                  onClick={handleResetPrompt1}
-                >
-                  Reset Prompt 1
-                </button>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <Label>SEO Category Content Prompt</Label>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleResetPrompt1}
+                    className="text-amber-600 hover:text-amber-700 hover:bg-amber-50"
+                  >
+                    Reset Prompt 1
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Placeholders: {"${productName}"}, {"${productMainCategory}"},{" "}
+                  {"${productSubCategory}"}, {"${productSubCategory2}"},{" "}
+                  {"${relatedCategories}"}, {"${specs}"}
+                </p>
+                <Textarea
+                  className="min-h-[500px] font-mono text-xs sm:text-sm bg-muted/30"
+                  value={editCategoryPrompt1}
+                  onChange={(e) => setEditCategoryPrompt1(e.target.value)}
+                />
               </div>
-              <p className="text-xs text-gray-500 mb-2">
-                Placeholders: {"${productName}"}, {"${productMainCategory}"},{" "}
-                {"${productSubCategory}"}, {"${productSubCategory2}"},{" "}
-                {"${relatedCategories}"}, {"${specs}"}
-              </p>
-              <textarea
-                className="w-full p-4 text-sm rounded-lg border border-gray-200 focus:outline-none focus:border-emerald-600 min-h-[600px] font-mono whitespace-pre-wrap bg-gray-50"
-                value={editCategoryPrompt1}
-                onChange={(e) => setEditCategoryPrompt1(e.target.value)}
-              />
-            </div>
-            <div>
-              <div className="flex justify-between items-center mb-2">
-                <label className="block text-sm font-semibold">
-                  Key Features & Specs Prompt
-                </label>
-                <button
-                  className="px-3 py-1 text-xs font-semibold text-orange-600 bg-orange-50 rounded hover:bg-orange-100"
-                  onClick={handleResetPrompt2}
-                >
-                  Reset Prompt 2
-                </button>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <Label>Key Features & Specs Prompt</Label>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleResetPrompt2}
+                    className="text-amber-600 hover:text-amber-700 hover:bg-amber-50"
+                  >
+                    Reset Prompt 2
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Placeholder: {"${productContent}"}
+                </p>
+                <Textarea
+                  className="min-h-[500px] font-mono text-xs sm:text-sm bg-muted/30"
+                  value={editCategoryPrompt2}
+                  onChange={(e) => setEditCategoryPrompt2(e.target.value)}
+                />
               </div>
-              <p className="text-xs text-gray-500 mb-2">
-                Placeholder: {"${productContent}"}
-              </p>
-              <textarea
-                className="w-full p-4 text-sm rounded-lg border border-gray-200 focus:outline-none focus:border-emerald-600 min-h-[600px] font-mono whitespace-pre-wrap bg-gray-50"
-                value={editCategoryPrompt2}
-                onChange={(e) => setEditCategoryPrompt2(e.target.value)}
-              />
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-100 text-gray-800 p-8 font-sans">
+    <div className="min-h-[calc(100vh-4rem)] bg-background p-4 sm:p-8">
       <div className="max-w-5xl mx-auto">
-        <div className="bg-white rounded-xl shadow-lg p-8">
-          <div className="flex justify-between items-start mb-6">
-            <div>
-              <h1 className="text-2xl font-bold mb-2 text-gray-900">
-                Category Content Prompt Generator
-              </h1>
-              <p className="text-gray-500 text-sm">
-                Generate SEO-optimized category content and key features/specs
-                prompts
-              </p>
+        <Card>
+          <CardHeader>
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-900/30">
+                  <FolderOpen className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                </div>
+                <div>
+                  <CardTitle>Category Content Prompt Generator</CardTitle>
+                  <CardDescription>
+                    Generate SEO-optimized category content and key
+                    features/specs prompts
+                  </CardDescription>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" onClick={loadPrompts}>
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  <span className="hidden sm:inline">Refresh</span>
+                </Button>
+                <Button variant="outline" size="sm" onClick={startEditing}>
+                  <Pencil className="h-4 w-4 mr-2" />
+                  <span className="hidden sm:inline">Edit Templates</span>
+                  <span className="sm:hidden">Edit</span>
+                </Button>
+              </div>
             </div>
-            <div className="flex gap-2">
-              <button
-                onClick={loadPrompts}
-                className="px-4 py-2 text-xs font-semibold text-gray-600 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition"
-              >
-                Refresh Templates
-              </button>
-              <button
-                onClick={startEditing}
-                className="px-4 py-2 text-xs font-semibold text-emerald-600 bg-emerald-50 rounded-lg border border-emerald-200 hover:bg-emerald-100 transition"
-              >
-                Edit Templates
-              </button>
-            </div>
-          </div>
-
-          {/* Tab Navigation */}
-          <div className="flex border-b border-gray-200 mb-6">
-            <button
-              className={`px-6 py-3 text-sm font-semibold transition-all ${
-                activeTab === "prompt1"
-                  ? "text-emerald-600 border-b-2 border-emerald-600"
-                  : "text-gray-500 hover:text-gray-700"
-              }`}
-              onClick={() => setActiveTab("prompt1")}
+          </CardHeader>
+          <CardContent>
+            <Tabs
+              value={activeTab}
+              onValueChange={setActiveTab}
+              className="w-full"
             >
-              SEO Category Content
-            </button>
-            <button
-              className={`px-6 py-3 text-sm font-semibold transition-all ${
-                activeTab === "prompt2"
-                  ? "text-emerald-600 border-b-2 border-emerald-600"
-                  : "text-gray-500 hover:text-gray-700"
-              }`}
-              onClick={() => setActiveTab("prompt2")}
-            >
-              Key Features & Specs
-            </button>
-          </div>
+              <TabsList className="grid w-full grid-cols-2 mb-6">
+                <TabsTrigger
+                  value="prompt1"
+                  className="flex items-center gap-2"
+                >
+                  <FolderOpen className="h-4 w-4" />
+                  <span className="hidden sm:inline">SEO Category Content</span>
+                  <span className="sm:hidden">SEO</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="prompt2"
+                  className="flex items-center gap-2"
+                >
+                  <ListChecks className="h-4 w-4" />
+                  <span className="hidden sm:inline">Key Features & Specs</span>
+                  <span className="sm:hidden">Features</span>
+                </TabsTrigger>
+              </TabsList>
 
-          {/* Prompt 1 - SEO Category Content */}
-          {activeTab === "prompt1" && (
-            <div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-semibold mb-2">
-                    Product Name <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    className="w-full p-3 text-sm rounded-lg border border-gray-200 focus:outline-none focus:border-emerald-600 focus:ring-[3px] focus:ring-emerald-600/15 transition-all"
-                    value={formData.productName}
-                    onChange={(e) =>
-                      setFormData({ ...formData, productName: e.target.value })
-                    }
-                    placeholder="e.g. NVIDIA RTX 4090"
-                  />
+              {/* Prompt 1 - SEO Category Content */}
+              <TabsContent value="prompt1" className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="cat-product-name">
+                      Product Name <span className="text-destructive">*</span>
+                    </Label>
+                    <Input
+                      id="cat-product-name"
+                      value={formData.productName}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          productName: e.target.value,
+                        })
+                      }
+                      placeholder="e.g. NVIDIA RTX 4090"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="cat-main-category">
+                      Product Main Category{" "}
+                      <span className="text-destructive">*</span>
+                    </Label>
+                    <Input
+                      id="cat-main-category"
+                      value={formData.productMainCategory}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          productMainCategory: e.target.value,
+                        })
+                      }
+                      placeholder="e.g. PC Components"
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-sm font-semibold mb-2">
-                    Product Main Category{" "}
-                    <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    className="w-full p-3 text-sm rounded-lg border border-gray-200 focus:outline-none focus:border-emerald-600 focus:ring-[3px] focus:ring-emerald-600/15 transition-all"
-                    value={formData.productMainCategory}
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="cat-sub-category">
+                      Product Sub Category
+                    </Label>
+                    <Input
+                      id="cat-sub-category"
+                      value={formData.productSubCategory}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          productSubCategory: e.target.value,
+                        })
+                      }
+                      placeholder="e.g. Graphics Cards"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="cat-sub-category-2">
+                      Product Sub Category 2
+                    </Label>
+                    <Input
+                      id="cat-sub-category-2"
+                      value={formData.productSubCategory2}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          productSubCategory2: e.target.value,
+                        })
+                      }
+                      placeholder="e.g. NVIDIA GPUs"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="cat-related">
+                    Related Categories (comma separated)
+                  </Label>
+                  <Input
+                    id="cat-related"
+                    value={formData.relatedCategories}
                     onChange={(e) =>
                       setFormData({
                         ...formData,
-                        productMainCategory: e.target.value,
+                        relatedCategories: e.target.value,
                       })
                     }
-                    placeholder="e.g. PC Components"
+                    placeholder="e.g. Gaming Monitors, Power Supplies, CPU Coolers"
                   />
                 </div>
-              </div>
 
-              <div className="grid grid-cols-2 gap-4 mt-4">
-                <div>
-                  <label className="block text-sm font-semibold mb-2">
-                    Product Sub Category
-                  </label>
-                  <input
-                    className="w-full p-3 text-sm rounded-lg border border-gray-200 focus:outline-none focus:border-emerald-600 focus:ring-[3px] focus:ring-emerald-600/15 transition-all"
-                    value={formData.productSubCategory}
+                <div className="space-y-2">
+                  <Label htmlFor="cat-specs">
+                    Specs <span className="text-destructive">*</span>
+                  </Label>
+                  <Textarea
+                    id="cat-specs"
+                    className="min-h-[120px] resize-y"
+                    value={formData.specs}
                     onChange={(e) =>
+                      setFormData({ ...formData, specs: e.target.value })
+                    }
+                    placeholder="Paste product specifications here..."
+                  />
+                </div>
+
+                <div className="flex flex-wrap gap-3">
+                  <Button variant="success" onClick={handleGeneratePrompt1}>
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    Generate SEO Prompt
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() =>
+                      handleCopy(
+                        prompt1,
+                        "SEO Category prompt copied to clipboard!",
+                      )
+                    }
+                  >
+                    <Copy className="h-4 w-4 mr-2" />
+                    Copy Prompt
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    onClick={() => {
                       setFormData({
                         ...formData,
-                        productSubCategory: e.target.value,
-                      })
-                    }
-                    placeholder="e.g. Graphics Cards"
+                        productName: "",
+                        productMainCategory: "",
+                        productSubCategory: "",
+                        productSubCategory2: "",
+                        relatedCategories: "",
+                        specs: "",
+                      });
+                      setPrompt1("");
+                      toast.success("Form reset successfully");
+                    }}
+                  >
+                    <RotateCcw className="h-4 w-4 mr-2" />
+                    Reset
+                  </Button>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Generated SEO Category Prompt</Label>
+                  <Textarea
+                    className="min-h-[280px] font-mono text-xs sm:text-sm bg-muted/30"
+                    readOnly
+                    value={prompt1}
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-semibold mb-2">
-                    Product Sub Category 2
-                  </label>
-                  <input
-                    className="w-full p-3 text-sm rounded-lg border border-gray-200 focus:outline-none focus:border-emerald-600 focus:ring-[3px] focus:ring-emerald-600/15 transition-all"
-                    value={formData.productSubCategory2}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        productSubCategory2: e.target.value,
-                      })
-                    }
-                    placeholder="e.g. NVIDIA GPUs"
+              </TabsContent>
+
+              {/* Prompt 2 - Key Features & Specs */}
+              <TabsContent value="prompt2" className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="product-content">
+                    Product Content <span className="text-destructive">*</span>
+                  </Label>
+                  <p className="text-xs text-muted-foreground">
+                    Paste the complete product content/information here
+                  </p>
+                  <Textarea
+                    id="product-content"
+                    className="min-h-[200px] resize-y"
+                    value={productContent}
+                    onChange={(e) => setProductContent(e.target.value)}
+                    placeholder="Paste complete product content here..."
                   />
                 </div>
-              </div>
 
-              <div className="mt-4">
-                <label className="block text-sm font-semibold mb-2">
-                  Related Categories (comma separated)
-                </label>
-                <input
-                  className="w-full p-3 text-sm rounded-lg border border-gray-200 focus:outline-none focus:border-emerald-600 focus:ring-[3px] focus:ring-emerald-600/15 transition-all"
-                  value={formData.relatedCategories}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      relatedCategories: e.target.value,
-                    })
-                  }
-                  placeholder="e.g. Gaming Monitors, Power Supplies, CPU Coolers"
-                />
-              </div>
+                <div className="flex flex-wrap gap-3">
+                  <Button variant="success" onClick={handleGeneratePrompt2}>
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    Generate Features Prompt
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() =>
+                      handleCopy(
+                        prompt2,
+                        "Key Features & Specs prompt copied to clipboard!",
+                      )
+                    }
+                  >
+                    <Copy className="h-4 w-4 mr-2" />
+                    Copy Prompt
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    onClick={() => {
+                      setProductContent("");
+                      setPrompt2("");
+                      toast.success("Form reset successfully");
+                    }}
+                  >
+                    <RotateCcw className="h-4 w-4 mr-2" />
+                    Reset
+                  </Button>
+                </div>
 
-              <div className="mt-4">
-                <label className="block text-sm font-semibold mb-2">
-                  Specs <span className="text-red-500">*</span>
-                </label>
-                <textarea
-                  className="w-full p-3 text-sm rounded-lg border border-gray-200 focus:outline-none focus:border-emerald-600 focus:ring-[3px] focus:ring-emerald-600/15 transition-all min-h-[120px] resize-y"
-                  value={formData.specs}
-                  onChange={(e) =>
-                    setFormData({ ...formData, specs: e.target.value })
-                  }
-                  placeholder="Paste product specifications here..."
-                ></textarea>
-              </div>
-
-              <div className="flex flex-wrap gap-3 mt-6">
-                <button
-                  className="px-6 py-3 text-sm font-semibold rounded-lg bg-gradient-to-br from-emerald-600 to-emerald-800 text-white shadow-lg shadow-emerald-600/25 hover:-translate-y-px hover:shadow-emerald-600/35 transition-all cursor-pointer border-none"
-                  onClick={handleGeneratePrompt1}
-                >
-                  Generate SEO Prompt
-                </button>
-                <button
-                  className="px-6 py-3 text-sm font-semibold rounded-lg bg-gray-100 text-gray-800 border border-gray-200 hover:bg-emerald-50 hover:border-emerald-600 transition-all cursor-pointer"
-                  onClick={() =>
-                    handleCopy(
-                      prompt1,
-                      "SEO Category prompt copied to clipboard!",
-                    )
-                  }
-                >
-                  Copy Prompt
-                </button>
-                <button
-                  className="px-6 py-3 text-sm font-semibold rounded-lg bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 transition-all cursor-pointer"
-                  onClick={() => {
-                    setFormData({
-                      ...formData,
-                      productName: "",
-                      productMainCategory: "",
-                      productSubCategory: "",
-                      productSubCategory2: "",
-                      relatedCategories: "",
-                      specs: "",
-                    });
-                    setPrompt1("");
-                    toast.success("Form reset successfully");
-                  }}
-                >
-                  Reset Form
-                </button>
-              </div>
-
-              <div className="mt-8">
-                <label className="block text-sm font-semibold mb-2">
-                  Generated SEO Category Prompt
-                </label>
-                <textarea
-                  className="w-full p-3 text-sm rounded-lg border border-gray-200 min-h-[320px] font-mono whitespace-pre-wrap bg-gray-50 text-gray-600"
-                  readOnly
-                  value={prompt1}
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Prompt 2 - Key Features & Specs */}
-          {activeTab === "prompt2" && (
-            <div>
-              <div>
-                <label className="block text-sm font-semibold mb-2">
-                  Product Content <span className="text-red-500">*</span>
-                </label>
-                <p className="text-xs text-gray-500 mb-2">
-                  Paste the complete product content/information here
-                </p>
-                <textarea
-                  className="w-full p-3 text-sm rounded-lg border border-gray-200 focus:outline-none focus:border-emerald-600 focus:ring-[3px] focus:ring-emerald-600/15 transition-all min-h-[200px] resize-y"
-                  value={productContent}
-                  onChange={(e) => setProductContent(e.target.value)}
-                  placeholder="Paste complete product content here..."
-                ></textarea>
-              </div>
-
-              <div className="flex flex-wrap gap-3 mt-6">
-                <button
-                  className="px-6 py-3 text-sm font-semibold rounded-lg bg-gradient-to-br from-emerald-600 to-emerald-800 text-white shadow-lg shadow-emerald-600/25 hover:-translate-y-px hover:shadow-emerald-600/35 transition-all cursor-pointer border-none"
-                  onClick={handleGeneratePrompt2}
-                >
-                  Generate Features & Specs Prompt
-                </button>
-                <button
-                  className="px-6 py-3 text-sm font-semibold rounded-lg bg-gray-100 text-gray-800 border border-gray-200 hover:bg-emerald-50 hover:border-emerald-600 transition-all cursor-pointer"
-                  onClick={() =>
-                    handleCopy(
-                      prompt2,
-                      "Key Features & Specs prompt copied to clipboard!",
-                    )
-                  }
-                >
-                  Copy Prompt
-                </button>
-                <button
-                  className="px-6 py-3 text-sm font-semibold rounded-lg bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 transition-all cursor-pointer"
-                  onClick={() => {
-                    setProductContent("");
-                    setPrompt2("");
-                    toast.success("Form reset successfully");
-                  }}
-                >
-                  Reset Form
-                </button>
-              </div>
-
-              <div className="mt-8">
-                <label className="block text-sm font-semibold mb-2">
-                  Generated Key Features & Specs Prompt
-                </label>
-                <textarea
-                  className="w-full p-3 text-sm rounded-lg border border-gray-200 min-h-[320px] font-mono whitespace-pre-wrap bg-gray-50 text-gray-600"
-                  readOnly
-                  value={prompt2}
-                />
-              </div>
-            </div>
-          )}
-        </div>
-        <footer className="text-center mt-8 text-xs text-gray-500">
+                <div className="space-y-2">
+                  <Label>Generated Key Features & Specs Prompt</Label>
+                  <Textarea
+                    className="min-h-[280px] font-mono text-xs sm:text-sm bg-muted/30"
+                    readOnly
+                    value={prompt2}
+                  />
+                </div>
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </Card>
+        <footer className="text-center mt-8 text-xs text-muted-foreground">
           Category Prompt Tool · Developed by TARIKUL ISLAM
         </footer>
       </div>
