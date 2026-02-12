@@ -1,6 +1,20 @@
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import reportService from "../../services/reportService";
+import {
+  formatReportForWhatsApp,
+  copyToClipboard,
+} from "../../utils/formatReportForWhatsApp";
+import {
+  Button,
+  Card,
+  CardHeader,
+  CardContent,
+  Input,
+  Badge,
+  EmptyState,
+  LoadingOverlay,
+} from "../ui";
 
 const DateRangeReport = () => {
   const [startDate, setStartDate] = useState("");
@@ -39,6 +53,7 @@ const DateRangeReport = () => {
         warrantyClaimReasons: { generated: 0, added: 0 },
         titleFixed: { fixed: 0, added: 0 },
         imageRenamed: { fixed: 0 },
+        productReCheck: { check: 0, fixed: 0 },
         category: { added: 0 },
         attributes: { added: 0 },
         deliveryCharge: { added: 0 },
@@ -98,155 +113,243 @@ const DateRangeReport = () => {
     }
   };
 
-  const copyToClipboard = (text) => {
-    navigator.clipboard.writeText(text);
-    toast.success("Copied to clipboard!");
-  };
-
-  const formatWhatsAppMessage = () => {
+  const getFormattedWhatsAppMessage = () => {
     if (!aggregatedData) return "";
-
-    let text = `*Date Range Report (${startDate} to ${endDate})*\n\nProducts:\n`;
-
-    const addLine = (label, data) => {
-      const parts = [];
-      if (data.generated > 0) parts.push(`generated ${data.generated}`);
-      if (data.added > 0) parts.push(`added ${data.added}`);
-      if (data.fixed > 0) parts.push(`fixed ${data.fixed}`);
-      if (parts.length > 0) {
-        text += `- ${label}: ${parts.join(", ")}\n`;
-      }
-    };
-
-    addLine("description", aggregatedData.description);
-    addLine("FAQ", aggregatedData.faq);
-    addLine("key features", aggregatedData.keyFeatures);
-    addLine("specifications", aggregatedData.specifications);
-    addLine("meta title and description", aggregatedData.metaTitleDescription);
-    addLine("warranty claim reasons", aggregatedData.warrantyClaimReasons);
-    addLine("title", aggregatedData.titleFixed);
-
-    if (aggregatedData.imageRenamed?.fixed > 0) {
-      text += `- image renamed and fixed: ${aggregatedData.imageRenamed.fixed}\n`;
-    }
-
-    if (aggregatedData.category?.added > 0)
-      text += `- category: added ${aggregatedData.category.added}\n`;
-    if (aggregatedData.attributes?.added > 0)
-      text += `- attributes: added ${aggregatedData.attributes.added}\n`;
-    if (aggregatedData.deliveryCharge?.added > 0)
-      text += `- delivery charge: added ${aggregatedData.deliveryCharge.added}\n`;
-    if (aggregatedData.warranty?.added > 0)
-      text += `- warranty: added ${aggregatedData.warranty.added}\n`;
-    if (aggregatedData.brand?.added > 0)
-      text += `- brand: added ${aggregatedData.brand.added}\n`;
-    if (aggregatedData.price?.added > 0)
-      text += `- price: added ${aggregatedData.price.added}\n`;
-    if (aggregatedData.internalLink?.added > 0)
-      text += `- internal link: added ${aggregatedData.internalLink.added}\n`;
-
-    // Add custom fields
-    if (aggregatedData.customFields?.length > 0) {
-      aggregatedData.customFields.forEach((field) => {
-        if (field.value > 0) {
-          text += `- ${field.name}: ${field.value}\n`;
-        }
-      });
-    }
-
-    return text;
+    return formatReportForWhatsApp(aggregatedData, {
+      type: "dateRange",
+      startDate,
+      endDate,
+    });
   };
+
+  const handleCopyToClipboard = () => {
+    copyToClipboard(getFormattedWhatsAppMessage(), toast);
+  };
+
+  const DocumentIcon = () => (
+    <svg
+      className="h-12 w-12"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.5}
+        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+      />
+    </svg>
+  );
+
+  const CalendarIcon = () => (
+    <svg
+      className="h-5 w-5 text-gray-400"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+      />
+    </svg>
+  );
 
   return (
     <div className="space-y-6">
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">
-          Generate Date Range Report
-        </h2>
-        <p className="text-sm text-gray-600 mb-6">
-          Select a date range to generate an aggregated report
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Start Date
-            </label>
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              End Date
-            </label>
-            <input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-            />
-          </div>
-
-          <div className="flex items-end">
-            <button
-              onClick={handleGenerate}
-              disabled={loading}
-              className="w-full px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? "Generating..." : "Generate Report"}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {aggregatedData && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-bold text-gray-900">
-              Aggregated Report ({reports.length} days)
-            </h3>
-            <button
-              onClick={() => copyToClipboard(formatWhatsAppMessage())}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
-            >
-              Copy for WhatsApp
-            </button>
-          </div>
-
-          <div className="bg-gray-50 rounded-lg p-4">
-            <pre className="whitespace-pre-wrap text-sm text-gray-700 font-mono">
-              {formatWhatsAppMessage()}
-            </pre>
-          </div>
-
-          <div className="mt-6">
-            <h4 className="text-md font-semibold text-gray-900 mb-3">
-              Daily Breakdown
-            </h4>
-            <div className="space-y-2">
-              {reports.map((report, index) => (
-                <div
-                  key={index}
-                  className="p-3 bg-gray-50 rounded-lg border border-gray-200"
-                >
-                  <div className="flex justify-between items-center">
-                    <span className="font-medium text-gray-900">
-                      {report.date}
-                    </span>
-                    <span className="text-sm text-gray-600">
-                      {report.hourlyReportsCount} hourly report(s)
-                    </span>
-                  </div>
-                </div>
-              ))}
+      {/* Date Selection Card */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-indigo-100 rounded-lg">
+              <CalendarIcon />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-gray-900">
+                Generate Date Range Report
+              </h2>
+              <p className="text-sm text-gray-500 mt-0.5">
+                Select a date range to generate an aggregated report
+              </p>
             </div>
           </div>
-        </div>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Input
+              type="date"
+              label="Start Date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+
+            <Input
+              type="date"
+              label="End Date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+            />
+
+            <div className="flex items-end">
+              <Button
+                onClick={handleGenerate}
+                loading={loading}
+                className="w-full"
+                leftIcon={
+                  <svg
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
+                  </svg>
+                }
+              >
+                {loading ? "Generating..." : "Generate Report"}
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Results Card */}
+      {aggregatedData && (
+        <Card className="relative">
+          <LoadingOverlay show={loading} message="Generating report..." />
+          <CardHeader>
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-emerald-100 rounded-lg">
+                  <svg
+                    className="h-5 w-5 text-emerald-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900">
+                    Aggregated Report
+                  </h3>
+                  <p className="text-sm text-gray-500">
+                    {reports.length} day{reports.length !== 1 ? "s" : ""} of
+                    data combined
+                  </p>
+                </div>
+              </div>
+              <Button
+                variant="success"
+                onClick={handleCopyToClipboard}
+                leftIcon={
+                  <svg
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
+                    />
+                  </svg>
+                }
+              >
+                Copy for WhatsApp
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-5 border border-gray-200">
+              <pre className="whitespace-pre-wrap text-sm text-gray-700 font-mono leading-relaxed">
+                {getFormattedWhatsAppMessage()}
+              </pre>
+            </div>
+
+            {/* Daily Breakdown */}
+            <div className="mt-6">
+              <h4 className="text-md font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <svg
+                  className="h-5 w-5 text-gray-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 10h16M4 14h16M4 18h16"
+                  />
+                </svg>
+                Daily Breakdown
+              </h4>
+              <div className="grid gap-3">
+                {reports.map((report, index) => (
+                  <div
+                    key={index}
+                    className="flex justify-between items-center p-4 bg-white rounded-lg border border-gray-200 hover:border-indigo-200 hover:shadow-sm transition-all"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-indigo-50 rounded-lg">
+                        <svg
+                          className="h-4 w-4 text-indigo-600"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          />
+                        </svg>
+                      </div>
+                      <span className="font-medium text-gray-900">
+                        {report.date}
+                      </span>
+                    </div>
+                    <Badge variant="primary">
+                      {report.hourlyReportsCount} hourly report
+                      {report.hourlyReportsCount !== 1 ? "s" : ""}
+                    </Badge>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Empty State */}
+      {!aggregatedData && !loading && (
+        <Card>
+          <CardContent>
+            <EmptyState
+              icon={<DocumentIcon />}
+              title="No report generated yet"
+              description="Select a date range above and click 'Generate Report' to see aggregated data"
+            />
+          </CardContent>
+        </Card>
       )}
     </div>
   );

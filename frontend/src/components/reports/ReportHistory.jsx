@@ -1,6 +1,20 @@
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import reportService from "../../services/reportService";
+import {
+  formatReportForWhatsApp,
+  copyToClipboard,
+} from "../../utils/formatReportForWhatsApp";
+import {
+  Button,
+  Card,
+  CardHeader,
+  CardContent,
+  Input,
+  Badge,
+  EmptyState,
+  Spinner,
+} from "../ui";
 
 const ReportHistory = ({ onEdit, lastEditedReportId, onClearLastEdited }) => {
   const [hourlyReports, setHourlyReports] = useState([]);
@@ -9,6 +23,7 @@ const ReportHistory = ({ onEdit, lastEditedReportId, onClearLastEdited }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const [loading, setLoading] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
 
   useEffect(() => {
     document.title = "Report History - PCB Automation";
@@ -22,7 +37,13 @@ const ReportHistory = ({ onEdit, lastEditedReportId, onClearLastEdited }) => {
       if (filterEndDate) filters.endDate = filterEndDate;
 
       const response = await reportService.getHourlyReports(filters);
-      setHourlyReports(response.reports);
+      // Sort by date and time descending (newest first)
+      const sortedReports = [...response.reports].sort((a, b) => {
+        const dateA = new Date(`${a.date}T${a.time || "00:00"}`);
+        const dateB = new Date(`${b.date}T${b.time || "00:00"}`);
+        return dateB - dateA;
+      });
+      setHourlyReports(sortedReports);
       setCurrentPage(1);
     } catch (error) {
       console.error("Error fetching hourly reports:", error);
@@ -35,6 +56,7 @@ const ReportHistory = ({ onEdit, lastEditedReportId, onClearLastEdited }) => {
   const handleDeleteReport = async (id) => {
     if (!confirm("Are you sure you want to delete this report?")) return;
 
+    setDeletingId(id);
     try {
       await reportService.deleteHourlyReport(id);
       toast.success("Report deleted successfully");
@@ -42,10 +64,21 @@ const ReportHistory = ({ onEdit, lastEditedReportId, onClearLastEdited }) => {
     } catch (error) {
       console.error("Error deleting report:", error);
       toast.error("Failed to delete report");
+    } finally {
+      setDeletingId(null);
     }
   };
 
-  // new codes
+  // Format report for WhatsApp using shared utility
+  const copyHourlyReportToClipboard = (report) => {
+    const text = formatReportForWhatsApp(report.data, {
+      type: "hourly",
+      date: `${report.date} at ${report.time}`,
+    });
+    copyToClipboard(text, toast);
+  };
+
+  // Format parts for display
   const formatParts = (parts) => {
     return (
       Object.entries(parts)
@@ -57,64 +90,6 @@ const ReportHistory = ({ onEdit, lastEditedReportId, onClearLastEdited }) => {
   };
 
   const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
-
-  const formatHourlyReportForWhatsApp = (report) => {
-    let text = `*Hourly Report*\nProducts:\n`;
-    const data = report.data;
-    let hasData = false;
-
-    const addLine = (label, parts) => {
-      const line = formatParts(parts);
-      if (line) {
-        text += `- ${label}: ${line}\n`;
-        hasData = true;
-      }
-    };
-
-    addLine("Description", data.description || {});
-    addLine("FAQ", data.faq || {});
-    addLine("Key Features", data.keywords || data.keyFeatures || {});
-    addLine("Specifications", data.specifications || {});
-    addLine("Meta Title & Description", data.metaTitleDescription || {});
-    addLine("Title", data.titleFixed || {});
-    addLine("Image Renamed & Fixed", { fixed: data.imageRenamed?.fixed || 0 });
-    addLine("Category", data.category || {});
-    addLine("Attributes", data.attributes || {});
-    addLine("Delivery Charge", data.deliveryCharge || {});
-    addLine("Warranty", data.warranty || {});
-    addLine("Warranty Claim Reasons", data.warrantyClaimReasons || {});
-    addLine("Brand", data.brand || {});
-    addLine("Price", data.price || {});
-    addLine("Internal Link", data.internalLink || {});
-
-    if (data.customFields?.length) {
-      data.customFields.forEach((field) => {
-        if (field.value > 0) {
-          text += `- ${field.name}: ${field.value}\n`;
-          hasData = true;
-        }
-      });
-    }
-
-    if (!hasData) {
-      text += `No data recorded\n`;
-    }
-
-    return text;
-  };
-
-  const copyHourlyReportToClipboard = (report) => {
-    const text = formatHourlyReportForWhatsApp(report);
-    navigator.clipboard
-      .writeText(text)
-      .then(() => {
-        toast.success("Hourly report copied to clipboard!");
-      })
-      .catch((err) => {
-        console.error("Failed to copy:", err);
-        toast.error("Failed to copy to clipboard");
-      });
-  };
 
   useEffect(() => {
     fetchHourlyReports();
@@ -143,209 +118,281 @@ const ReportHistory = ({ onEdit, lastEditedReportId, onClearLastEdited }) => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  const DocumentIcon = () => (
+    <svg
+      className="h-12 w-12"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.5}
+        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+      />
+    </svg>
+  );
+
   return (
-    <div className="bg-white shadow-sm rounded-lg p-6">
-      <div className="flex flex-wrap gap-4 mb-6">
-        <div className="flex-1 min-w-[200px]">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Start Date
-          </label>
-          <input
-            type="date"
-            value={filterStartDate}
-            onChange={(e) => setFilterStartDate(e.target.value)}
-            className="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all"
-          />
-        </div>
-        <div className="flex-1 min-w-[200px]">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            End Date
-          </label>
-          <input
-            type="date"
-            value={filterEndDate}
-            onChange={(e) => setFilterEndDate(e.target.value)}
-            className="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all"
-          />
-        </div>
-        <div className="flex items-end gap-2">
-          <button
-            onClick={fetchHourlyReports}
-            disabled={loading}
-            className="px-6 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-lg hover:bg-indigo-700 transition-all shadow-sm hover:shadow disabled:opacity-50"
-          >
-            {loading ? "Loading..." : "Apply Filter"}
-          </button>
-          <button
-            onClick={() => {
-              setFilterStartDate("");
-              setFilterEndDate("");
-            }}
-            className="px-6 py-2 bg-gray-200 text-gray-800 text-sm font-semibold rounded-lg hover:bg-gray-300 transition-all shadow-sm hover:shadow"
-          >
-            Clear
-          </button>
-        </div>
-      </div>
-
-      {currentItems.length > 0 ? (
-        <>
-          <div className="space-y-4 mb-6">
-            {currentItems.map((report) => (
-              <div
-                key={report.id}
-                className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
-              >
-                <div className="flex justify-between items-start mb-3">
-                  <div>
-                    <h4 className="text-lg font-semibold text-gray-900">
-                      {report.date} at {report.time}
-                    </h4>
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => copyHourlyReportToClipboard(report)}
-                      className="px-3 py-1 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 transition-colors"
-                      title="Copy hourly report"
-                    >
-                      📋 Copy
-                    </button>
-                    <button
-                      onClick={() => onEdit(report)}
-                      className="px-3 py-1 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDeleteReport(report.id)}
-                      className="px-3 py-1 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 transition-colors"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {Object.entries(report.data).map(([key, value]) => {
-                    if (key === "customFields") {
-                      return value.length > 0 ? (
-                        <span
-                          key={key}
-                          className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800"
-                        >
-                          Custom:{" "}
-                          {value
-                            .map((f) => `${f.name} (${f.value})`)
-                            .join(", ")}
-                        </span>
-                      ) : null;
-                    }
-                    // Ensure value is an object before formatting
-                    if (!value || typeof value !== "object") return null;
-
-                    const formatted = formatParts(value);
-                    return formatted ? (
-                      <span
-                        key={key}
-                        className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800"
-                      >
-                        {capitalize(key)}: {formatted}
-                      </span>
-                    ) : null;
-                  })}
-                </div>
-              </div>
-            ))}
+    <Card>
+      <CardHeader>
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-indigo-100 rounded-lg">
+            <svg
+              className="h-5 w-5 text-indigo-600"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
           </div>
-
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="flex items-center justify-between border-t border-gray-200 pt-4">
-              <div className="text-sm text-gray-700">
-                Showing{" "}
-                <span className="font-medium">{indexOfFirstItem + 1}</span> to{" "}
-                <span className="font-medium">
-                  {Math.min(indexOfLastItem, hourlyReports.length)}
-                </span>{" "}
-                of <span className="font-medium">{hourlyReports.length}</span>{" "}
-                reports
-              </div>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => paginate(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  className="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Previous
-                </button>
-                {[...Array(totalPages)].map((_, index) => {
-                  const pageNumber = index + 1;
-                  // Show first, last, current, and adjacent pages
-                  if (
-                    pageNumber === 1 ||
-                    pageNumber === totalPages ||
-                    (pageNumber >= currentPage - 1 &&
-                      pageNumber <= currentPage + 1)
-                  ) {
-                    return (
-                      <button
-                        key={pageNumber}
-                        onClick={() => paginate(pageNumber)}
-                        className={`px-3 py-1 border rounded-md text-sm font-medium ${
-                          currentPage === pageNumber
-                            ? "bg-indigo-600 text-white border-indigo-600"
-                            : "border-gray-300 text-gray-700 hover:bg-gray-50"
-                        }`}
-                      >
-                        {pageNumber}
-                      </button>
-                    );
-                  } else if (
-                    pageNumber === currentPage - 2 ||
-                    pageNumber === currentPage + 2
-                  ) {
-                    return (
-                      <span key={pageNumber} className="px-2">
-                        ...
-                      </span>
-                    );
-                  }
-                  return null;
-                })}
-                <button
-                  onClick={() => paginate(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                  className="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Next
-                </button>
-              </div>
-            </div>
-          )}
-        </>
-      ) : (
-        <div className="text-center py-12">
-          <svg
-            className="mx-auto h-12 w-12 text-gray-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-            />
-          </svg>
-          <h3 className="mt-2 text-sm font-medium text-gray-900">
-            No hourly reports found
-          </h3>
-          <p className="mt-1 text-sm text-gray-500">
-            Create your first hourly report to get started
-          </p>
+          <div>
+            <h2 className="text-xl font-bold text-gray-900">Report History</h2>
+            <p className="text-sm text-gray-500">
+              View and manage your hourly reports
+            </p>
+          </div>
         </div>
-      )}
-    </div>
+      </CardHeader>
+      <CardContent>
+        {/* Filters */}
+        <div className="flex flex-wrap gap-4 mb-6 p-4 bg-gray-50 rounded-xl border border-gray-100">
+          <div className="flex-1 min-w-[180px]">
+            <Input
+              type="date"
+              label="Start Date"
+              value={filterStartDate}
+              onChange={(e) => setFilterStartDate(e.target.value)}
+            />
+          </div>
+          <div className="flex-1 min-w-[180px]">
+            <Input
+              type="date"
+              label="End Date"
+              value={filterEndDate}
+              onChange={(e) => setFilterEndDate(e.target.value)}
+            />
+          </div>
+          <div className="flex items-end gap-2">
+            <Button onClick={fetchHourlyReports} loading={loading}>
+              {loading ? "Loading..." : "Apply Filter"}
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setFilterStartDate("");
+                setFilterEndDate("");
+              }}
+            >
+              Clear
+            </Button>
+          </div>
+        </div>
+
+        {/* Loading State */}
+        {loading && hourlyReports.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-12">
+            <Spinner size="lg" className="text-indigo-600" />
+            <p className="mt-4 text-sm text-gray-500">Loading reports...</p>
+          </div>
+        )}
+
+        {/* Reports List */}
+        {!loading && currentItems.length > 0 && (
+          <>
+            <div className="space-y-4 mb-6">
+              {currentItems.map((report) => (
+                <div
+                  key={report.id}
+                  className={`border rounded-xl p-5 transition-all hover:shadow-md ${
+                    deletingId === report.id
+                      ? "opacity-50 pointer-events-none"
+                      : "border-gray-200 hover:border-indigo-200"
+                  }`}
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-gray-100 rounded-lg">
+                        <svg
+                          className="h-5 w-5 text-gray-600"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          />
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 className="text-lg font-semibold text-gray-900">
+                          {report.date}
+                        </h4>
+                        <p className="text-sm text-gray-500">
+                          at {report.time}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="success"
+                        size="sm"
+                        onClick={() => copyHourlyReportToClipboard(report)}
+                        leftIcon={
+                          <svg
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
+                            />
+                          </svg>
+                        }
+                      >
+                        Copy
+                      </Button>
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        onClick={() => onEdit(report)}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        loading={deletingId === report.id}
+                        onClick={() => handleDeleteReport(report.id)}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {Object.entries(report.data).map(([key, value]) => {
+                      if (key === "customFields") {
+                        return value.length > 0 ? (
+                          <Badge key={key} variant="purple">
+                            Custom:{" "}
+                            {value
+                              .map((f) => `${f.name} (${f.value})`)
+                              .join(", ")}
+                          </Badge>
+                        ) : null;
+                      }
+                      // Ensure value is an object before formatting
+                      if (!value || typeof value !== "object") return null;
+
+                      const formatted = formatParts(value);
+                      return formatted ? (
+                        <Badge key={key} variant="primary">
+                          {capitalize(key)}: {formatted}
+                        </Badge>
+                      ) : null;
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between border-t border-gray-200 pt-4">
+                <div className="text-sm text-gray-600">
+                  Showing{" "}
+                  <span className="font-semibold">{indexOfFirstItem + 1}</span>{" "}
+                  to{" "}
+                  <span className="font-semibold">
+                    {Math.min(indexOfLastItem, hourlyReports.length)}
+                  </span>{" "}
+                  of{" "}
+                  <span className="font-semibold">{hourlyReports.length}</span>{" "}
+                  reports
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => paginate(currentPage - 1)}
+                    disabled={currentPage === 1}
+                  >
+                    Previous
+                  </Button>
+                  {[...Array(totalPages)].map((_, index) => {
+                    const pageNumber = index + 1;
+                    // Show first, last, current, and adjacent pages
+                    if (
+                      pageNumber === 1 ||
+                      pageNumber === totalPages ||
+                      (pageNumber >= currentPage - 1 &&
+                        pageNumber <= currentPage + 1)
+                    ) {
+                      return (
+                        <Button
+                          key={pageNumber}
+                          variant={
+                            currentPage === pageNumber ? "primary" : "secondary"
+                          }
+                          size="sm"
+                          onClick={() => paginate(pageNumber)}
+                        >
+                          {pageNumber}
+                        </Button>
+                      );
+                    } else if (
+                      pageNumber === currentPage - 2 ||
+                      pageNumber === currentPage + 2
+                    ) {
+                      return (
+                        <span
+                          key={pageNumber}
+                          className="px-2 text-gray-400 self-center"
+                        >
+                          ...
+                        </span>
+                      );
+                    }
+                    return null;
+                  })}
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => paginate(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                  >
+                    Next
+                  </Button>
+                </div>
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Empty State */}
+        {!loading && currentItems.length === 0 && (
+          <EmptyState
+            icon={<DocumentIcon />}
+            title="No hourly reports found"
+            description="Create your first hourly report to get started"
+          />
+        )}
+      </CardContent>
+    </Card>
   );
 };
 
