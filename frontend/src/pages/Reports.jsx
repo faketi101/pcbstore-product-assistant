@@ -28,9 +28,10 @@ const Reports = () => {
   };
 
   const handleReportSuccess = () => {
-    if (activeTab === "create" && editingReport) {
+    if (activeTab === "create") {
       setActiveTab("history");
       setEditingReport(null);
+      window.scrollTo(0, 0);
     }
   };
 
