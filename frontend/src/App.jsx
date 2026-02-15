@@ -12,6 +12,9 @@ import Home from "./pages/Home";
 import ProductPrompt from "./pages/ProductPrompt";
 import CategoryPrompt from "./pages/CategoryPrompt";
 import Reports from "./pages/Reports";
+import UserTasks from "./pages/UserTasks";
+import PublicTasks from "./pages/PublicTasks";
+import AdminPanel from "./pages/AdminPanel";
 import Login from "./components/Login";
 import Navigation from "./components/Navigation";
 import "./App.css";
@@ -39,6 +42,7 @@ function App() {
         <Toaster position="top-right" />
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/tasks/public" element={<PublicTasks />} />
           <Route
             path="/"
             element={
@@ -68,6 +72,22 @@ function App() {
             element={
               <PrivateRoute>
                 <Reports />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/tasks"
+            element={
+              <PrivateRoute>
+                <UserTasks />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <PrivateRoute>
+                <AdminPanel />
               </PrivateRoute>
             }
           />

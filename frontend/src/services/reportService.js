@@ -64,6 +64,45 @@ const reportService = {
     return response.data;
   },
 
+  // Admin: Get reports from all users with date range and optional userId
+  getDateRangeReport: async (params = {}) => {
+    const qs = new URLSearchParams();
+    if (params.startDate) qs.append("startDate", params.startDate);
+    if (params.endDate) qs.append("endDate", params.endDate);
+    if (params.userId) qs.append("userId", params.userId);
+    const query = qs.toString();
+    const response = await axios.get(
+      `${API_URL}/admin/reports${query ? `?${query}` : ""}`,
+    );
+    return response.data;
+  },
+
+  // Admin: Get daily aggregated reports across all users
+  getAdminDailyReports: async (params = {}) => {
+    const qs = new URLSearchParams();
+    if (params.startDate) qs.append("startDate", params.startDate);
+    if (params.endDate) qs.append("endDate", params.endDate);
+    if (params.userId) qs.append("userId", params.userId);
+    const query = qs.toString();
+    const response = await axios.get(
+      `${API_URL}/admin/daily${query ? `?${query}` : ""}`,
+    );
+    return response.data;
+  },
+
+  // Admin: Get combined range summary across all users
+  getAdminRangeReports: async (params = {}) => {
+    const qs = new URLSearchParams();
+    if (params.startDate) qs.append("startDate", params.startDate);
+    if (params.endDate) qs.append("endDate", params.endDate);
+    if (params.userId) qs.append("userId", params.userId);
+    const query = qs.toString();
+    const response = await axios.get(
+      `${API_URL}/admin/range${query ? `?${query}` : ""}`,
+    );
+    return response.data;
+  },
+
   // Update existing hourly report
   updateHourlyReport: async (id, reportData) => {
     const response = await axios.put(`${API_URL}/hourly/${id}`, reportData);

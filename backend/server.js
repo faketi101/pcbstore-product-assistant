@@ -10,6 +10,7 @@ const authRoutes = require("./routes/auth.routes");
 const promptRoutes = require("./routes/prompt.routes");
 const categoryPromptRoutes = require("./routes/categoryPrompt.routes");
 const reportRoutes = require("./routes/report.routes");
+const taskRoutes = require("./routes/task.routes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -133,6 +134,7 @@ app.use("/api", authRoutes);
 app.use("/api/prompts", promptRoutes);
 app.use("/api/category-prompts", categoryPromptRoutes);
 app.use("/api/reports", reportRoutes);
+app.use("/api/tasks", taskRoutes);
 
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to PCB Automotions API." });

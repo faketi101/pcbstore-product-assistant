@@ -163,6 +163,41 @@ const changePassword = async (currentPassword, newPassword) => {
   return handleResponse(response);
 };
 
+// Generic HTTP methods for API calls
+const get = async (endpoint) => {
+  const response = await fetch(`${API_URL}${endpoint}`, {
+    method: "GET",
+    headers: getHeaders(),
+  });
+  return handleResponse(response);
+};
+
+const post = async (endpoint, data) => {
+  const response = await fetch(`${API_URL}${endpoint}`, {
+    method: "POST",
+    headers: getHeaders(),
+    body: JSON.stringify(data),
+  });
+  return handleResponse(response);
+};
+
+const put = async (endpoint, data) => {
+  const response = await fetch(`${API_URL}${endpoint}`, {
+    method: "PUT",
+    headers: getHeaders(),
+    body: JSON.stringify(data),
+  });
+  return handleResponse(response);
+};
+
+const del = async (endpoint) => {
+  const response = await fetch(`${API_URL}${endpoint}`, {
+    method: "DELETE",
+    headers: getHeaders(),
+  });
+  return handleResponse(response);
+};
+
 const authService = {
   login,
   logout,
@@ -178,6 +213,11 @@ const authService = {
   resetCategoryPrompt1,
   resetCategoryPrompt2,
   changePassword,
+  // Generic HTTP methods
+  get,
+  post,
+  put,
+  delete: del,
 };
 
 export default authService;

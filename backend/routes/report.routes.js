@@ -2,6 +2,7 @@ const express = require("express");
 const { v4: uuidv4 } = require("uuid");
 const User = require("../models/User.model");
 const verifyToken = require("../middleware/auth.middleware");
+const verifyAdmin = require("../middleware/admin.middleware");
 
 const router = express.Router();
 
@@ -371,6 +372,145 @@ router.delete("/hourly/:id", verifyToken, async (req, res) => {
     res.json({ message: "Report deleted successfully." });
   } catch (e) {
     console.error("Delete hourly report error:", e);
+    res.status(500).json({ message: "Internal server error." });
+  }
+});
+
+// ADMIN: Get reports from all users with optional date range and userId filter
+router.get("/admin/reports", verifyToken, verifyAdmin, async (req, res) => {
+  try {
+    const { startDate, endDate, userId } = req.query;
+
+    const userQuery = userId ? { _id: userId } : {};
+    const users = await User.find(userQuery, "name email reports");
+
+    const allReports = [];
+    users.forEach((u) => {
+      let reports = u.reports || [];
+
+      // Filter by date range
+      if (startDate) reports = reports.filter((r) => r.date >= startDate);
+      if (endDate) reports = reports.filter((r) => r.date <= endDate);
+
+      reports.forEach((report) => {
+        allReports.push({
+          id: report.id,
+          date: report.date,
+          time: report.time,
+          timestamp: report.timestamp,
+          type: report.type,
+          data: report.data,
+          formattedText: formatReportForWhatsApp(report, "hourly", report.date),
+          userName: u.name,
+          userEmail: u.email,
+          userId: u._id,
+        });
+      });
+    });
+
+    // Sort by timestamp descending (newest first)
+    allReports.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+    res.json({ reports: allReports });
+  } catch (e) {
+    console.error("Admin get reports error:", e);
+    res.status(500).json({ message: "Internal server error." });
+  }
+});
+
+// ADMIN: Get daily aggregated reports across all users
+router.get("/admin/daily", verifyToken, verifyAdmin, async (req, res) => {
+  try {
+    const { startDate, endDate, userId } = req.query;
+
+    const userQuery = userId ? { _id: userId } : {};
+    const users = await User.find(userQuery, "name email reports");
+
+    // Group all reports by user+date
+    const userDateMap = new Map(); // key: `userId|date`
+
+    users.forEach((u) => {
+      let reports = u.reports || [];
+      if (startDate) reports = reports.filter((r) => r.date >= startDate);
+      if (endDate) reports = reports.filter((r) => r.date <= endDate);
+
+      // Group by date for this user
+      const dateMap = new Map();
+      reports.forEach((r) => {
+        if (!dateMap.has(r.date)) dateMap.set(r.date, []);
+        dateMap.get(r.date).push(r);
+      });
+
+      dateMap.forEach((hourlyReports, date) => {
+        const data = aggregateDailyReport(hourlyReports);
+        userDateMap.set(`${u._id}|${date}`, {
+          date,
+          type: "daily",
+          hourlyReportsCount: hourlyReports.length,
+          data,
+          formattedText: formatReportForWhatsApp({ data }, "daily", date),
+          userName: u.name,
+          userEmail: u.email,
+          userId: u._id,
+        });
+      });
+    });
+
+    const dailyReports = Array.from(userDateMap.values()).sort(
+      (a, b) =>
+        b.date.localeCompare(a.date) || a.userName.localeCompare(b.userName),
+    );
+
+    res.json({ reports: dailyReports });
+  } catch (e) {
+    console.error("Admin get daily reports error:", e);
+    res.status(500).json({ message: "Internal server error." });
+  }
+});
+
+// ADMIN: Get combined range summary across all users
+router.get("/admin/range", verifyToken, verifyAdmin, async (req, res) => {
+  try {
+    const { startDate, endDate, userId } = req.query;
+
+    const userQuery = userId ? { _id: userId } : {};
+    const users = await User.find(userQuery, "name email reports");
+
+    const userSummaries = [];
+
+    users.forEach((u) => {
+      let reports = u.reports || [];
+      if (startDate) reports = reports.filter((r) => r.date >= startDate);
+      if (endDate) reports = reports.filter((r) => r.date <= endDate);
+
+      if (reports.length === 0) return;
+
+      const data = aggregateDailyReport(reports);
+      const dates = [...new Set(reports.map((r) => r.date))].sort();
+
+      userSummaries.push({
+        userName: u.name,
+        userEmail: u.email,
+        userId: u._id,
+        type: "range",
+        dateRange: { from: dates[0], to: dates[dates.length - 1] },
+        totalDays: dates.length,
+        totalReports: reports.length,
+        data,
+        formattedText: formatReportForWhatsApp(
+          { data },
+          "daily",
+          `${dates[0]} to ${dates[dates.length - 1]}`,
+        ),
+      });
+    });
+
+    // Sort alphabetically by user name
+    userSummaries.sort((a, b) => a.userName.localeCompare(b.userName));
+
+    res.json({ reports: userSummaries });
+  } catch (e) {
+    console.error("Admin get range reports error:", e);
     res.status(500).json({ message: "Internal server error." });
   }
 });
