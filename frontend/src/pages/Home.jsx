@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
-import { FileText, BarChart3, FolderOpen, Cpu } from "lucide-react";
+import { FileText, BarChart3, FolderOpen, Cpu, ListTodo } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -39,6 +39,14 @@ const Home = () => {
       path: "/reports",
       color: "text-purple-600 dark:text-purple-400",
       bg: "bg-purple-100 dark:bg-purple-900/30",
+    },
+    {
+      title: "Task Manager",
+      description: "Plan, assign, and track team tasks",
+      icon: ListTodo,
+      path: "/tasks",
+      color: "text-orange-600 dark:text-orange-400",
+      bg: "bg-orange-100 dark:bg-orange-900/30",
     },
   ];
 

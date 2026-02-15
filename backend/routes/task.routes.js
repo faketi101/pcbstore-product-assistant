@@ -293,6 +293,12 @@ router.put("/:id", verifyToken, async (req, res) => {
         task.totalCompletedTask = totalCompletedTask;
       if (status !== undefined) task.status = status;
     }
+
+    // Auto-set endDate when marking as Completed
+    if (task.status === "Completed" && !task.endDate) {
+      task.endDate = new Date();
+    }
+
     task.lastUpdated = {
       updatedBy: req.userId,
       updatedAt: new Date(),

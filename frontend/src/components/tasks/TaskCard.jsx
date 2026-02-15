@@ -124,6 +124,14 @@ const TaskCard = ({
           </div>
         </div>
 
+        {/* Completed Date */}
+        {task.status === "Completed" && task.endDate && (
+          <div className="flex items-center gap-2 text-sm text-emerald-600">
+            <CheckCircle2 className="h-4 w-4 shrink-0" />
+            <span>Completed: {formatDateTime(task.endDate)}</span>
+          </div>
+        )}
+
         {/* Assigned Users */}
         {((task.assignedUsers && task.assignedUsers.length > 0) ||
           (task.assignedTo && task.assignedTo.length > 0)) && (
