@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { X, KeyRound, Lock, ShieldCheck } from "lucide-react";
 import toast from "react-hot-toast";
 import api from "../services/api";
@@ -21,9 +22,17 @@ const ChangePassword = ({ isOpen, onClose }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Prevent background scrolling when modal is open
   useEffect(() => {
-    document.title = "Change Password - PCB Automation";
-  }, []);
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,7 +57,15 @@ const ChangePassword = ({ isOpen, onClose }) => {
       setTimeout(() => onClose(), 1500);
     } catch (error) {
       console.error("Error changing password:", error);
-      toast.error(error.message || "Failed to change password");
+      // Try to parse relevant error message
+      let errorMessage = "Failed to change password";
+      try {
+        const parsed = JSON.parse(error.message);
+        errorMessage = parsed.message || errorMessage;
+      } catch {
+        errorMessage = error.message || errorMessage;
+      }
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -56,9 +73,17 @@ const ChangePassword = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <Card className="w-full max-w-md">
+  // Use createPortal to render at document.body level, escaping nav stacking context
+  return createPortal(
+    <div
+      className="fixed inset-0 bg-black/50 flex items-center justify-center p-4"
+      style={{ zIndex: 9999 }}
+      onClick={(e) => {
+        // Close modal when clicking the backdrop
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <Card className="w-full max-w-md shadow-2xl">
         <CardHeader>
           <div className="flex justify-between items-start">
             <div className="flex items-center gap-3">
@@ -156,7 +181,8 @@ const ChangePassword = ({ isOpen, onClose }) => {
           </CardFooter>
         </form>
       </Card>
-    </div>
+    </div>,
+    document.body
   );
 };
 

@@ -12,16 +12,33 @@ const getHeaders = () => {
 
 const handleResponse = async (response) => {
   if (!response.ok) {
-    if (response.status === 401) {
-      // Clear user data and redirect to login
-      localStorage.removeItem("user");
-      localStorage.removeItem("token");
-      if (window.location.pathname !== "/login") {
-        window.location.href = "/login";
+    // Try to parse error body as JSON to extract message
+    let errorMessage = response.statusText;
+    try {
+      const errorData = await response.json();
+      errorMessage = errorData.message || errorMessage;
+    } catch {
+      // If JSON parsing fails, try text
+      try {
+        errorMessage = await response.text() || errorMessage;
+      } catch {
+        // use statusText as fallback
       }
     }
-    const error = await response.text();
-    throw new Error(error || response.statusText);
+
+    if (response.status === 401) {
+      // Don't redirect for change-password — 401 means wrong current password
+      const url = response.url || "";
+      if (!url.includes("change-password")) {
+        // Clear user data and redirect to login
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+        if (window.location.pathname !== "/login") {
+          window.location.href = "/login";
+        }
+      }
+    }
+    throw new Error(errorMessage);
   }
   return response.json();
 };

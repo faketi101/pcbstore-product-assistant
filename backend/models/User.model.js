@@ -128,15 +128,10 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
-// Pre-save hook to hash password only if it's modified and not already hashed
+// Pre-save hook to hash password if it's modified
 userSchema.pre("save", async function (next) {
   // Only hash the password if it has been modified (or is new)
   if (!this.isModified("password")) {
-    return next();
-  }
-
-  // Check if password is already hashed (bcrypt hashes start with $2a$, $2b$, or $2y$)
-  if (this.password.match(/^\$2[ayb]\$.{56}$/)) {
     return next();
   }
 
