@@ -476,39 +476,77 @@ router.get("/admin/range", verifyToken, verifyAdmin, async (req, res) => {
     const userQuery = userId ? { _id: userId } : {};
     const users = await User.find(userQuery, "name email reports");
 
-    const userSummaries = [];
+    // If a specific user is selected, return their individual summary
+    if (userId) {
+      const userSummaries = [];
+      users.forEach((u) => {
+        let reports = u.reports || [];
+        if (startDate) reports = reports.filter((r) => r.date >= startDate);
+        if (endDate) reports = reports.filter((r) => r.date <= endDate);
 
+        if (reports.length === 0) return;
+
+        const data = aggregateDailyReport(reports);
+        const dates = [...new Set(reports.map((r) => r.date))].sort();
+
+        userSummaries.push({
+          userName: u.name,
+          userEmail: u.email,
+          userId: u._id,
+          type: "range",
+          dateRange: { from: dates[0], to: dates[dates.length - 1] },
+          totalDays: dates.length,
+          totalReports: reports.length,
+          data,
+          formattedText: formatReportForWhatsApp(
+            { data },
+            "daily",
+            `${dates[0]} to ${dates[dates.length - 1]}`,
+          ),
+        });
+      });
+
+      userSummaries.sort((a, b) => a.userName.localeCompare(b.userName));
+      return res.json({ reports: userSummaries });
+    }
+
+    // "All Users" — return a single combined summary
+    const allReports = [];
     users.forEach((u) => {
       let reports = u.reports || [];
       if (startDate) reports = reports.filter((r) => r.date >= startDate);
       if (endDate) reports = reports.filter((r) => r.date <= endDate);
-
-      if (reports.length === 0) return;
-
-      const data = aggregateDailyReport(reports);
-      const dates = [...new Set(reports.map((r) => r.date))].sort();
-
-      userSummaries.push({
-        userName: u.name,
-        userEmail: u.email,
-        userId: u._id,
-        type: "range",
-        dateRange: { from: dates[0], to: dates[dates.length - 1] },
-        totalDays: dates.length,
-        totalReports: reports.length,
-        data,
-        formattedText: formatReportForWhatsApp(
-          { data },
-          "daily",
-          `${dates[0]} to ${dates[dates.length - 1]}`,
-        ),
-      });
+      allReports.push(...reports);
     });
 
-    // Sort alphabetically by user name
-    userSummaries.sort((a, b) => a.userName.localeCompare(b.userName));
+    if (allReports.length === 0) {
+      return res.json({ reports: [] });
+    }
 
-    res.json({ reports: userSummaries });
+    const data = aggregateDailyReport(allReports);
+    const allDates = [...new Set(allReports.map((r) => r.date))].sort();
+
+    const combinedSummary = {
+      userName: "All Users",
+      userEmail: "",
+      userId: null,
+      type: "range",
+      dateRange: {
+        from: allDates[0],
+        to: allDates[allDates.length - 1],
+      },
+      totalDays: allDates.length,
+      totalReports: allReports.length,
+      totalUsers: users.length,
+      data,
+      formattedText: formatReportForWhatsApp(
+        { data },
+        "daily",
+        `${allDates[0]} to ${allDates[allDates.length - 1]}`,
+      ),
+    };
+
+    res.json({ reports: [combinedSummary] });
   } catch (e) {
     console.error("Admin get range reports error:", e);
     res.status(500).json({ message: "Internal server error." });

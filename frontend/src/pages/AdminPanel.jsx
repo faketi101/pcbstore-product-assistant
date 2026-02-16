@@ -100,6 +100,9 @@ const AdminPanel = () => {
     }
   }, [user]);
 
+  const [reportPage, setReportPage] = useState(1);
+  const reportsPerPage = 10;
+
   useEffect(() => {
     document.title = "Admin Panel - PCB Automation";
     fetchUsers();
@@ -109,6 +112,22 @@ const AdminPanel = () => {
       fetchReports();
     }
   }, [activeTab, fetchTasks, fetchUsers, fetchReports]);
+
+  // Reset report page when filters change
+  useEffect(() => {
+    setReportPage(1);
+  }, [reportFilters, reportView, reports]);
+
+  // Calculate pagination for reports
+  const indexOfLastReport = reportPage * reportsPerPage;
+  const indexOfFirstReport = indexOfLastReport - reportsPerPage;
+  const currentReports = reports.slice(indexOfFirstReport, indexOfLastReport);
+  const totalReportPages = Math.ceil(reports.length / reportsPerPage);
+
+  const handleReportPageChange = (page) => {
+    setReportPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   // Check user role before rendering
   if (!user || user.role !== "admin") {
@@ -318,45 +337,110 @@ const AdminPanel = () => {
                   <div className="h-8 w-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
                 </div>
               ) : reports.length > 0 ? (
-                reports.map((report, idx) => (
-                  <div
-                    key={report.id || `${report.userId}-${report.date}-${idx}`}
-                    className="bg-card rounded-lg border overflow-hidden"
-                  >
-                    {/* Card Header */}
-                    <div className="flex items-center gap-3 px-4 py-3 bg-muted/30 border-b">
-                      <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                        <User className="h-4 w-4 text-primary" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-medium text-sm truncate">
-                            {report.userName || "Unknown User"}
-                          </span>
-                          <Badge variant="outline" className="text-xs shrink-0">
-                            {reportView === "hourly"
-                              ? "Hourly"
-                              : reportView === "daily"
-                                ? "Daily"
-                                : "Range"}
-                          </Badge>
+                <>
+                  {currentReports.map((report, idx) => (
+                    <div
+                      key={report.id || `${report.userId}-${report.date}-${idx}`}
+                      className="bg-card rounded-lg border overflow-hidden"
+                    >
+                      {/* Card Header */}
+                      <div className="flex items-center gap-3 px-4 py-3 bg-muted/30 border-b">
+                        <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                          <User className="h-4 w-4 text-primary" />
                         </div>
-                        <p className="text-xs text-muted-foreground">
-                          {reportView === "range"
-                            ? `${report.dateRange?.from} → ${report.dateRange?.to} · ${report.totalDays} days · ${report.totalReports} reports`
-                            : reportView === "daily"
-                              ? `${report.date} · ${report.hourlyReportsCount || 0} hourly reports`
-                              : `${report.date} at ${report.time || "—"}`}
-                        </p>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="font-medium text-sm truncate">
+                              {report.userName || "Unknown User"}
+                            </span>
+                            <Badge variant="outline" className="text-xs shrink-0">
+                              {reportView === "hourly"
+                                ? "Hourly"
+                                : reportView === "daily"
+                                  ? "Daily"
+                                  : "Range"}
+                            </Badge>
+                            {report.totalUsers && (
+                              <Badge
+                                variant="secondary"
+                                className="text-xs shrink-0"
+                              >
+                                {report.totalUsers} Users Combined
+                              </Badge>
+                            )}
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            {reportView === "range"
+                              ? `${report.dateRange?.from} → ${report.dateRange?.to} · ${report.totalDays} days · ${report.totalReports} reports`
+                              : reportView === "daily"
+                                ? `${report.date} · ${report.hourlyReportsCount || 0} hourly reports`
+                                : `${report.date} at ${report.time || "—"}`}
+                          </p>
+                        </div>
+                      </div>
+                      {/* Card Body */}
+                      <pre className="text-xs p-4 overflow-x-auto whitespace-pre-wrap font-mono leading-relaxed text-muted-foreground">
+                        {report.formattedText ||
+                          JSON.stringify(report.data, null, 2)}
+                      </pre>
+                    </div>
+                  ))}
+
+                  {/* Pagination Controls */}
+                  {totalReportPages > 1 && (
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t">
+                      <div className="text-sm text-muted-foreground">
+                        Showing page {reportPage} of {totalReportPages} ({reports.length} total reports)
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleReportPageChange(reportPage - 1)}
+                          disabled={reportPage <= 1}
+                        >
+                          Previous
+                        </Button>
+
+                        <div className="hidden sm:flex gap-1">
+                          {Array.from({ length: Math.min(5, totalReportPages) }, (_, i) => {
+                            let pageNum;
+                            if (totalReportPages <= 5) {
+                              pageNum = i + 1;
+                            } else if (reportPage <= 3) {
+                              pageNum = i + 1;
+                            } else if (reportPage >= totalReportPages - 2) {
+                              pageNum = totalReportPages - 4 + i;
+                            } else {
+                              pageNum = reportPage - 2 + i;
+                            }
+
+                            return (
+                              <Button
+                                key={pageNum}
+                                variant={reportPage === pageNum ? "default" : "outline"}
+                                size="sm"
+                                onClick={() => handleReportPageChange(pageNum)}
+                                className="w-9"
+                              >
+                                {pageNum}
+                              </Button>
+                            );
+                          })}
+                        </div>
+
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleReportPageChange(reportPage + 1)}
+                          disabled={reportPage >= totalReportPages}
+                        >
+                          Next
+                        </Button>
                       </div>
                     </div>
-                    {/* Card Body */}
-                    <pre className="text-xs p-4 overflow-x-auto whitespace-pre-wrap font-mono leading-relaxed text-muted-foreground">
-                      {report.formattedText ||
-                        JSON.stringify(report.data, null, 2)}
-                    </pre>
-                  </div>
-                ))
+                  )}
+                </>
               ) : (
                 <div className="text-center py-12 text-muted-foreground">
                   No reports found. Select filters and click Apply.

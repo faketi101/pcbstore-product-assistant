@@ -90,8 +90,17 @@ const taskSchema = new mongoose.Schema(
   },
 );
 
-// Pre-save middleware to auto-complete task when all subtasks are done
+// Pre-save middleware to auto-transition task status
 taskSchema.pre("save", function (next) {
+  // Auto-start: if completed tasks added while "Not Started" or "On Hold", switch to "Running"
+  if (
+    this.totalCompletedTask > 0 &&
+    (this.status === "Not Started" || this.status === "On Hold") &&
+    this.totalCompletedTask < this.totalTaskCount
+  ) {
+    this.status = "Running";
+  }
+
   // Auto-complete if all tasks are done
   if (
     this.totalTaskCount === this.totalCompletedTask &&
