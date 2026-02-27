@@ -18,10 +18,8 @@ const TaskFilters = ({
   const getInitialFilters = () => ({
     search: "",
     status: [],
-    startDateFrom: "",
-    startDateTo: "",
-    dueDateFrom: "",
-    dueDateTo: "",
+    dateFrom: "",
+    dateTo: "",
     assignedTo: [],
     sortBy: "statusPriority",
     sortOrder: "desc",
@@ -30,14 +28,25 @@ const TaskFilters = ({
 
   const [localFilters, setLocalFilters] = useState(getInitialFilters);
 
+  // Extract only known filter keys (avoids circular refs from URL search params)
+  const pickFilterKeys = (f) => ({
+    search: f.search || "",
+    status: f.status || [],
+    dateFrom: f.dateFrom || "",
+    dateTo: f.dateTo || "",
+    assignedTo: f.assignedTo || [],
+    sortBy: f.sortBy || "statusPriority",
+    sortOrder: f.sortOrder || "desc",
+  });
+
   // Update local filters when parent filters change significantly
   useEffect(() => {
-    const filtersChanged =
-      JSON.stringify(prevFiltersRef.current) !== JSON.stringify(filters);
-    if (filtersChanged) {
-      setLocalFilters((prev) => {
-        const updated = { ...prev, ...filters };
-        prevFiltersRef.current = filters;
+    const prev = pickFilterKeys(prevFiltersRef.current);
+    const curr = pickFilterKeys(filters);
+    if (JSON.stringify(prev) !== JSON.stringify(curr)) {
+      setLocalFilters((old) => {
+        const updated = { ...old, ...curr };
+        prevFiltersRef.current = curr;
         return updated;
       });
     }
@@ -77,8 +86,10 @@ const TaskFilters = ({
     });
   };
 
-  const applyFilters = () => {
-    onFilterChange(localFilters);
+  const applyFilters = (overrides = {}) => {
+    const filtersToApply = { ...localFilters, ...overrides };
+    setLocalFilters(filtersToApply);
+    onFilterChange(filtersToApply);
     setShowFilters(false);
   };
 
@@ -86,10 +97,8 @@ const TaskFilters = ({
     const resetFilters = {
       search: "",
       status: [],
-      startDateFrom: "",
-      startDateTo: "",
-      dueDateFrom: "",
-      dueDateTo: "",
+      dateFrom: "",
+      dateTo: "",
       assignedTo: [],
       sortBy: "statusPriority",
       sortOrder: "desc",
@@ -102,10 +111,8 @@ const TaskFilters = ({
   const activeFilterCount = [
     localFilters.search,
     localFilters.status?.length > 0,
-    localFilters.startDateFrom,
-    localFilters.startDateTo,
-    localFilters.dueDateFrom,
-    localFilters.dueDateTo,
+    localFilters.dateFrom,
+    localFilters.dateTo,
     localFilters.assignedTo?.length > 0,
   ].filter(Boolean).length;
 
@@ -128,7 +135,6 @@ const TaskFilters = ({
                   applyFilters();
                 }
               }}
-              onBlur={applyFilters}
               className="pl-10"
             />
           </div>
@@ -188,17 +194,17 @@ const TaskFilters = ({
               </div>
             </div>
 
-            {/* Start Date Filter */}
+            {/* Date Range Filter */}
             <div className="space-y-2">
-              <Label className="text-sm font-medium">Start Date Range</Label>
+              <Label className="text-sm font-medium">Date Range</Label>
               <div className="space-y-2">
                 <div>
                   <label className="text-xs text-muted-foreground">From</label>
                   <Input
                     type="date"
-                    value={localFilters.startDateFrom}
+                    value={localFilters.dateFrom}
                     onChange={(e) =>
-                      handleInputChange("startDateFrom", e.target.value)
+                      handleInputChange("dateFrom", e.target.value)
                     }
                   />
                 </div>
@@ -206,36 +212,9 @@ const TaskFilters = ({
                   <label className="text-xs text-muted-foreground">To</label>
                   <Input
                     type="date"
-                    value={localFilters.startDateTo}
+                    value={localFilters.dateTo}
                     onChange={(e) =>
-                      handleInputChange("startDateTo", e.target.value)
-                    }
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Due Date Filter */}
-            <div className="space-y-2">
-              <Label className="text-sm font-medium">Due Date Range</Label>
-              <div className="space-y-2">
-                <div>
-                  <label className="text-xs text-muted-foreground">From</label>
-                  <Input
-                    type="date"
-                    value={localFilters.dueDateFrom}
-                    onChange={(e) =>
-                      handleInputChange("dueDateFrom", e.target.value)
-                    }
-                  />
-                </div>
-                <div>
-                  <label className="text-xs text-muted-foreground">To</label>
-                  <Input
-                    type="date"
-                    value={localFilters.dueDateTo}
-                    onChange={(e) =>
-                      handleInputChange("dueDateTo", e.target.value)
+                      handleInputChange("dateTo", e.target.value)
                     }
                   />
                 </div>
@@ -326,8 +305,7 @@ const TaskFilters = ({
               <X
                 className="h-3 w-3 ml-1 cursor-pointer"
                 onClick={() => {
-                  handleInputChange("search", "");
-                  applyFilters();
+                  applyFilters({ search: "" });
                 }}
               />
             </Badge>
@@ -338,34 +316,21 @@ const TaskFilters = ({
               <X
                 className="h-3 w-3 ml-1 cursor-pointer"
                 onClick={() => {
-                  handleStatusToggle(status);
-                  applyFilters();
+                  const newStatuses = localFilters.status.filter(
+                    (s) => s !== status,
+                  );
+                  applyFilters({ status: newStatuses });
                 }}
               />
             </Badge>
           ))}
-          {(localFilters.startDateFrom || localFilters.startDateTo) && (
+          {(localFilters.dateFrom || localFilters.dateTo) && (
             <Badge variant="secondary">
-              Start Date Range
+              Date Range
               <X
                 className="h-3 w-3 ml-1 cursor-pointer"
                 onClick={() => {
-                  handleInputChange("startDateFrom", "");
-                  handleInputChange("startDateTo", "");
-                  applyFilters();
-                }}
-              />
-            </Badge>
-          )}
-          {(localFilters.dueDateFrom || localFilters.dueDateTo) && (
-            <Badge variant="secondary">
-              Due Date Range
-              <X
-                className="h-3 w-3 ml-1 cursor-pointer"
-                onClick={() => {
-                  handleInputChange("dueDateFrom", "");
-                  handleInputChange("dueDateTo", "");
-                  applyFilters();
+                  applyFilters({ dateFrom: "", dateTo: "" });
                 }}
               />
             </Badge>

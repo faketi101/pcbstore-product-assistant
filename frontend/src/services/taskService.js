@@ -17,7 +17,11 @@ const toQuery = (params = {}) => {
 
 const taskService = {
   // Public
-  getPublicTasks: (params) => api.get(`/tasks/public${toQuery(params)}`),
+  getPublicTasks: (params) => {
+    const url = `/tasks/public${toQuery(params)}`;
+    // console.log("[taskService] getPublicTasks URL:", url);
+    return api.get(url);
+  },
 
   // Authenticated user
   getUsers: () => api.get("/tasks/users"),

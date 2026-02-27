@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useCallback } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ListTodo, CheckSquare } from "lucide-react";
 import TaskFilters from "../components/tasks/TaskFilters";
@@ -19,6 +19,8 @@ const UserTasks = () => {
   const [editingTask, setEditingTask] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [users, setUsers] = useState([]);
+  const [debugInfo, setDebugInfo] = useState("");
+  const usersLoaded = useRef(false);
 
   const [myFilters, setMyFilters] = useState({
     page: 1,
@@ -34,52 +36,94 @@ const UserTasks = () => {
     sortOrder: "desc",
   });
 
-  const fetchMyTasks = useCallback(async () => {
-    try {
-      setLoading(true);
-      const data = await taskService.getMyTasks(myFilters);
-      setMyTasks(data.tasks);
-      setMyPagination(data.pagination);
-    } catch (error) {
-      console.error("Error fetching my tasks:", error);
-      toast.error("Failed to fetch tasks");
-    } finally {
-      setLoading(false);
-    }
-  }, [myFilters]);
+  // Build a clean params object with only known keys (avoids circular refs)
+  const buildParams = (f) => ({
+    page: f.page,
+    limit: f.limit,
+    sortBy: f.sortBy,
+    sortOrder: f.sortOrder,
+    search: f.search || "",
+    status: f.status || [],
+    assignedTo: f.assignedTo || [],
+    dateFrom: f.dateFrom || "",
+    dateTo: f.dateTo || "",
+  });
 
-  const fetchAllTasks = useCallback(async () => {
-    try {
-      setLoading(true);
-      const data = await taskService.getAllTasks(allFilters);
-      setAllTasks(data.tasks);
-      setAllPagination(data.pagination);
-    } catch (error) {
-      console.error("Error fetching all tasks:", error);
-      toast.error("Failed to fetch tasks");
-    } finally {
-      setLoading(false);
-    }
-  }, [allFilters]);
-
-  const fetchUsers = useCallback(async () => {
-    try {
-      const data = await taskService.getUsers();
-      setUsers(data);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-    }
-  }, []);
-
+  // Fetch my tasks
   useEffect(() => {
+    if (activeTab !== "my-tasks") return;
+    let cancelled = false;
+    const doFetch = async () => {
+      try {
+        setLoading(true);
+        const params = buildParams(myFilters);
+        setDebugInfo(`[MY] Fetching: ${JSON.stringify(params)}`);
+        const data = await taskService.getMyTasks(params);
+        if (!cancelled) {
+          setMyTasks(data.tasks);
+          setMyPagination(data.pagination);
+          setDebugInfo(
+            `[MY] Sent: ${JSON.stringify(params)} → Got ${data.pagination.total} results`,
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching my tasks:", error);
+        if (!cancelled) toast.error("Failed to fetch tasks");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+    doFetch();
+    return () => {
+      cancelled = true;
+    };
+  }, [activeTab, myFilters]);
+
+  // Fetch all tasks
+  useEffect(() => {
+    if (activeTab !== "all-tasks") return;
+    let cancelled = false;
+    const doFetch = async () => {
+      try {
+        setLoading(true);
+        const params = buildParams(allFilters);
+        setDebugInfo(`[ALL] Fetching: ${JSON.stringify(params)}`);
+        const data = await taskService.getAllTasks(params);
+        if (!cancelled) {
+          setAllTasks(data.tasks);
+          setAllPagination(data.pagination);
+          setDebugInfo(
+            `[ALL] Sent: ${JSON.stringify(params)} → Got ${data.pagination.total} results`,
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching all tasks:", error);
+        if (!cancelled) toast.error("Failed to fetch tasks");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+    doFetch();
+    return () => {
+      cancelled = true;
+    };
+  }, [activeTab, allFilters]);
+
+  // Load users once
+  useEffect(() => {
+    if (usersLoaded.current) return;
+    usersLoaded.current = true;
     document.title = "My Tasks - PCB Automation";
-    fetchUsers();
-    if (activeTab === "my-tasks") {
-      fetchMyTasks();
-    } else {
-      fetchAllTasks();
-    }
-  }, [activeTab, fetchMyTasks, fetchAllTasks, fetchUsers]);
+    const loadUsers = async () => {
+      try {
+        const data = await taskService.getUsers();
+        setUsers(data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+    loadUsers();
+  }, []);
 
   const handleMyFilterChange = (filters) => {
     setMyFilters({ ...filters, page: 1, limit: myFilters.limit });
@@ -140,11 +184,11 @@ const UserTasks = () => {
       setShowEditModal(false);
       setEditingTask(null);
 
-      // Refresh the current tab
+      // Force a re-fetch by toggling filters (triggers the useEffect)
       if (activeTab === "my-tasks") {
-        fetchMyTasks();
+        setMyFilters((prev) => ({ ...prev }));
       } else {
-        fetchAllTasks();
+        setAllFilters((prev) => ({ ...prev }));
       }
     } catch (error) {
       console.error("Error updating task:", error);
@@ -175,6 +219,13 @@ const UserTasks = () => {
             </div>
           </div>
         </div>
+
+        {/* Debug Info - remove after testing */}
+        {/* {debugInfo && (
+          <div className="mb-4 p-2 bg-yellow-100 dark:bg-yellow-900 text-xs font-mono rounded border border-yellow-300 dark:border-yellow-700 break-all">
+            {debugInfo}
+          </div>
+        )} */}
 
         {/* Tabs */}
         <Tabs

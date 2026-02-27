@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useCallback } from "react";
+import { useState, useEffect, useContext, useCallback, useRef } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   Settings,
@@ -37,6 +37,8 @@ const AdminPanel = () => {
     endDate: "",
     userId: "",
   });
+  const [debugInfo, setDebugInfo] = useState("");
+  const usersLoaded = useRef(false);
 
   const [filters, setFilters] = useState({
     page: 1,
@@ -45,27 +47,63 @@ const AdminPanel = () => {
     sortOrder: "desc",
   });
 
-  const fetchTasks = useCallback(async () => {
-    try {
-      setLoading(true);
-      const data = await taskService.getAdminTasks(filters);
-      setTasks(data.tasks);
-      setPagination(data.pagination);
-    } catch (error) {
-      console.error("Error fetching tasks:", error);
-      toast.error("Failed to fetch tasks");
-    } finally {
-      setLoading(false);
-    }
-  }, [filters]);
+  // Build a clean params object with only known keys (avoids circular refs)
+  const buildParams = (f) => ({
+    page: f.page,
+    limit: f.limit,
+    sortBy: f.sortBy,
+    sortOrder: f.sortOrder,
+    search: f.search || "",
+    status: f.status || [],
+    assignedTo: f.assignedTo || [],
+    dateFrom: f.dateFrom || "",
+    dateTo: f.dateTo || "",
+  });
 
-  const fetchUsers = useCallback(async () => {
-    try {
-      const data = await taskService.getAdminUsers();
-      setUsers(data);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-    }
+  // Fetch tasks whenever filters or relevant tab changes
+  useEffect(() => {
+    if (activeTab !== "tasks" && activeTab !== "task-view") return;
+    let cancelled = false;
+    const doFetch = async () => {
+      try {
+        setLoading(true);
+        const params = buildParams(filters);
+        setDebugInfo(`[ADMIN] Fetching: ${JSON.stringify(params)}`);
+        const data = await taskService.getAdminTasks(params);
+        if (!cancelled) {
+          setTasks(data.tasks);
+          setPagination(data.pagination);
+          setDebugInfo(
+            `[ADMIN] Sent: ${JSON.stringify(params)} → Got ${data.pagination.total} results`,
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+        if (!cancelled) toast.error("Failed to fetch tasks");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+    doFetch();
+    return () => {
+      cancelled = true;
+    };
+  }, [activeTab, filters]);
+
+  // Load users once
+  useEffect(() => {
+    if (usersLoaded.current) return;
+    usersLoaded.current = true;
+    document.title = "Admin Panel - PCB Automation";
+    const loadUsers = async () => {
+      try {
+        const data = await taskService.getAdminUsers();
+        setUsers(data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+    loadUsers();
   }, []);
 
   const fetchReports = useCallback(async () => {
@@ -93,25 +131,15 @@ const AdminPanel = () => {
     }
   }, [reportFilters, reportView]);
 
-  // Redirect non-admin users
+  // Fetch reports when tab changes
   useEffect(() => {
-    if (user && user.role !== "admin") {
-      // Will be handled by Navigate component
+    if (activeTab === "reports") {
+      fetchReports();
     }
-  }, [user]);
+  }, [activeTab, fetchReports]);
 
   const [reportPage, setReportPage] = useState(1);
   const reportsPerPage = 10;
-
-  useEffect(() => {
-    document.title = "Admin Panel - PCB Automation";
-    fetchUsers();
-    if (activeTab === "tasks" || activeTab === "task-view") {
-      fetchTasks();
-    } else if (activeTab === "reports") {
-      fetchReports();
-    }
-  }, [activeTab, fetchTasks, fetchUsers, fetchReports]);
 
   // Reset report page when filters change
   useEffect(() => {
@@ -173,7 +201,8 @@ const AdminPanel = () => {
       }
       setShowTaskModal(false);
       setEditingTask(null);
-      fetchTasks();
+      // Force re-fetch by toggling filters
+      setFilters((prev) => ({ ...prev }));
     } catch (error) {
       console.error("Error saving task:", error);
       toast.error(error.response?.data?.message || "Failed to save task");
@@ -190,7 +219,7 @@ const AdminPanel = () => {
     try {
       await taskService.deleteTask(task._id);
       toast.success("Task deleted successfully");
-      fetchTasks();
+      setFilters((prev) => ({ ...prev }));
     } catch (error) {
       console.error("Error deleting task:", error);
       toast.error("Failed to delete task");
@@ -216,6 +245,13 @@ const AdminPanel = () => {
             </div>
           </div>
         </div>
+
+        {/* Debug Info - remove after testing */}
+        {/* {debugInfo && (
+          <div className="mb-4 p-2 bg-yellow-100 dark:bg-yellow-900 text-xs font-mono rounded border border-yellow-300 dark:border-yellow-700 break-all">
+            {debugInfo}
+          </div>
+        )} */}
 
         {/* Tabs */}
         <Tabs
@@ -340,7 +376,9 @@ const AdminPanel = () => {
                 <>
                   {currentReports.map((report, idx) => (
                     <div
-                      key={report.id || `${report.userId}-${report.date}-${idx}`}
+                      key={
+                        report.id || `${report.userId}-${report.date}-${idx}`
+                      }
                       className="bg-card rounded-lg border overflow-hidden"
                     >
                       {/* Card Header */}
@@ -353,7 +391,10 @@ const AdminPanel = () => {
                             <span className="font-medium text-sm truncate">
                               {report.userName || "Unknown User"}
                             </span>
-                            <Badge variant="outline" className="text-xs shrink-0">
+                            <Badge
+                              variant="outline"
+                              className="text-xs shrink-0"
+                            >
                               {reportView === "hourly"
                                 ? "Hourly"
                                 : reportView === "daily"
@@ -390,7 +431,8 @@ const AdminPanel = () => {
                   {totalReportPages > 1 && (
                     <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t">
                       <div className="text-sm text-muted-foreground">
-                        Showing page {reportPage} of {totalReportPages} ({reports.length} total reports)
+                        Showing page {reportPage} of {totalReportPages} (
+                        {reports.length} total reports)
                       </div>
                       <div className="flex gap-2">
                         <Button
@@ -403,30 +445,39 @@ const AdminPanel = () => {
                         </Button>
 
                         <div className="hidden sm:flex gap-1">
-                          {Array.from({ length: Math.min(5, totalReportPages) }, (_, i) => {
-                            let pageNum;
-                            if (totalReportPages <= 5) {
-                              pageNum = i + 1;
-                            } else if (reportPage <= 3) {
-                              pageNum = i + 1;
-                            } else if (reportPage >= totalReportPages - 2) {
-                              pageNum = totalReportPages - 4 + i;
-                            } else {
-                              pageNum = reportPage - 2 + i;
-                            }
+                          {Array.from(
+                            { length: Math.min(5, totalReportPages) },
+                            (_, i) => {
+                              let pageNum;
+                              if (totalReportPages <= 5) {
+                                pageNum = i + 1;
+                              } else if (reportPage <= 3) {
+                                pageNum = i + 1;
+                              } else if (reportPage >= totalReportPages - 2) {
+                                pageNum = totalReportPages - 4 + i;
+                              } else {
+                                pageNum = reportPage - 2 + i;
+                              }
 
-                            return (
-                              <Button
-                                key={pageNum}
-                                variant={reportPage === pageNum ? "default" : "outline"}
-                                size="sm"
-                                onClick={() => handleReportPageChange(pageNum)}
-                                className="w-9"
-                              >
-                                {pageNum}
-                              </Button>
-                            );
-                          })}
+                              return (
+                                <Button
+                                  key={pageNum}
+                                  variant={
+                                    reportPage === pageNum
+                                      ? "default"
+                                      : "outline"
+                                  }
+                                  size="sm"
+                                  onClick={() =>
+                                    handleReportPageChange(pageNum)
+                                  }
+                                  className="w-9"
+                                >
+                                  {pageNum}
+                                </Button>
+                              );
+                            },
+                          )}
                         </div>
 
                         <Button

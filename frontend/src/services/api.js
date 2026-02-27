@@ -20,7 +20,7 @@ const handleResponse = async (response) => {
     } catch {
       // If JSON parsing fails, try text
       try {
-        errorMessage = await response.text() || errorMessage;
+        errorMessage = (await response.text()) || errorMessage;
       } catch {
         // use statusText as fallback
       }
@@ -185,6 +185,7 @@ const get = async (endpoint) => {
   const response = await fetch(`${API_URL}${endpoint}`, {
     method: "GET",
     headers: getHeaders(),
+    cache: "no-store",
   });
   return handleResponse(response);
 };
