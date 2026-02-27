@@ -12,50 +12,93 @@ const router = express.Router();
 const toObjectId = (id) => new mongoose.Types.ObjectId(id);
 
 const buildFilter = (query, userId = null, onlyAssigned = false) => {
-  const filter = {};
+  // Use a clean $and array to avoid $or/$and key collisions
+  const conditions = [];
 
   // "My Tasks" — must convert to ObjectId for aggregation
   if (onlyAssigned && userId) {
-    filter.assignedTo = toObjectId(userId);
+    conditions.push({ assignedTo: toObjectId(userId) });
   }
 
   if (query.status) {
     const s = Array.isArray(query.status) ? query.status : [query.status];
-    filter.status = { $in: s };
+    conditions.push({ status: { $in: s } });
   }
 
   // User-based filter (public / admin / all-tasks)
-  // Exclusive: only show tasks where ALL assignees are within the selected users
   if (!onlyAssigned && query.assignedTo) {
     const ids = (
       Array.isArray(query.assignedTo) ? query.assignedTo : [query.assignedTo]
     ).filter(Boolean);
     if (ids.length) {
       const objectIds = ids.map(toObjectId);
-      filter.assignedTo = { $not: { $elemMatch: { $nin: objectIds } } };
-      filter["assignedTo.0"] = { $exists: true };
+      conditions.push({
+        assignedTo: { $not: { $elemMatch: { $nin: objectIds } } },
+      });
+      conditions.push({ "assignedTo.0": { $exists: true } });
     }
   }
 
-  if (query.startDateFrom || query.startDateTo) {
-    filter.startDate = {};
-    if (query.startDateFrom)
-      filter.startDate.$gte = new Date(query.startDateFrom);
-    if (query.startDateTo) filter.startDate.$lte = new Date(query.startDateTo);
-  }
-  if (query.dueDateFrom || query.dueDateTo) {
-    filter.dueDate = {};
-    if (query.dueDateFrom) filter.dueDate.$gte = new Date(query.dueDateFrom);
-    if (query.dueDateTo) filter.dueDate.$lte = new Date(query.dueDateTo);
+  // Date range filter:
+  // For completed-only filters: only check endDate (completion date) against range.
+  // For other statuses: check if startDate, dueDate, or endDate falls in range.
+  if (query.dateFrom || query.dateTo) {
+    const dateCond = {};
+    if (query.dateFrom) dateCond.$gte = new Date(query.dateFrom);
+    if (query.dateTo) {
+      const endOfDay = new Date(query.dateTo);
+      endOfDay.setUTCHours(23, 59, 59, 999);
+      dateCond.$lte = endOfDay;
+    }
+
+    // Determine if filtering exclusively for "Completed" status
+    const statusArr = query.status
+      ? Array.isArray(query.status)
+        ? query.status
+        : [query.status]
+      : [];
+    const onlyCompleted =
+      statusArr.length === 1 && statusArr[0].toLowerCase() === "completed";
+
+    if (onlyCompleted) {
+      // Only match completed tasks whose endDate is within the range
+      conditions.push({ endDate: dateCond });
+    } else if (
+      statusArr.length > 0 &&
+      statusArr.map((s) => s.toLowerCase()).includes("completed")
+    ) {
+      // Mixed statuses including Completed:
+      // Non-completed tasks match on startDate/dueDate;
+      // Completed tasks match on endDate only.
+      conditions.push({
+        $or: [
+          {
+            $and: [
+              { status: { $ne: "Completed" } },
+              { $or: [{ startDate: dateCond }, { dueDate: dateCond }] },
+            ],
+          },
+          { status: "Completed", endDate: dateCond },
+        ],
+      });
+    } else {
+      // No completed status selected — match on startDate or dueDate
+      conditions.push({
+        $or: [{ startDate: dateCond }, { dueDate: dateCond }],
+      });
+    }
   }
 
   if (query.search) {
-    filter.$or = [
-      { title: { $regex: query.search, $options: "i" } },
-      { description: { $regex: query.search, $options: "i" } },
-    ];
+    conditions.push({
+      $or: [
+        { title: { $regex: query.search, $options: "i" } },
+        { description: { $regex: query.search, $options: "i" } },
+      ],
+    });
   }
-  return filter;
+
+  return conditions.length > 0 ? { $and: conditions } : {};
 };
 
 const STATUS_SORT = [
@@ -188,7 +231,12 @@ const populateTask = (q) =>
 
 router.get("/public", async (req, res) => {
   try {
-    res.json(await queryTasks(buildFilter(req.query), req.query));
+    const filter = buildFilter(req.query);
+    console.log("[PUBLIC] query:", JSON.stringify(req.query));
+    console.log("[PUBLIC] filter:", JSON.stringify(filter));
+    const result = await queryTasks(filter, req.query);
+    console.log("[PUBLIC] results:", result.pagination.total);
+    res.json(result);
   } catch (err) {
     res
       .status(500)
@@ -211,9 +259,12 @@ router.get("/users", verifyToken, async (req, res) => {
 
 router.get("/my-tasks", verifyToken, async (req, res) => {
   try {
-    res.json(
-      await queryTasks(buildFilter(req.query, req.userId, true), req.query),
-    );
+    const filter = buildFilter(req.query, req.userId, true);
+    console.log("[MY-TASKS] query:", JSON.stringify(req.query));
+    console.log("[MY-TASKS] filter:", JSON.stringify(filter));
+    const result = await queryTasks(filter, req.query);
+    console.log("[MY-TASKS] results:", result.pagination.total);
+    res.json(result);
   } catch (err) {
     res
       .status(500)
@@ -223,7 +274,12 @@ router.get("/my-tasks", verifyToken, async (req, res) => {
 
 router.get("/all-tasks", verifyToken, async (req, res) => {
   try {
-    res.json(await queryTasks(buildFilter(req.query), req.query));
+    const filter = buildFilter(req.query);
+    console.log("[ALL-TASKS] query:", JSON.stringify(req.query));
+    console.log("[ALL-TASKS] filter:", JSON.stringify(filter));
+    const result = await queryTasks(filter, req.query);
+    console.log("[ALL-TASKS] results:", result.pagination.total);
+    res.json(result);
   } catch (err) {
     res
       .status(500)
@@ -318,7 +374,12 @@ router.put("/:id", verifyToken, async (req, res) => {
 
 router.get("/admin/tasks", verifyToken, verifyAdmin, async (req, res) => {
   try {
-    res.json(await queryTasks(buildFilter(req.query), req.query));
+    const filter = buildFilter(req.query);
+    console.log("[ADMIN-TASKS] query:", JSON.stringify(req.query));
+    console.log("[ADMIN-TASKS] filter:", JSON.stringify(filter));
+    const result = await queryTasks(filter, req.query);
+    console.log("[ADMIN-TASKS] results:", result.pagination.total);
+    res.json(result);
   } catch (err) {
     res
       .status(500)
