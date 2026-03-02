@@ -32,6 +32,7 @@ const TaskFormModal = ({
   }));
 
   const [newLink, setNewLink] = useState({ url: "", label: "" });
+  const [addCount, setAddCount] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -226,6 +227,70 @@ const TaskFormModal = ({
                     })
                   }
                 />
+                {/* Quick-add input */}
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-muted-foreground whitespace-nowrap">
+                    +
+                  </span>
+                  <Input
+                    type="number"
+                    min="0"
+                    placeholder="Add..."
+                    value={addCount}
+                    onChange={(e) => setAddCount(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        const val = parseInt(addCount) || 0;
+                        if (val > 0) {
+                          const newTotal = Math.min(
+                            formData.totalCompletedTask + val,
+                            formData.totalTaskCount,
+                          );
+                          setFormData({
+                            ...formData,
+                            totalCompletedTask: newTotal,
+                          });
+                          setAddCount("");
+                        }
+                      }
+                    }}
+                    className="h-8 text-sm"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="h-8 px-3 text-xs"
+                    onClick={() => {
+                      const val = parseInt(addCount) || 0;
+                      if (val > 0) {
+                        const newTotal = Math.min(
+                          formData.totalCompletedTask + val,
+                          formData.totalTaskCount,
+                        );
+                        setFormData({
+                          ...formData,
+                          totalCompletedTask: newTotal,
+                        });
+                        setAddCount("");
+                      }
+                    }}
+                  >
+                    Add
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {formData.totalCompletedTask} / {formData.totalTaskCount} —{" "}
+                  {formData.totalTaskCount > 0
+                    ? Math.round(
+                        (formData.totalCompletedTask /
+                          formData.totalTaskCount) *
+                          100,
+                      )
+                    : 0}
+                  % done
+                </p>
               </div>
             </div>
 
