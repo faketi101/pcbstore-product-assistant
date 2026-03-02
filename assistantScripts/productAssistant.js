@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PCB Product Assistant
 // @namespace    http://tampermonkey.net/
-// @version      3.5
+// @version      4.0
 // @description  All-in-one productivity assistant: Short desc formatter, description paste cleaner, keyword highlighter, meta counters, field status dashboard, FAQ/Spec/Warranty importer
 // @author       faketi101
 // @match        https://admin.pcbstore.net/admin/product/*
@@ -293,8 +293,13 @@
         background: rgba(220,38,38,0.06);
         border-color: rgba(220,38,38,0.15);
       }
+      .pa-fitem.no-optional {
+        background: rgba(245,158,11,0.06);
+        border-color: rgba(245,158,11,0.15);
+      }
       .pa-fitem:hover.ok { background: rgba(22,163,74,0.15); }
       .pa-fitem:hover.no { background: rgba(220,38,38,0.12); }
+      .pa-fitem:hover.no-optional { background: rgba(245,158,11,0.12); }
       .pa-fdot {
         width: 8px;
         height: 8px;
@@ -303,6 +308,7 @@
       }
       .pa-fdot.g { background: #22c55e; box-shadow: 0 0 6px rgba(34,197,94,0.4); }
       .pa-fdot.r { background: #ef4444; box-shadow: 0 0 6px rgba(239,68,68,0.4); }
+      .pa-fdot.o { background: #f59e0b; box-shadow: 0 0 6px rgba(245,158,11,0.4); }
       .pa-fname { font-weight: 500; flex: 1; }
       .pa-fgo { color: #555; display: flex; align-items: center; transition: color 0.2s; }
       .pa-fitem:hover .pa-fgo { color: #dc2626; }
@@ -405,6 +411,9 @@
         box-shadow: 0 8px 30px rgba(220,38,38,0.2);
       }
       .pa-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+      .pa-toast.toast-success { border-color: #22c55e; box-shadow: 0 8px 30px rgba(34,197,94,0.2); }
+      .pa-toast.toast-error { border-color: #ef4444; box-shadow: 0 8px 30px rgba(239,68,68,0.2); }
+      .pa-toast.toast-warning { border-color: #f59e0b; box-shadow: 0 8px 30px rgba(245,158,11,0.2); }
 
       /* ── Inline counter (injected near meta fields) ── */
       .pa-ictr {
@@ -485,13 +494,19 @@
 
   // ─── TOAST ───────────────────────────────────────────────────
   let toastEl = null;
-  const showToast = (msg, duration = 2500) => {
+  const showToast = (msg, duration = 2500, type = "success") => {
     if (!toastEl) {
       toastEl = document.createElement("div");
       toastEl.className = "pa-toast";
       document.body.appendChild(toastEl);
     }
     toastEl.textContent = msg;
+    // Remove previous type classes
+    toastEl.classList.remove("toast-success", "toast-error", "toast-warning");
+    // Apply color based on type: success=green, error=red, warning=orange
+    if (type === "success") toastEl.classList.add("toast-success");
+    else if (type === "error") toastEl.classList.add("toast-error");
+    else if (type === "warning") toastEl.classList.add("toast-warning");
     toastEl.classList.add("show");
     clearTimeout(toastEl._t);
     toastEl._t = setTimeout(() => toastEl.classList.remove("show"), duration);
@@ -611,6 +626,28 @@
             <button class="pa-btn pa-btn-dark" id="pa-desc-hl-clear">Clear Highlights</button>
           </div>
           <div class="pa-hint" style="margin-top:6px;">Uses CSS Highlight API — does not modify editor content. Keywords appear highlighted visually only.</div>
+        </div>
+
+        <!-- Meta Title Editor -->
+        <div class="pa-sec">
+          <div class="pa-sec-title">${I.edit} Meta Title</div>
+          <textarea class="pa-textarea" id="pa-meta-title-input" rows="2" placeholder="Enter meta title..."></textarea>
+          <div style="display:flex; gap:8px; margin-top:10px;">
+            <button class="pa-btn pa-btn-red" id="pa-meta-title-fill" style="flex:1;">Fill Meta Title</button>
+            <button class="pa-btn pa-btn-dark" id="pa-meta-title-clear">Clear</button>
+          </div>
+          <div class="pa-hint">Fills the meta title field on the form. Recommended: under 60 chars.</div>
+        </div>
+
+        <!-- Meta Description Editor -->
+        <div class="pa-sec">
+          <div class="pa-sec-title">${I.edit} Meta Description</div>
+          <textarea class="pa-textarea" id="pa-meta-desc-input" rows="3" placeholder="Enter meta description..."></textarea>
+          <div style="display:flex; gap:8px; margin-top:10px;">
+            <button class="pa-btn pa-btn-red" id="pa-meta-desc-fill" style="flex:1;">Fill Meta Description</button>
+            <button class="pa-btn pa-btn-dark" id="pa-meta-desc-clear">Clear</button>
+          </div>
+          <div class="pa-hint">Fills the meta description field on the form. Recommended: under 160 chars.</div>
         </div>
 
         <!-- Meta Counters -->
@@ -755,9 +792,10 @@
 
   const fillShortDescription = (rawText) => {
     const html = formatShortDescription(rawText);
-    if (!html) return showToast("No text to format");
+    if (!html) return showToast("No text to format", 2500, "warning");
     const ed = document.querySelector("#editor .ql-editor");
-    if (!ed) return showToast("Short description editor not found");
+    if (!ed)
+      return showToast("Short description editor not found", 2500, "error");
     ed.innerHTML = html;
     const h = document.getElementById("description");
     if (h) h.value = correctULTagFromQuill(html);
@@ -765,7 +803,7 @@
     // Clear the input textarea after filling
     const inp = document.getElementById("pa-sd-input");
     if (inp) inp.value = "";
-    showToast("Short description formatted & filled!");
+    showToast("Short description formatted & filled!", 2500, "success");
     refreshFieldStatus();
   };
 
@@ -776,12 +814,13 @@
   const fillDescriptionFromPasteEditor = () => {
     const pasteEditor = document.getElementById("pa-desc-editor");
     if (!pasteEditor || pasteEditor.textContent.trim().length === 0) {
-      return showToast("Paste content into the editor first");
+      return showToast("Paste content into the editor first", 2500, "warning");
     }
     const container = document.querySelector("#specificationEditor");
-    if (!container) return showToast("Specification editor not found");
+    if (!container)
+      return showToast("Specification editor not found", 2500, "error");
     const ed = container.querySelector(".ql-editor");
-    if (!ed) return showToast("Specification editor not found");
+    if (!ed) return showToast("Specification editor not found", 2500, "error");
 
     // Clean backgrounds, inline text colors, and normalize whitespace
     let html = cleanBackgroundFromHtml(pasteEditor.innerHTML);
@@ -941,7 +980,7 @@
     }, 500);
 
     pasteEditor.innerHTML = "";
-    showToast("Description filled!");
+    showToast("Description filled!", 2500, "success");
     refreshFieldStatus();
   };
 
@@ -994,6 +1033,16 @@
   };
 
   // ─── 4. FIELD COMPLETION STATUS ──────────────────────────────
+  // Required fields for validation (used for submit button & field status coloring)
+  const REQUIRED_FIELD_NAMES = [
+    "Product Name",
+    "Slug",
+    "Short Description",
+    "Categories",
+    "Main Thumbnail",
+    "Selling Price",
+  ];
+
   const FIELDS = [
     {
       name: "Product Name",
@@ -1068,11 +1117,54 @@
       },
     },
     {
+      name: "Main Thumbnail",
+      sel: "input#thumbnail",
+      check: () => {
+        try {
+          // The actual input: <input id="thumbnail" name="thumbnail" type="file">
+          const fileInput = document.querySelector(
+            'input#thumbnail, input[name="thumbnail"]',
+          );
+          if (fileInput && fileInput.files && fileInput.files.length > 0)
+            return true;
+          // For edit mode: check the preview image (onchange="previewFile(event, 'preview')" data-preview="preview")
+          const preview = document.getElementById("preview");
+          if (
+            preview &&
+            preview.src &&
+            preview.src.length > 10 &&
+            !preview.src.includes("placeholder") &&
+            !preview.src.endsWith("#") &&
+            !preview.src.endsWith("/")
+          )
+            return true;
+          // Also check any img-thumbnail near the thumbnail input
+          const imgPreviews = document.querySelectorAll(
+            'img.img-thumbnail, img[src*="product"], img[src*="upload"], img[src*="storage"]',
+          );
+          for (const img of imgPreviews) {
+            if (
+              img.src &&
+              img.src.length > 10 &&
+              !img.src.includes("placeholder") &&
+              !img.src.endsWith("#")
+            )
+              return true;
+          }
+          // Track via our internal flag set by change listener
+          if (window._paImageSelected) return true;
+          return false;
+        } catch {
+          return false;
+        }
+      },
+    },
+    {
       name: "Buying Price",
       sel: "input#buy_price",
       check: () => {
         try {
-          const v = document.querySelector("input#price")?.value;
+          const v = document.querySelector("input#buy_price")?.value;
           return v && parseFloat(v) > 0 && parseFloat(v) !== 10;
         } catch {
           return false;
@@ -1084,7 +1176,7 @@
       sel: "input#price",
       check: () => {
         try {
-          const v = document.querySelector("input#discount_price")?.value;
+          const v = document.querySelector("input#price")?.value;
           return v && parseFloat(v) > 0 && parseFloat(v) !== 10;
         } catch {
           return false;
@@ -1245,12 +1337,16 @@
       FIELDS.forEach((f) => {
         const ok = f.check();
         if (ok) filled++;
+        const isRequired = REQUIRED_FIELD_NAMES.includes(f.name);
+        // Color: green=filled, red=required & missing, orange=optional & missing
+        const statusClass = ok ? "ok" : isRequired ? "no" : "no-optional";
+        const dotClass = ok ? "g" : isRequired ? "r" : "o";
 
         const item = document.createElement("div");
-        item.className = `pa-fitem ${ok ? "ok" : "no"}`;
+        item.className = `pa-fitem ${statusClass}`;
         item.innerHTML = `
-          <span class="pa-fdot ${ok ? "g" : "r"}"></span>
-          <span class="pa-fname">${f.name}</span>
+          <span class="pa-fdot ${dotClass}"></span>
+          <span class="pa-fname">${f.name}${isRequired ? ' <span style="color:#ef4444;font-size:10px;">★</span>' : ""}</span>
           <span class="pa-fgo">${I.target}</span>
         `;
         item.addEventListener("click", () => scrollToField(f.sel));
@@ -1275,9 +1371,190 @@
       }
       const cntEl = document.getElementById("pa-f-count");
       if (cntEl) cntEl.textContent = `${filled} / ${total} fields`;
+
+      // Update submit button state based on required fields
+      updateSubmitButtonState();
     } catch (e) {
       console.error("[PA] field status error:", e);
     }
+  };
+
+  // ─── SUBMIT BUTTON GATING ───────────────────────────────────
+  const checkRequiredFieldsFilled = () => {
+    return FIELDS.filter((f) => REQUIRED_FIELD_NAMES.includes(f.name)).every(
+      (f) => f.check(),
+    );
+  };
+
+  const REQUIRED_TOOLTIP =
+    "Fill all required fields: Product Name, Slug, Short Description, Categories, Main Thumbnail, Selling Price";
+
+  const setButtonDisabled = (btn, allFilled) => {
+    if (!btn) return;
+    if (!allFilled) {
+      btn.disabled = true;
+      btn.style.opacity = "0.5";
+      btn.style.pointerEvents = "none";
+      btn.title = REQUIRED_TOOLTIP;
+      // For onclick buttons, store and remove the onclick to prevent any clicks
+      if (btn.getAttribute("onclick") && !btn.dataset.paOrigOnclick) {
+        btn.dataset.paOrigOnclick = btn.getAttribute("onclick");
+        btn.removeAttribute("onclick");
+      }
+    } else {
+      btn.disabled = false;
+      btn.style.opacity = "1";
+      btn.style.pointerEvents = "auto";
+      btn.title = "";
+      // Restore onclick if we previously removed it
+      if (btn.dataset.paOrigOnclick) {
+        btn.setAttribute("onclick", btn.dataset.paOrigOnclick);
+        delete btn.dataset.paOrigOnclick;
+      }
+    }
+  };
+
+  const updateSubmitButtonState = () => {
+    try {
+      const allFilled = checkRequiredFieldsFilled();
+
+      // Create product page: find BOTH "Save As Draft" and "Save And Publish" buttons
+      // Draft button: onclick="submitProductForm('draft')"
+      const draftBtn =
+        document.querySelector(
+          "button[onclick*=\"submitProductForm('draft')\"]",
+        ) ||
+        document.querySelector(
+          "button[data-pa-orig-onclick*=\"submitProductForm('draft')\"]",
+        );
+      // Publish button: onclick="submitProductForm('publish')"
+      const publishBtn =
+        document.querySelector(
+          "button[onclick*=\"submitProductForm('publish')\"]",
+        ) ||
+        document.querySelector(
+          "button[data-pa-orig-onclick*=\"submitProductForm('publish')\"]",
+        ) ||
+        (() => {
+          // Fallback: btn-success with "Save" and "Publish" text
+          let found = null;
+          document.querySelectorAll("button.btn-success").forEach((btn) => {
+            if (
+              btn.textContent.includes("Save") &&
+              btn.textContent.includes("Publish")
+            )
+              found = btn;
+          });
+          return found;
+        })();
+
+      setButtonDisabled(draftBtn, allFilled);
+      setButtonDisabled(publishBtn, allFilled);
+
+      // Update product page: form submit button (type="submit")
+      const formSubmitBtns = document.querySelectorAll(
+        'form button[type="submit"], form input[type="submit"]',
+      );
+      formSubmitBtns.forEach((btn) => setButtonDisabled(btn, allFilled));
+    } catch (e) {
+      console.warn("[PA] submit button state error:", e);
+    }
+  };
+
+  // ─── REAL-TIME FIELD MONITORING ──────────────────────────────
+  const setupRealtimeFieldMonitoring = () => {
+    // Debounce helper to avoid excessive refresh calls
+    let _refreshTimer = null;
+    const debouncedRefresh = () => {
+      clearTimeout(_refreshTimer);
+      _refreshTimer = setTimeout(refreshFieldStatus, 300);
+    };
+
+    // 1. Listen for input/change on all form inputs, selects, textareas
+    document.addEventListener(
+      "input",
+      (e) => {
+        if (e.target.closest("#pa-panel")) return; // ignore our own panel
+        debouncedRefresh();
+      },
+      true,
+    );
+
+    document.addEventListener(
+      "change",
+      (e) => {
+        if (e.target.closest("#pa-panel")) return;
+        // Special handling for file inputs — set tracking flag
+        if (e.target.type === "file") {
+          window._paImageSelected = !!(
+            e.target.files && e.target.files.length > 0
+          );
+        }
+        debouncedRefresh();
+      },
+      true,
+    );
+
+    // 2. Listen for clicks (checkboxes, radio buttons, category tree, etc.)
+    document.addEventListener(
+      "click",
+      (e) => {
+        if (e.target.closest("#pa-panel")) return;
+        const t = e.target;
+        // Trigger refresh for checkbox/radio clicks and buttons inside forms
+        if (
+          t.type === "checkbox" ||
+          t.type === "radio" ||
+          t.closest(".attributeBox") ||
+          t.closest("#categoryTree")
+        ) {
+          debouncedRefresh();
+        }
+      },
+      true,
+    );
+
+    // 3. MutationObserver for Quill editors (they change innerHTML without input events)
+    const quillEditors = document.querySelectorAll(
+      "#editor .ql-editor, #specificationEditor .ql-editor",
+    );
+    if (quillEditors.length > 0) {
+      const observer = new MutationObserver(debouncedRefresh);
+      quillEditors.forEach((ed) => {
+        observer.observe(ed, {
+          childList: true,
+          subtree: true,
+          characterData: true,
+        });
+      });
+    }
+
+    // 4. MutationObserver on the form body for dynamically added elements (FAQ rows, spec groups)
+    const form = document.querySelector("form") || document.body;
+    const formObserver = new MutationObserver((mutations) => {
+      // Only refresh if actual form-relevant nodes were added/removed
+      for (const m of mutations) {
+        if (m.type === "childList" && m.addedNodes.length > 0) {
+          debouncedRefresh();
+          break;
+        }
+      }
+    });
+    formObserver.observe(form, { childList: true, subtree: true });
+
+    // 5. Select2/jQuery change events (warranty, meta keywords, etc.)
+    if (typeof $ !== "undefined" || typeof jQuery !== "undefined") {
+      const jq = $ || jQuery;
+      try {
+        jq(document).on("change", "select", debouncedRefresh);
+        jq(document).on("select2:select select2:unselect", debouncedRefresh);
+      } catch (e) {
+        /* jQuery not available */
+      }
+    }
+
+    // 6. Fallback interval (reduced from 12s to 5s since we have real-time now)
+    setInterval(refreshFieldStatus, 5000);
   };
 
   // ─── 5. FAQ IMPORTER (from autoFill.js) ──────────────────────
@@ -1302,7 +1579,8 @@
   async function processFAQ() {
     const input = document.getElementById("pa-faq-input");
     const faqs = generateFAQ(input.value);
-    if (faqs.length === 0) return showToast("No valid FAQs found");
+    if (faqs.length === 0)
+      return showToast("No valid FAQs found", 2500, "warning");
 
     const faqBtn = document.getElementById("pa-faq-fill");
     if (faqBtn) {
@@ -1346,7 +1624,7 @@
     const stats = getStats();
     stats.faqs += faqs.length;
     saveStats(stats);
-    showToast(`${faqs.length} FAQs added!`);
+    showToast(`${faqs.length} FAQs added!`, 2500, "success");
     input.value = "";
     refreshFieldStatus();
 
@@ -1385,7 +1663,8 @@
   async function processSpecs() {
     const input = document.getElementById("pa-spec-input");
     const specs = generateSpecificationTable(input.value);
-    if (specs.length === 0) return showToast("No valid Specs found");
+    if (specs.length === 0)
+      return showToast("No valid Specs found", 2500, "warning");
 
     const specBtn = document.getElementById("pa-spec-fill");
     if (specBtn) {
@@ -1465,7 +1744,7 @@
     stats.specGroups += groupCount;
     stats.specItems += specs.length;
     saveStats(stats);
-    showToast("Specification import complete!");
+    showToast("Specification import complete!", 2500, "success");
     input.value = "";
     refreshFieldStatus();
 
@@ -1482,10 +1761,11 @@
   function processWarranty() {
     const input = document.getElementById("pa-war-input");
     const keyword = input.value.trim().toLowerCase();
-    if (!keyword) return showToast("Enter a warranty keyword");
+    if (!keyword) return showToast("Enter a warranty keyword", 2500, "warning");
 
     const $sel = $('select[name="warranty_claims[]"]');
-    if ($sel.length === 0) return showToast("Warranty dropdown not found");
+    if ($sel.length === 0)
+      return showToast("Warranty dropdown not found", 2500, "error");
 
     let current = $sel.val() || [];
     let count = 0;
@@ -1506,11 +1786,15 @@
       const stats = getStats();
       stats.warranties += count;
       saveStats(stats);
-      showToast(`Added ${count} warranty items for "${keyword}"`);
+      showToast(
+        `Added ${count} warranty items for "${keyword}"`,
+        2500,
+        "success",
+      );
       input.value = "";
       refreshFieldStatus();
     } else {
-      showToast(`No new items for "${keyword}"`);
+      showToast(`No new items for "${keyword}"`, 2500, "warning");
     }
   }
 
@@ -1541,7 +1825,7 @@
         cfg.highlightWords.splice(parseInt(e.target.dataset.i), 1);
         saveConfig(cfg);
         renderKeywordTags();
-        showToast("Keyword removed");
+        showToast("Keyword removed", 2500, "success");
       });
     });
   };
@@ -1550,13 +1834,18 @@
   const highlightKeywordsInEditor = () => {
     const config = getConfig();
     const words = config.highlightWords || [];
-    if (words.length === 0) return showToast("No keywords to highlight");
+    if (words.length === 0)
+      return showToast("No keywords to highlight", 2500, "warning");
 
     const ed = document.querySelector("#specificationEditor .ql-editor");
-    if (!ed) return showToast("Specification editor not found");
+    if (!ed) return showToast("Specification editor not found", 2500, "error");
 
     if (!window.CSS?.highlights) {
-      return showToast("Browser does not support CSS Highlight API");
+      return showToast(
+        "Browser does not support CSS Highlight API",
+        2500,
+        "error",
+      );
     }
 
     const escapedWords = words
@@ -1584,10 +1873,10 @@
 
     if (ranges.length > 0) {
       CSS.highlights.set("pa-keywords", new Highlight(...ranges));
-      showToast(`Highlighted ${ranges.length} match(es)`);
+      showToast(`Highlighted ${ranges.length} match(es)`, 2500, "success");
     } else {
       CSS.highlights.delete("pa-keywords");
-      showToast("No keyword matches found in description");
+      showToast("No keyword matches found in description", 2500, "warning");
     }
   };
 
@@ -1595,7 +1884,7 @@
     if (window.CSS?.highlights) {
       CSS.highlights.delete("pa-keywords");
     }
-    showToast("Highlights cleared");
+    showToast("Highlights cleared", 2500, "success");
   };
 
   // ─── TAB SWITCHING ───────────────────────────────────────────
@@ -1679,6 +1968,56 @@
           document.getElementById("pa-desc-editor").innerHTML = "";
         });
 
+      // Meta Title fill
+      document
+        .getElementById("pa-meta-title-fill")
+        .addEventListener("click", () => {
+          const inp = document.getElementById("pa-meta-title-input");
+          const val = inp.value.trim();
+          if (!val)
+            return showToast("Enter a meta title first", 2500, "warning");
+          const field = document.querySelector("input#meta_title");
+          if (!field)
+            return showToast("Meta title field not found", 2500, "error");
+          field.value = val;
+          field.dispatchEvent(new Event("input", { bubbles: true }));
+          field.dispatchEvent(new Event("change", { bubbles: true }));
+          inp.value = "";
+          showToast("Meta title filled!", 2500, "success");
+          refreshFieldStatus();
+        });
+      document
+        .getElementById("pa-meta-title-clear")
+        .addEventListener("click", () => {
+          document.getElementById("pa-meta-title-input").value = "";
+        });
+
+      // Meta Description fill
+      document
+        .getElementById("pa-meta-desc-fill")
+        .addEventListener("click", () => {
+          const inp = document.getElementById("pa-meta-desc-input");
+          const val = inp.value.trim();
+          if (!val)
+            return showToast("Enter a meta description first", 2500, "warning");
+          const field = document.querySelector(
+            'textarea[name="meta_description"]',
+          );
+          if (!field)
+            return showToast("Meta description field not found", 2500, "error");
+          field.value = val;
+          field.dispatchEvent(new Event("input", { bubbles: true }));
+          field.dispatchEvent(new Event("change", { bubbles: true }));
+          inp.value = "";
+          showToast("Meta description filled!", 2500, "success");
+          refreshFieldStatus();
+        });
+      document
+        .getElementById("pa-meta-desc-clear")
+        .addEventListener("click", () => {
+          document.getElementById("pa-meta-desc-input").value = "";
+        });
+
       document
         .getElementById("pa-desc-hl")
         .addEventListener("click", highlightKeywordsInEditor);
@@ -1695,7 +2034,7 @@
         if (!cfg.highlightWords.includes(w)) {
           cfg.highlightWords.push(w);
           saveConfig(cfg);
-          showToast(`Added "${w}"`);
+          showToast(`Added "${w}"`, 2500, "success");
         }
         inp.value = "";
         renderKeywordTags();
@@ -1723,7 +2062,7 @@
       document.getElementById("pa-war-clr").addEventListener("click", () => {
         if (confirm("Clear all warranty selections?")) {
           $('select[name="warranty_claims[]"]').val(null).trigger("change");
-          showToast("Warranty claims cleared");
+          showToast("Warranty claims cleared", 2500, "success");
           refreshFieldStatus();
         }
       });
@@ -1752,7 +2091,7 @@
           const s = getStats();
           s[type] = 0;
           saveStats(s);
-          showToast(`${label.trim()} counter reset`);
+          showToast(`${label.trim()} counter reset`, 2500, "success");
         });
       });
 
@@ -1761,13 +2100,13 @@
         const txt = `FAQs: ${s.faqs}\nSpec Groups: ${s.specGroups}\nSpec Items: ${s.specItems}\nWarranties: ${s.warranties}`;
         navigator.clipboard
           .writeText(txt)
-          .then(() => showToast("Stats copied!"));
+          .then(() => showToast("Stats copied!", 2500, "success"));
       });
 
       document.getElementById("pa-st-reset").addEventListener("click", () => {
         if (confirm("Reset ALL stats?")) {
           saveStats({ faqs: 0, specGroups: 0, specItems: 0, warranties: 0 });
-          showToast("All stats reset");
+          showToast("All stats reset", 2500, "success");
         }
       });
 
@@ -1779,11 +2118,11 @@
       updateStatsUI();
       refreshFieldStatus();
 
-      // Auto-refresh
-      setInterval(refreshFieldStatus, 12000);
+      // ── Real-time field status monitoring ──
+      setupRealtimeFieldMonitoring();
 
       console.log("[PCB Product Assistant v2.0] Ready! Alt+Q to toggle.");
-      showToast("Product Assistant ready — Alt+Q to open");
+      showToast("Product Assistant ready — Alt+Q to open", 2500, "success");
     } catch (err) {
       console.error("[PA] Init error:", err);
     }
