@@ -1,5 +1,16 @@
 import { useState, useEffect } from "react";
-import { Plus, Pencil, ClipboardList, Check, RotateCcw, X } from "lucide-react";
+import {
+  Plus,
+  Pencil,
+  ClipboardList,
+  Check,
+  RotateCcw,
+  X,
+  Zap,
+  ChevronDown,
+  ChevronUp,
+  Clipboard,
+} from "lucide-react";
 import FieldGroup from "./FieldGroup";
 import CustomFieldsSection from "./CustomFieldsSection";
 import toast from "react-hot-toast";
@@ -122,6 +133,12 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
 
   const [customFieldName, setCustomFieldName] = useState("");
   const [customFieldValue, setCustomFieldValue] = useState("");
+  const [statsText, setStatsText] = useState("");
+  const [statsFillerOpen, setStatsFillerOpen] = useState(false);
+  const [statsFillMode, setStatsFillMode] = useState({
+    generated: false,
+    added: true,
+  });
 
   // Update form data when editingReport changes
   useEffect(() => {
@@ -178,6 +195,115 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
       ...prev,
       customFields: prev.customFields.filter((_, i) => i !== index),
     }));
+  };
+
+  const parseStatsText = (text) => {
+    const stats = {};
+    const lines = text.trim().split("\n");
+    for (const line of lines) {
+      const match = line.match(/^(.+?):\s*(\d+)/);
+      if (match) {
+        stats[match[1].trim()] = parseInt(match[2], 10);
+      }
+    }
+    return stats;
+  };
+
+  const fillFromStats = () => {
+    if (!statsText.trim()) {
+      toast.error("Paste stats text first");
+      return;
+    }
+    if (!statsFillMode.generated && !statsFillMode.added) {
+      toast.error("Select at least one fill mode (Generated or Added)");
+      return;
+    }
+
+    const stats = parseStatsText(statsText);
+    const shortDesc = stats["Short Desc"] || 0;
+    const descItems = stats["Desc Items"] || 0;
+    const faqs = stats["FAQs"] || 0;
+    const specItems = stats["Spec Items"] || 0;
+    const warranties = stats["Warranties"] || 0;
+    const categories = stats["Categories"] || 0;
+    const attributes = stats["Attributes"] || 0;
+
+    setFormData((prev) => {
+      const next = { ...prev };
+
+      // Helper: add to generated/added fields based on selection
+      const addDual = (field, value) => {
+        next[field] = { ...prev[field] };
+        if (statsFillMode.generated)
+          next[field].generated = (prev[field].generated || 0) + value;
+        if (statsFillMode.added)
+          next[field].added = (prev[field].added || 0) + value;
+      };
+
+      // Mapped fields with dual mode
+      addDual("keyFeatures", shortDesc);
+      addDual("description", descItems);
+      addDual("faq", faqs);
+      addDual("specifications", specItems);
+      addDual("metaTitleDescription", descItems);
+
+      // Single "added" fields
+      next.warrantyClaimReasons = {
+        ...prev.warrantyClaimReasons,
+        added: (prev.warrantyClaimReasons.added || 0) + warranties,
+      };
+      next.category = {
+        ...prev.category,
+        added: (prev.category.added || 0) + categories,
+      };
+      next.attributes = {
+        ...prev.attributes,
+        added: (prev.attributes.added || 0) + attributes,
+      };
+
+      // Other fields = same as descItems
+      next.titleFixed = {
+        ...prev.titleFixed,
+        added: (prev.titleFixed.added || 0) + descItems,
+      };
+      next.deliveryCharge = {
+        ...prev.deliveryCharge,
+        added: (prev.deliveryCharge.added || 0) + descItems,
+      };
+      next.warranty = {
+        ...prev.warranty,
+        added: (prev.warranty.added || 0) + descItems,
+      };
+      next.brand = {
+        ...prev.brand,
+        added: (prev.brand.added || 0) + descItems,
+      };
+      next.price = {
+        ...prev.price,
+        added: (prev.price.added || 0) + descItems,
+      };
+
+      return next;
+    });
+
+    const mode = [
+      statsFillMode.generated && "Generated",
+      statsFillMode.added && "Added",
+    ]
+      .filter(Boolean)
+      .join(" + ");
+    toast.success(`Stats filled (${mode})`);
+    setStatsText("");
+  };
+
+  const pasteFromClipboard = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      setStatsText(text);
+      toast.success("Pasted from clipboard");
+    } catch {
+      toast.error("Clipboard access denied");
+    }
   };
 
   const resetForm = () => {
@@ -348,6 +474,129 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
                 required
               />
             </div>
+          </div>
+
+          {/* Stats Filler */}
+          <div className="mb-6 border border-border rounded-xl overflow-hidden bg-card">
+            <button
+              type="button"
+              className="w-full flex items-center justify-between px-4 py-3 bg-muted/40 hover:bg-muted/60 transition-colors rounded-t-xl"
+              onClick={() => setStatsFillerOpen((v) => !v)}
+            >
+              <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                <Zap className="h-4 w-4 text-primary" />
+                Fill from Stats
+              </span>
+              {statsFillerOpen ? (
+                <ChevronUp className="h-4 w-4 text-muted-foreground" />
+              ) : (
+                <ChevronDown className="h-4 w-4 text-muted-foreground" />
+              )}
+            </button>
+            {statsFillerOpen && (
+              <div className="p-4 space-y-4 border-t border-border">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-xs text-muted-foreground">
+                      Paste stats output
+                    </Label>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="h-7 text-xs gap-1"
+                      onClick={pasteFromClipboard}
+                    >
+                      <Clipboard className="h-3 w-3" />
+                      Paste
+                    </Button>
+                  </div>
+                  <textarea
+                    className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 font-mono min-h-[120px] resize-y"
+                    placeholder={
+                      "Short Desc: 6\nDesc Items: 1\nFAQs: 7\nSpec Groups: 7\nSpec Items: 22\nWarranties: 6\nCategories: 3\nAttributes: 2"
+                    }
+                    value={statsText}
+                    onChange={(e) => setStatsText(e.target.value)}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-xs text-muted-foreground">
+                    Fill mode for dual fields (Description, FAQ, Key Features,
+                    Specifications, Meta)
+                  </Label>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium border transition-all ${
+                        statsFillMode.generated
+                          ? "bg-emerald-600 border-emerald-600 text-white shadow-sm hover:bg-emerald-700"
+                          : "bg-transparent border-border text-muted-foreground hover:bg-muted hover:text-foreground"
+                      }`}
+                      onClick={() =>
+                        setStatsFillMode((m) => ({
+                          ...m,
+                          generated: !m.generated,
+                        }))
+                      }
+                    >
+                      <span className="flex items-center justify-center gap-1.5">
+                        {statsFillMode.generated && (
+                          <Check className="h-3.5 w-3.5" />
+                        )}
+                        Generated
+                      </span>
+                    </button>
+                    <button
+                      type="button"
+                      className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium border transition-all ${
+                        statsFillMode.added
+                          ? "bg-primary border-primary text-primary-foreground shadow-sm hover:bg-primary/90"
+                          : "bg-transparent border-border text-muted-foreground hover:bg-muted hover:text-foreground"
+                      }`}
+                      onClick={() =>
+                        setStatsFillMode((m) => ({ ...m, added: !m.added }))
+                      }
+                    >
+                      <span className="flex items-center justify-center gap-1.5">
+                        {statsFillMode.added && (
+                          <Check className="h-3.5 w-3.5" />
+                        )}
+                        Added
+                      </span>
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex gap-2 pt-1">
+                  <Button
+                    type="button"
+                    className="flex-1"
+                    variant="warning"
+                    size="sm"
+                    onClick={fillFromStats}
+                  >
+                    <Zap className="h-4 w-4 mr-1.5" />
+                    Fill Fields
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => setStatsText("")}
+                  >
+                    Clear
+                  </Button>
+                </div>
+
+                <p className="text-[11px] text-muted-foreground leading-relaxed">
+                  Adds values to existing fields (does not replace). Dual-mode
+                  fields use selected fill mode. Single fields always fill
+                  &quot;added&quot;.
+                </p>
+              </div>
+            )}
           </div>
 
           <div className="mb-6">

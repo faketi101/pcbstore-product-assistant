@@ -1,75 +1,89 @@
-# PCB Product Automotions
+# PCB Product Assistant
 
-A comprehensive production-ready web application for managing PCB (Printed Circuit Board) automation reports and user management. Built with modern web technologies for reliable performance and scalability.
+A full-stack web application plus a Tampermonkey userscript for streamlining PCB Store product management. The **web app** handles AI prompt management, work reports, and team task tracking, while the **Product Assistant** userscript automates product-page editing directly inside the PCBStore admin panel.
 
 ## 🚀 Features
 
-### Core Functionality
-- **User Authentication**: Secure session-based login system with password change capability
-- **Report Management**: Create, view, and manage hourly and daily PCB automation reports
-- **Date Range Reports**: Generate comprehensive reports across custom date ranges
-- **Real-time Data**: Live updates and instant report generation
-- **WhatsApp Integration**: Direct sharing of reports via WhatsApp
+### Web Application
+- **SEO Product Prompt Builder** — Compose and store reusable AI prompts (static + main template) for generating product descriptions, key features, FAQs, specs, and meta tags
+- **Category Prompt Builder** — Maintain two-step AI prompts for category-level content generation
+- **Report Management** — Create hourly/daily work reports tracking descriptions, FAQs, key features, specifications, meta titles, warranty claims, categories, attributes, and more; supports custom fields
+- **WhatsApp Export** — One-click formatting of reports for WhatsApp sharing
+- **Date Range Reports** — Aggregate reports across custom date ranges with daily summaries
+- **Task Manager** — Create, assign, filter, sort, and paginate team tasks with status flow (Not Started → Running → On Hold → Completed), due dates, progress tracking, and link attachments
+- **Public Task Board** — A read-only public view of tasks (no login required)
+- **Admin Panel** — User management with role-based access (admin / product_manager / user)
+- **JWT Authentication** — Secure token-based auth with role-based route protection
+- **Health & Session Diagnostics** — Built-in `/api/health` and `/api/session-test` endpoints
 
-### Technical Features
-- **Production Ready**: MongoDB database with session storage
-- **Network Ready**: Automatic IP detection for local network access
-- **Responsive Design**: Mobile-friendly interface with modern UI
-- **API Documentation**: Complete REST API with comprehensive endpoints
-- **Development Tools**: Morgan logging, ESLint, and automated testing setup
+### Product Assistant (Tampermonkey Userscript)
+A floating panel injected into `https://admin.pcbstore.net/admin/product/*` that provides:
+
+- **Short Description Formatter** — Paste plain text; first line becomes an `<h2>` heading, remaining lines become a bullet list; auto-fills the Quill editor
+- **Description Paste Editor** — Paste rich HTML, strip background/inline colors, and inject cleaned content into the specification Quill editor (multi-strategy: `dangerouslyPasteHTML`, `setContents`, synthetic paste)
+- **Keyword Highlighter** — Add keywords and highlight them in the description using the CSS Custom Highlight API (non-destructive, visual only)
+- **Meta Title & Description Filler** — Fill meta fields with live character counters (60 / 160 char limits)
+- **FAQ Importer** — Parse question/answer pairs and auto-fill the FAQ section
+- **Specification Table Importer** — Parse grouped key→tab→value lines and fill the specification table
+- **Warranty Claims Selector** — Match and select warranty options by category prefix
+- **Field Completion Dashboard** — Real-time status grid showing 18 product fields with a progress ring
+- **Session Stats Tracker** — Counts short descriptions, descriptions, FAQs, spec groups/items, warranties, categories, and attributes filled during the session; copyable and resettable
+- **Alt+Q Toggle** — Show/hide the panel with a keyboard shortcut
 
 ## 🛠 Tech Stack
 
 ### Backend
 - **Runtime**: Node.js with Express.js
 - **Database**: MongoDB Atlas with Mongoose ODM
-- **Authentication**: Session-based auth with express-session
-- **Security**: bcryptjs for password hashing, CORS configuration
-- **Logging**: Morgan for request logging
-- **Environment**: dotenv for configuration management
+- **Authentication**: JWT (jsonwebtoken) with Bearer token middleware
+- **Security**: bcryptjs for password hashing, CORS with configurable origins
+- **Session Store**: connect-mongo (for legacy session support alongside JWT)
+- **Logging**: Morgan (dev / combined modes)
+- **Utilities**: uuid, dotenv
+- **Dev**: nodemon for hot-reload
 
 ### Frontend
-- **Framework**: React 18 with Vite
-- **Styling**: CSS Modules with responsive design
-- **HTTP Client**: Axios with credentials support
-- **Routing**: React Router for navigation
-- **Build Tool**: Vite for fast development and optimized builds
+- **Framework**: React 19 with Vite 7
+- **Styling**: Tailwind CSS 4 with tailwind-merge & class-variance-authority
+- **UI Components**: Radix UI (Dialog, Dropdown Menu, Tabs, Slot)
+- **Icons**: Lucide React
+- **HTTP Client**: Axios with Bearer token auth
+- **Routing**: React Router 7
+- **Notifications**: react-hot-toast
+- **Date Handling**: date-fns
+- **Build Tool**: Vite with @vitejs/plugin-react
 
-### Development Tools
-- **Package Manager**: pnpm for frontend, npm for backend
-- **Version Control**: Git with structured commit messages
-- **Code Quality**: ESLint for code linting
-- **Documentation**: Comprehensive API and setup guides
+### Product Assistant Userscript
+- **Platform**: Tampermonkey / Greasemonkey
+- **Target**: `https://admin.pcbstore.net/admin/product/*`
+- **Tech**: Vanilla JS, CSS Custom Highlight API, Quill editor integration
+- **Storage**: localStorage for config and session stats
 
 ## 📋 Prerequisites
 
-Before running this application, make sure you have the following installed:
-
-- **Node.js** (v16 or higher) - [Download](https://nodejs.org/)
-- **MongoDB Atlas** account - [Sign up](https://www.mongodb.com/atlas)
-- **Git** - [Download](https://git-scm.com/)
+- **Node.js** (v16 or higher) — [Download](https://nodejs.org/)
+- **MongoDB Atlas** account — [Sign up](https://www.mongodb.com/atlas)
 - **pnpm** (recommended) or npm
-
-### Optional but Recommended
-- **Visual Studio Code** with extensions for React and Node.js development
+- **Git** — [Download](https://git-scm.com/)
+- **Tampermonkey** browser extension (for the Product Assistant userscript)
 
 ## 🚀 Quick Start
 
 ### 1. Clone the Repository
 ```bash
-git clone git@github.com:faketi101/pcb-product-automation.git
-cd pcb-automotions
+git clone git@github.com:faketi101/pcbstore-product-assistant.git
+cd pcbstore-product-assistant
 ```
 
-### 2. Environment Setup
-The start scripts will automatically detect your local IP and configure the environment files. Choose between localhost (local only) or network IP (accessible from other devices).
+### 2. Automated Setup
+The start scripts auto-detect your local IP and configure `.env` files for both backend and frontend.
 
-### Linux/macOS
+#### Linux / macOS
 ```bash
 ./start.sh
 ```
 
-### Windows
+#### Windows
 ```bash
 start.bat
 ```
@@ -81,61 +95,108 @@ The script will:
 - Install dependencies if needed
 - Start both servers
 
-## 📖 Manual Setup (Alternative)
+### 3. Install the Product Assistant
+1. Install the [Tampermonkey](https://www.tampermonkey.net/) browser extension
+2. Create a new userscript and paste the contents of `assistantScripts/productAssistant.js`
+3. Navigate to any product page on `https://admin.pcbstore.net/admin/product/*`
+4. Press **Alt+Q** to toggle the assistant panel
 
-If you prefer manual setup:
+## 📖 Manual Setup
 
-### Backend Setup
+### Backend
 ```bash
 cd backend
 pnpm install
 cp .env.example .env
-# Edit .env with your MongoDB connection string and other settings
-pnpm start
+# Edit .env with your MongoDB connection string and settings
+pnpm start        # production
+pnpm run dev      # development (nodemon)
 ```
 
-### Frontend Setup
+### Frontend
 ```bash
 cd frontend
 pnpm install
 cp .env.example .env
 # Edit .env with the backend API URL
-pnpm dev
+pnpm dev          # development
+pnpm build        # production build
 ```
 
 ## 🌐 Access URLs
 
-After starting the application, you'll see URLs for both local and network access:
+### Live
+- **Production**: [https://pcb.tarikul.dev/](https://pcb.tarikul.dev/)
 
+### Local
 ```
 Local Access:
   Backend:  http://localhost:5000
   Frontend: http://localhost:5173
 
-Network Access:
+Network Access (example):
   Backend:  http://192.168.1.100:5000
   Frontend: http://192.168.1.100:5173
 ```
 
 ## 📚 API Documentation
 
-### Authentication Endpoints
-- `POST /api/auth/login` - User login
-- `POST /api/auth/logout` - User logout
-- `GET /api/auth/me` - Get current user info
-- `POST /api/auth/change-password` - Change user password
+### Authentication
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/login` | User login (returns JWT) |
+| POST | `/api/logout` | Logout (client-side token removal) |
+| GET | `/api/me` | Get current user (requires token) |
+| POST | `/api/change-password` | Change password |
 
-### Report Endpoints
-- `GET /api/reports/hourly` - Get hourly reports with filters
-- `POST /api/reports/hourly` - Create new hourly report
-- `GET /api/reports/daily/:date` - Get daily report for specific date
-- `GET /api/reports/daily` - Get daily reports with date range
-- `PUT /api/reports/hourly/:id` - Update hourly report
-- `DELETE /api/reports/hourly/:id` - Delete hourly report
+### Reports
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/reports/hourly` | Get hourly reports (filterable) |
+| POST | `/api/reports/hourly` | Create hourly report |
+| PUT | `/api/reports/hourly/:id` | Update hourly report |
+| DELETE | `/api/reports/hourly/:id` | Delete hourly report |
+| GET | `/api/reports/daily/:date` | Daily report for a date |
+| GET | `/api/reports/daily` | Daily reports with date range |
 
-### Prompt Endpoints
-- `GET /api/prompts` - Get product prompts
-- `POST /api/prompts` - Create new prompt
+### Product Prompts
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/prompts` | Get user's prompts |
+| POST | `/api/prompts` | Save prompts |
+| DELETE | `/api/prompts` | Reset all prompts to default |
+| DELETE | `/api/prompts/main` | Reset main prompt only |
+| DELETE | `/api/prompts/static` | Reset static prompt only |
+
+### Category Prompts
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/category-prompts` | Get category prompts |
+| POST | `/api/category-prompts` | Save category prompts |
+| DELETE | `/api/category-prompts` | Reset both to default |
+| DELETE | `/api/category-prompts/1` | Reset prompt 1 only |
+| DELETE | `/api/category-prompts/2` | Reset prompt 2 only |
+
+### Tasks
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| GET | `/api/tasks/public` | None | Public task list |
+| GET | `/api/tasks/users` | Token | Users list (for filters) |
+| GET | `/api/tasks/my-tasks` | Token | Current user's tasks |
+| GET | `/api/tasks/all-tasks` | Token | All tasks |
+| GET | `/api/tasks/:id` | Token | Single task |
+| PUT | `/api/tasks/:id` | Token | Update task (role-scoped) |
+| GET | `/api/tasks/admin/tasks` | Admin | Admin task list |
+| POST | `/api/tasks` | Admin | Create task |
+| PUT | `/api/tasks/admin/:id` | Admin | Admin update task |
+| DELETE | `/api/tasks/:id` | Admin | Delete task |
+| GET | `/api/tasks/admin/users` | Admin | Users with roles |
+
+### System
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/health` | Health check (DB, env, IPs) |
+| GET | `/api/session-test` | Session diagnostics |
 
 ## ⚙️ Configuration
 
@@ -143,11 +204,14 @@ Network Access:
 
 #### Backend (.env)
 ```env
-MONGODB_URI=
-SESSION_SECRET=
-FRONTEND_URL=
+MONGODB_URI=mongodb+srv://...
+JWT_SECRET=your_jwt_secret
+SESSION_SECRET=your_session_secret
+FRONTEND_URL=http://localhost:5173
 PORT=5000
 NODE_ENV=development
+COOKIE_SECURE=false
+COOKIE_DOMAIN=
 ```
 
 #### Frontend (.env)
@@ -156,11 +220,9 @@ VITE_API_URL=http://localhost:5000
 ```
 
 ### Network Configuration
-The application supports both local development and network access:
-
-1. **Local Development**: Use `localhost` for development on a single machine
-2. **Network Access**: Use your local IP (e.g., `192.168.1.100`) to access from other devices on the same network
-3. **Production**: Configure with your production domain
+1. **Local Development** — Use `localhost` for single-machine development
+2. **Network Access** — Use your LAN IP (e.g. `192.168.1.100`) for multi-device access
+3. **Production** — Configure with your domain, enable HTTPS, set `COOKIE_SECURE=true`
 
 ## 🧪 Development
 
@@ -169,63 +231,90 @@ The application supports both local development and network access:
 #### Backend
 ```bash
 cd backend
-npm run dev      # Start with nodemon for development
-npm start        # Start production server
-npm test         # Run tests
+pnpm run dev       # Start with nodemon (hot-reload)
+pnpm start         # Production server
+pnpm run test:db   # Test MongoDB connection
 ```
 
 #### Frontend
 ```bash
 cd frontend
-pnpm dev         # Start development server
-pnpm build       # Build for production
-pnpm preview     # Preview production build
-pnpm lint        # Run ESLint
+pnpm dev           # Development server
+pnpm build         # Production build
+pnpm preview       # Preview production build
+pnpm lint          # ESLint
+```
+
+#### Utility Scripts
+```bash
+node backend/scripts/addAdminUser.js       # Create an admin user
+node backend/scripts/testMongoConnection.js # Test DB connection
+node backend/scripts/testFilter.js          # Test task filters
 ```
 
 ### Project Structure
 ```
-pcb-automotions/
-├── backend/                 # Express.js server
-│   ├── models/             # MongoDB models
-│   ├── routes/             # API routes
-│   ├── middleware/         # Custom middleware
-│   ├── config/             # Configuration files
-│   ├── scripts/            # Utility scripts
-│   └── server.js           # Main server file
-├── frontend/               # React application
+pcbstore-product-assistant/
+├── backend/                     # Express.js API server
+│   ├── config/                  # DB connection, default prompts
+│   │   ├── database.js
+│   │   ├── defaultPrompts.js
+│   │   └── defaultCategoryPrompts.js
+│   ├── middleware/              # Auth & admin middleware
+│   │   ├── auth.middleware.js   # JWT token verification
+│   │   └── admin.middleware.js  # Admin role check
+│   ├── models/                  # Mongoose schemas
+│   │   ├── User.model.js       # User, prompts, reports
+│   │   └── Task.model.js       # Task management
+│   ├── routes/                  # API route handlers
+│   │   ├── auth.routes.js
+│   │   ├── prompt.routes.js
+│   │   ├── categoryPrompt.routes.js
+│   │   ├── report.routes.js
+│   │   └── task.routes.js
+│   ├── scripts/                 # CLI utilities
+│   └── server.js                # App entry point
+├── frontend/                    # React SPA
 │   ├── src/
-│   │   ├── components/     # React components
-│   │   ├── pages/          # Page components
-│   │   ├── services/       # API services
-│   │   ├── context/        # React context
-│   │   └── config/         # Configuration
-│   ├── public/             # Static assets
-│   └── vite.config.js      # Vite configuration
-├── start.sh                # Linux/macOS launcher
-├── start.bat               # Windows launcher
-└── README.md              # This file
+│   │   ├── components/          # Reusable UI components
+│   │   │   ├── ui/              # Primitives (Button, Card, Badge, etc.)
+│   │   │   ├── tasks/           # Task CRUD components
+│   │   │   └── reports/         # Report form & views
+│   │   ├── pages/               # Route pages
+│   │   │   ├── Home.jsx         # Dashboard menu
+│   │   │   ├── ProductPrompt.jsx
+│   │   │   ├── CategoryPrompt.jsx
+│   │   │   ├── Reports.jsx
+│   │   │   ├── UserTasks.jsx
+│   │   │   ├── PublicTasks.jsx
+│   │   │   └── AdminPanel.jsx
+│   │   ├── services/            # API service layer
+│   │   ├── context/             # AuthContext (JWT)
+│   │   ├── config/              # API base URL config
+│   │   ├── lib/                 # Utilities (cn helper)
+│   │   └── utils/               # Report formatting
+│   └── vite.config.js
+├── assistantScripts/            # Tampermonkey userscripts
+│   ├── productAssistant.js      # Main product assistant (v4.2)
+│   ├── autoFill.js              # Auto-fill helper
+│   └── doubleClickToInternalLink.js
+├── start.sh                     # Linux/macOS launcher
+├── start.bat                    # Windows launcher
+└── README.md
 ```
 
 ## 🚀 Deployment
 
 ### Production Checklist
-- [ ] Set `NODE_ENV=production` in backend `.env`
+- [ ] Set `NODE_ENV=production`
 - [ ] Configure production MongoDB URI
-- [ ] Set strong `SESSION_SECRET`
-- [ ] Configure production frontend URL
-- [ ] Enable HTTPS in production
-- [ ] Set up proper CORS origins
-- [ ] Configure firewall rules
-
-### Build Commands
-```bash
-# Backend
-cd backend && npm run build
-
-# Frontend
-cd frontend && pnpm build
-```
+- [ ] Set strong `JWT_SECRET` and `SESSION_SECRET`
+- [ ] Set `FRONTEND_URL` to the production domain
+- [ ] Enable HTTPS and set `COOKIE_SECURE=true`
+- [ ] Configure CORS allowed origins
+- [ ] Set `COOKIE_DOMAIN` for subdomain support if needed
+- [ ] Build frontend: `cd frontend && pnpm build`
+- [ ] Configure firewall rules and reverse proxy
 
 ## 🤝 Contributing
 
@@ -243,21 +332,8 @@ cd frontend && pnpm build
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🆘 Support
-
-If you encounter any issues:
-
-1. Check the [troubleshooting guide](TROUBLESHOOTING.md)
-2. Review the [API documentation](API_REFERENCE.md)
-3. Check existing issues on GitHub
-4. Create a new issue with detailed information
-
-## 📝 Changelog
-
-See [CHANGELOG.md](CHANGELOG.md) for version history and updates.
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
 
 ---
 
-**Built with ❤️ for efficient PCB Store Product automation management by TARIKUL ISLAM**
+**Built with ❤️ for efficient PCB Store product automation management by TARIKUL ISLAM**

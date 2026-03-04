@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PCB Product Assistant
 // @namespace    http://tampermonkey.net/
-// @version      4.0
+// @version      4.2
 // @description  All-in-one productivity assistant: Short desc formatter, description paste cleaner, keyword highlighter, meta counters, field status dashboard, FAQ/Spec/Warranty importer
 // @author       faketi101
 // @match        https://admin.pcbstore.net/admin/product/*
@@ -29,7 +29,16 @@
     localStorage.setItem(STORAGE_KEY, JSON.stringify(cfg));
 
   const getStats = () => {
-    const defaults = { faqs: 0, specGroups: 0, specItems: 0, warranties: 0 };
+    const defaults = {
+      faqs: 0,
+      specGroups: 0,
+      specItems: 0,
+      warranties: 0,
+      shortDescItems: 0,
+      descItems: 0,
+      categories: 0,
+      attributes: 0,
+    };
     try {
       const saved = localStorage.getItem(STATS_KEY);
       return saved ? { ...defaults, ...JSON.parse(saved) } : defaults;
@@ -725,6 +734,16 @@
           <div class="pa-sec-title">${I.activity} Session Stats</div>
           <div class="pa-stats">
             <div class="pa-stat-item">
+              <div><span style="color:#888;">Short Desc</span></div>
+              <span class="pa-stat-val" id="pa-st-sd">0</span>
+              <button class="pa-stat-reset" data-type="shortDescItems">rst</button>
+            </div>
+            <div class="pa-stat-item">
+              <div><span style="color:#888;">Desc Items</span></div>
+              <span class="pa-stat-val" id="pa-st-desc">0</span>
+              <button class="pa-stat-reset" data-type="descItems">rst</button>
+            </div>
+            <div class="pa-stat-item">
               <div><span style="color:#888;">FAQs</span></div>
               <span class="pa-stat-val" id="pa-st-faq">0</span>
               <button class="pa-stat-reset" data-type="faqs">rst</button>
@@ -744,6 +763,16 @@
               <span class="pa-stat-val" id="pa-st-war">0</span>
               <button class="pa-stat-reset" data-type="warranties">rst</button>
             </div>
+            <div class="pa-stat-item">
+              <div><span style="color:#888;">Categories</span></div>
+              <span class="pa-stat-val" id="pa-st-cat">0</span>
+              <button class="pa-stat-reset" data-type="categories">rst</button>
+            </div>
+            <div class="pa-stat-item">
+              <div><span style="color:#888;">Attributes</span></div>
+              <span class="pa-stat-val" id="pa-st-attr">0</span>
+              <button class="pa-stat-reset" data-type="attributes">rst</button>
+            </div>
           </div>
           <div style="display:flex; gap:8px;">
             <button class="pa-btn pa-btn-dark pa-btn-sm" id="pa-st-copy" style="flex:1;">${I.clipboard} Copy Stats</button>
@@ -760,6 +789,10 @@
   const updateStatsUI = () => {
     const s = getStats();
     const el = (id) => document.getElementById(id);
+    const sd = el("pa-st-sd");
+    if (sd) sd.textContent = s.shortDescItems;
+    const desc = el("pa-st-desc");
+    if (desc) desc.textContent = s.descItems;
     const faq = el("pa-st-faq");
     if (faq) faq.textContent = s.faqs;
     const grp = el("pa-st-groups");
@@ -768,6 +801,10 @@
     if (itm) itm.textContent = s.specItems;
     const war = el("pa-st-war");
     if (war) war.textContent = s.warranties;
+    const cat = el("pa-st-cat");
+    if (cat) cat.textContent = s.categories;
+    const attr = el("pa-st-attr");
+    if (attr) attr.textContent = s.attributes;
   };
 
   // ─── 1. SHORT DESCRIPTION FORMATTER ─────────────────────────
@@ -803,7 +840,22 @@
     // Clear the input textarea after filling
     const inp = document.getElementById("pa-sd-input");
     if (inp) inp.value = "";
-    showToast("Short description formatted & filled!", 2500, "success");
+    // Count bullet items (lines after the heading)
+    const sdLines = rawText
+      .split("\n")
+      .map((l) => l.trim())
+      .filter((l) => l.length > 0);
+    const bulletCount = Math.max(0, sdLines.length - 1);
+    if (bulletCount > 0) {
+      const stats = getStats();
+      stats.shortDescItems += bulletCount;
+      saveStats(stats);
+    }
+    showToast(
+      `Short description formatted & filled! (${bulletCount} items)`,
+      2500,
+      "success",
+    );
     refreshFieldStatus();
   };
 
@@ -979,6 +1031,10 @@
       if (hidden) hidden.value = correctULTagFromQuill(ed.innerHTML);
     }, 500);
 
+    // Count each description fill as 1
+    const stats = getStats();
+    stats.descItems += 1;
+    saveStats(stats);
     pasteEditor.innerHTML = "";
     showToast("Description filled!", 2500, "success");
     refreshFieldStatus();
@@ -1509,6 +1565,22 @@
           t.closest("#categoryTree")
         ) {
           debouncedRefresh();
+        }
+
+        // Track category checkbox selections for stats
+        if (t.type === "checkbox" && t.name === "categories[]") {
+          const stats = getStats();
+          stats.categories += t.checked ? 1 : -1;
+          if (stats.categories < 0) stats.categories = 0;
+          saveStats(stats);
+        }
+
+        // Track attribute checkbox selections for stats
+        if (t.type === "checkbox" && t.name === "category_attribute_ids[]") {
+          const stats = getStats();
+          stats.attributes += t.checked ? 1 : -1;
+          if (stats.attributes < 0) stats.attributes = 0;
+          saveStats(stats);
         }
       },
       true,
@@ -2097,7 +2169,7 @@
 
       document.getElementById("pa-st-copy").addEventListener("click", () => {
         const s = getStats();
-        const txt = `FAQs: ${s.faqs}\nSpec Groups: ${s.specGroups}\nSpec Items: ${s.specItems}\nWarranties: ${s.warranties}`;
+        const txt = `Short Desc: ${s.shortDescItems}\nDesc Items: ${s.descItems}\nFAQs: ${s.faqs}\nSpec Groups: ${s.specGroups}\nSpec Items: ${s.specItems}\nWarranties: ${s.warranties}\nCategories: ${s.categories}\nAttributes: ${s.attributes}`;
         navigator.clipboard
           .writeText(txt)
           .then(() => showToast("Stats copied!", 2500, "success"));
@@ -2105,7 +2177,16 @@
 
       document.getElementById("pa-st-reset").addEventListener("click", () => {
         if (confirm("Reset ALL stats?")) {
-          saveStats({ faqs: 0, specGroups: 0, specItems: 0, warranties: 0 });
+          saveStats({
+            faqs: 0,
+            specGroups: 0,
+            specItems: 0,
+            warranties: 0,
+            shortDescItems: 0,
+            descItems: 0,
+            categories: 0,
+            attributes: 0,
+          });
           showToast("All stats reset", 2500, "success");
         }
       });
