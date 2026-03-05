@@ -1177,40 +1177,47 @@
       sel: "input#thumbnail",
       check: () => {
         try {
-          // The actual input: <input id="thumbnail" name="thumbnail" type="file">
+          // 1. Check the actual file input first
           const fileInput = document.querySelector(
             'input#thumbnail, input[name="thumbnail"]',
           );
           if (fileInput && fileInput.files && fileInput.files.length > 0)
             return true;
-          // For edit mode: check the preview image (onchange="previewFile(event, 'preview')" data-preview="preview")
+
+          // Define what counts as a "fake" or default image
+          const isPlaceholder = (src) => {
+            if (!src || src.length < 10) return true;
+            const s = src.toLowerCase();
+            return (
+              s.includes("placeholder") ||
+              s.includes("placehold.co") ||
+              s === "https://placehold.co/500x500/f1f5f9/png" ||
+              s.endsWith("#") ||
+              s.endsWith("/")
+            );
+          };
+
+          // 2. Check the preview image by ID
           const preview = document.getElementById("preview");
-          if (
-            preview &&
-            preview.src &&
-            preview.src.length > 10 &&
-            !preview.src.includes("placeholder") &&
-            !preview.src.endsWith("#") &&
-            !preview.src.endsWith("/")
-          )
+          if (preview && preview.src && !isPlaceholder(preview.src)) {
             return true;
-          // Also check any img-thumbnail near the thumbnail input
+          }
+
+          // 3. Check any generic thumbnail images in the vicinity
           const imgPreviews = document.querySelectorAll(
             'img.img-thumbnail, img[src*="product"], img[src*="upload"], img[src*="storage"]',
           );
           for (const img of imgPreviews) {
-            if (
-              img.src &&
-              img.src.length > 10 &&
-              !img.src.includes("placeholder") &&
-              !img.src.endsWith("#")
-            )
+            if (img.src && !isPlaceholder(img.src)) {
               return true;
+            }
           }
-          // Track via our internal flag set by change listener
+
+          // 4. Fallback to the internal flag
           if (window._paImageSelected) return true;
+
           return false;
-        } catch {
+        } catch (e) {
           return false;
         }
       },
