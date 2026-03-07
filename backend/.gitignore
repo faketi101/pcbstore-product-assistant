@@ -13,3 +13,6 @@ data/users.json.backup
 
 # zip files
 *.zip
+# script files
+
+scripts
