@@ -16,6 +16,7 @@ import PublicTasks from "./pages/PublicTasks";
 import AdminPanel from "./pages/AdminPanel";
 import Login from "./components/Login";
 import Navigation from "./components/Navigation";
+import Footer from "./components/Footer";
 import "./App.css";
 
 const PrivateRoute = ({ children }) => {
@@ -27,10 +28,11 @@ const PrivateRoute = ({ children }) => {
   }
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
       <Navigation />
-      {children}
-    </>
+      <div className="flex-1">{children}</div>
+      <Footer />
+    </div>
   );
 };
 

@@ -111,11 +111,14 @@ const Navigation = () => {
         <div className="flex items-center justify-between h-14">
           {/* Brand */}
           <Link to="/" className="flex items-center gap-2 shrink-0">
-            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
+            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center shrink-0">
               <span className="text-[10px] font-bold text-primary-foreground tracking-tight">
                 PCB
               </span>
             </div>
+            <span className="font-semibold text-sm text-foreground">
+              PCB Assistant
+            </span>
           </Link>
 
           {/* Desktop Nav */}
