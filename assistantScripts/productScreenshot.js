@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PCB Product Screenshot Capture
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.4
 // @description  Auto-captures full page screenshot when saving a product. Filename includes product slug + full date & time.
 // @author       faketi101
 // @match        https://admin.pcbstore.net/admin/product/*
@@ -70,6 +70,28 @@
   // ─── SCREENSHOT CAPTURE ──────────────────────────────────────
 
   let _capturing = false;
+  let _enabled = true;
+
+  /** Refresh the visual state of the toggle button */
+  const updateToggleUI = () => {
+    const btn = document.getElementById("psc-toggle");
+    if (!btn) return;
+    if (_enabled) {
+      btn.title = "Screenshot capture is ON — click to disable";
+      btn.querySelector("#psc-toggle-dot").style.transform = "translateX(16px)";
+      btn.querySelector("#psc-toggle-dot").style.background = "#22c55e";
+      btn.querySelector("#psc-toggle-track").style.background =
+        "rgba(34,197,94,0.25)";
+      btn.querySelector("#psc-toggle-label").textContent = "Auto-SS: ON";
+    } else {
+      btn.title = "Screenshot capture is OFF — click to enable";
+      btn.querySelector("#psc-toggle-dot").style.transform = "translateX(0px)";
+      btn.querySelector("#psc-toggle-dot").style.background = "#ef4444";
+      btn.querySelector("#psc-toggle-track").style.background =
+        "rgba(239,68,68,0.25)";
+      btn.querySelector("#psc-toggle-label").textContent = "Auto-SS: OFF";
+    }
+  };
 
   /**
    * Capture a full-page screenshot and download it.
@@ -163,6 +185,7 @@
 
   const interceptSaveButtons = () => {
     const handleSaveClick = (e) => {
+      if (!_enabled) return;
       const btn = e.target.closest("button");
       if (!btn) return;
 
@@ -227,6 +250,85 @@
 
     // Capture phase (true) so we intercept before any other listener
     document.addEventListener("click", handleSaveClick, true);
+  };
+
+  // ─── TOGGLE ON/OFF BUTTON ─────────────────────────────────────
+
+  const injectToggleButton = () => {
+    if (document.getElementById("psc-toggle")) return;
+
+    const btn = document.createElement("button");
+    btn.id = "psc-toggle";
+    btn.title = "Screenshot capture is ON — click to disable";
+    btn.innerHTML = `
+      <div id="psc-toggle-track" style="
+        width:32px; height:16px; border-radius:9999px;
+        background:rgba(34,197,94,0.25);
+        display:flex; align-items:center;
+        padding:0 2px; box-sizing:border-box;
+        transition:background 0.2s; flex-shrink:0;
+      ">
+        <div id="psc-toggle-dot" style="
+          width:12px; height:12px; border-radius:50%;
+          background:#22c55e;
+          transform:translateX(16px);
+          transition:transform 0.2s, background 0.2s;
+        "></div>
+      </div>
+      <span id="psc-toggle-label">Auto-SS: ON</span>
+    `;
+
+    Object.assign(btn.style, {
+      position: "fixed",
+      bottom: "130px",
+      right: "18px",
+      zIndex: "99998",
+      display: "flex",
+      alignItems: "center",
+      gap: "8px",
+      background: "rgba(10,10,10,0.82)",
+      backdropFilter: "blur(14px)",
+      WebkitBackdropFilter: "blur(14px)",
+      color: "#e5e5e5",
+      border: "1px solid rgba(255,255,255,0.12)",
+      borderRadius: "12px",
+      padding: "7px 12px",
+      fontSize: "13px",
+      fontFamily:
+        "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+      fontWeight: "600",
+      cursor: "pointer",
+      boxShadow: "0 6px 24px rgba(0,0,0,0.45)",
+      transition: "background 0.2s, transform 0.1s",
+      userSelect: "none",
+    });
+
+    btn.addEventListener("mouseenter", () => {
+      btn.style.background = _enabled
+        ? "rgba(239,68,68,0.7)"
+        : "rgba(34,197,94,0.7)";
+    });
+    btn.addEventListener("mouseleave", () => {
+      btn.style.background = "rgba(10,10,10,0.82)";
+    });
+    btn.addEventListener("mousedown", () => {
+      btn.style.transform = "scale(0.95)";
+    });
+    btn.addEventListener("mouseup", () => {
+      btn.style.transform = "scale(1)";
+    });
+
+    btn.addEventListener("click", () => {
+      _enabled = !_enabled;
+      updateToggleUI();
+      showToast(
+        _enabled ? "✅ Auto-screenshot ENABLED" : "🚫 Auto-screenshot DISABLED",
+        _enabled ? "#22c55e" : "#ef4444",
+        2500,
+      );
+    });
+
+    document.body.appendChild(btn);
   };
 
   // ─── FLOATING MANUAL CAPTURE BUTTON ─────────────────────────
@@ -295,11 +397,12 @@
 
   const init = () => {
     try {
+      injectToggleButton();
       injectFloatingButton();
       interceptSaveButtons();
 
       console.log(
-        "[PCB Product Screenshot v1.1] Ready — click Save to screenshot first, then auto-submit.",
+        "[PCB Product Screenshot v1.2] Ready — click Save to screenshot first, then auto-submit.",
       );
       showToast("📸 Screenshot capture ready", "#3b82f6", 3000);
     } catch (err) {
