@@ -9,6 +9,7 @@ const connectDB = require("./config/database");
 const authRoutes = require("./routes/auth.routes");
 const promptRoutes = require("./routes/prompt.routes");
 const categoryPromptRoutes = require("./routes/categoryPrompt.routes");
+const promptTemplateRoutes = require("./routes/promptTemplate.routes");
 const reportRoutes = require("./routes/report.routes");
 const taskRoutes = require("./routes/task.routes");
 
@@ -133,6 +134,7 @@ app.use((req, res, next) => {
 app.use("/api", authRoutes);
 app.use("/api/prompts", promptRoutes);
 app.use("/api/category-prompts", categoryPromptRoutes);
+app.use("/api/prompt-templates", promptTemplateRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/tasks", taskRoutes);
 

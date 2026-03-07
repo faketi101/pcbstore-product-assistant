@@ -180,6 +180,103 @@ const changePassword = async (currentPassword, newPassword) => {
   return handleResponse(response);
 };
 
+// ============================================================
+// Prompt Template API (new dynamic system)
+// ============================================================
+
+const getActiveTemplates = async () => {
+  const response = await fetch(`${API_URL}/prompt-templates/active`, {
+    method: "GET",
+    headers: getHeaders(),
+  });
+  return handleResponse(response);
+};
+
+const getTemplateBySlug = async (slug) => {
+  const response = await fetch(`${API_URL}/prompt-templates/by-slug/${slug}`, {
+    method: "GET",
+    headers: getHeaders(),
+  });
+  return handleResponse(response);
+};
+
+const saveTemplateOverrides = async (templateId, promptOverrides) => {
+  const response = await fetch(
+    `${API_URL}/prompt-templates/${templateId}/overrides`,
+    {
+      method: "POST",
+      headers: getHeaders(),
+      body: JSON.stringify({ promptOverrides }),
+    },
+  );
+  return handleResponse(response);
+};
+
+const resetAllTemplateOverrides = async (templateId) => {
+  const response = await fetch(
+    `${API_URL}/prompt-templates/${templateId}/overrides`,
+    {
+      method: "DELETE",
+      headers: getHeaders(),
+    },
+  );
+  return handleResponse(response);
+};
+
+const resetTemplatePromptOverride = async (templateId, promptKey) => {
+  const response = await fetch(
+    `${API_URL}/prompt-templates/${templateId}/overrides/${promptKey}`,
+    {
+      method: "DELETE",
+      headers: getHeaders(),
+    },
+  );
+  return handleResponse(response);
+};
+
+// Admin: Prompt Template Management
+const getAdminTemplates = async () => {
+  const response = await fetch(`${API_URL}/prompt-templates`, {
+    method: "GET",
+    headers: getHeaders(),
+  });
+  return handleResponse(response);
+};
+
+const getAdminTemplate = async (id) => {
+  const response = await fetch(`${API_URL}/prompt-templates/${id}`, {
+    method: "GET",
+    headers: getHeaders(),
+  });
+  return handleResponse(response);
+};
+
+const createAdminTemplate = async (data) => {
+  const response = await fetch(`${API_URL}/prompt-templates`, {
+    method: "POST",
+    headers: getHeaders(),
+    body: JSON.stringify(data),
+  });
+  return handleResponse(response);
+};
+
+const updateAdminTemplate = async (id, data) => {
+  const response = await fetch(`${API_URL}/prompt-templates/${id}`, {
+    method: "PUT",
+    headers: getHeaders(),
+    body: JSON.stringify(data),
+  });
+  return handleResponse(response);
+};
+
+const deleteAdminTemplate = async (id) => {
+  const response = await fetch(`${API_URL}/prompt-templates/${id}`, {
+    method: "DELETE",
+    headers: getHeaders(),
+  });
+  return handleResponse(response);
+};
+
 // Generic HTTP methods for API calls
 const get = async (endpoint) => {
   const response = await fetch(`${API_URL}${endpoint}`, {
@@ -231,6 +328,18 @@ const authService = {
   resetCategoryPrompt1,
   resetCategoryPrompt2,
   changePassword,
+  // Prompt Templates (new dynamic system)
+  getActiveTemplates,
+  getTemplateBySlug,
+  saveTemplateOverrides,
+  resetAllTemplateOverrides,
+  resetTemplatePromptOverride,
+  // Admin Template Management
+  getAdminTemplates,
+  getAdminTemplate,
+  createAdminTemplate,
+  updateAdminTemplate,
+  deleteAdminTemplate,
   // Generic HTTP methods
   get,
   post,

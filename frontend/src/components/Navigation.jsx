@@ -3,7 +3,6 @@ import { useContext, useState, useRef, useEffect } from "react";
 import {
   Home,
   FileText,
-  FolderOpen,
   BarChart3,
   LogOut,
   KeyRound,
@@ -11,11 +10,30 @@ import {
   X,
   ListTodo,
   Settings,
+  ChevronDown,
+  Sparkles,
+  FolderOpen,
+  Layers,
+  BookOpen,
+  Zap,
+  Globe,
 } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
 import ChangePassword from "./ChangePassword";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import authService from "../services/api";
+
+// Icon map for rendering dynamic icons
+const ICON_MAP = {
+  FileText,
+  FolderOpen,
+  Layers,
+  BookOpen,
+  Zap,
+  Globe,
+  Sparkles,
+};
 
 const Navigation = () => {
   const location = useLocation();
@@ -23,9 +41,13 @@ const Navigation = () => {
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showUserCard, setShowUserCard] = useState(false);
+  const [showPromptsDropdown, setShowPromptsDropdown] = useState(false);
+  const [promptTemplates, setPromptTemplates] = useState([]);
   const userCardRef = useRef(null);
+  const promptsDropdownRef = useRef(null);
 
   const isActive = (path) => location.pathname === path;
+  const isPromptActive = () => location.pathname.startsWith("/prompts/");
 
   const getInitials = (name) => {
     if (!name) return "?";
@@ -37,30 +59,51 @@ const Navigation = () => {
       .toUpperCase();
   };
 
-  // Close user card when clicking outside
+  // Fetch active prompt templates
+  useEffect(() => {
+    const fetchTemplates = async () => {
+      try {
+        const data = await authService.getActiveTemplates();
+        setPromptTemplates(data);
+      } catch (err) {
+        console.error("Failed to fetch prompt templates:", err);
+      }
+    };
+    fetchTemplates();
+  }, []);
+
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (userCardRef.current && !userCardRef.current.contains(e.target)) {
         setShowUserCard(false);
       }
+      if (
+        promptsDropdownRef.current &&
+        !promptsDropdownRef.current.contains(e.target)
+      ) {
+        setShowPromptsDropdown(false);
+      }
     };
-    if (showUserCard)
+    if (showUserCard || showPromptsDropdown)
       document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [showUserCard]);
+  }, [showUserCard, showPromptsDropdown]);
 
-  const navLinks = [
-    { path: "/", label: "Home", icon: Home },
-    { path: "/product-prompt", label: "Products", icon: FileText },
-    { path: "/category-prompt", label: "Categories", icon: FolderOpen },
+  const staticNavLinks = [{ path: "/", label: "Home", icon: Home }];
+
+  const trailingNavLinks = [
     { path: "/reports", label: "Reports", icon: BarChart3 },
     { path: "/tasks", label: "Tasks", icon: ListTodo },
   ];
 
-  const allNavLinks =
+  const allTrailingLinks =
     user?.role === "admin"
-      ? [...navLinks, { path: "/admin", label: "Admin", icon: Settings }]
-      : navLinks;
+      ? [
+          ...trailingNavLinks,
+          { path: "/admin", label: "Admin", icon: Settings },
+        ]
+      : trailingNavLinks;
 
   return (
     <nav className="sticky top-0 z-40 bg-background/80 backdrop-blur-lg border-b">
@@ -77,7 +120,77 @@ const Navigation = () => {
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-1">
-            {allNavLinks.map(({ path, label, icon: Icon }) => (
+            {/* Static links */}
+            {staticNavLinks.map(({ path, label, icon: Icon }) => (
+              <Link
+                key={path}
+                to={path}
+                className={cn(
+                  "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-full transition-all",
+                  isActive(path)
+                    ? "bg-primary text-primary-foreground font-medium"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted",
+                )}
+              >
+                <Icon className="h-3.5 w-3.5" />
+                {label}
+              </Link>
+            ))}
+
+            {/* Prompts Dropdown */}
+            <div className="relative" ref={promptsDropdownRef}>
+              <button
+                onClick={() => setShowPromptsDropdown(!showPromptsDropdown)}
+                className={cn(
+                  "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-full transition-all cursor-pointer",
+                  isPromptActive()
+                    ? "bg-primary text-primary-foreground font-medium"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted",
+                )}
+              >
+                <Sparkles className="h-3.5 w-3.5" />
+                Prompts
+                <ChevronDown
+                  className={cn(
+                    "h-3 w-3 transition-transform",
+                    showPromptsDropdown && "rotate-180",
+                  )}
+                />
+              </button>
+              {showPromptsDropdown && (
+                <div className="absolute left-0 top-full mt-1 w-56 bg-card border rounded-lg shadow-lg py-1 z-50">
+                  {promptTemplates.length === 0 ? (
+                    <p className="px-3 py-2 text-sm text-muted-foreground">
+                      No prompts available
+                    </p>
+                  ) : (
+                    promptTemplates.map((tmpl) => {
+                      const TmplIcon = ICON_MAP[tmpl.icon] || FileText;
+                      const path = `/prompts/${tmpl.slug}`;
+                      return (
+                        <Link
+                          key={tmpl._id}
+                          to={path}
+                          onClick={() => setShowPromptsDropdown(false)}
+                          className={cn(
+                            "flex items-center gap-2.5 px-3 py-2 text-sm transition-colors",
+                            isActive(path)
+                              ? "bg-primary/10 text-primary font-medium"
+                              : "text-muted-foreground hover:text-foreground hover:bg-muted",
+                          )}
+                        >
+                          <TmplIcon className="h-4 w-4" />
+                          {tmpl.name}
+                        </Link>
+                      );
+                    })
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Trailing links */}
+            {allTrailingLinks.map(({ path, label, icon: Icon }) => (
               <Link
                 key={path}
                 to={path}
@@ -170,7 +283,57 @@ const Navigation = () => {
       {isMobileMenuOpen && (
         <div className="md:hidden border-t bg-background/95 backdrop-blur-lg">
           <div className="px-4 py-3 space-y-1">
-            {allNavLinks.map(({ path, label, icon: Icon }) => (
+            {/* Static links */}
+            {staticNavLinks.map(({ path, label, icon: Icon }) => (
+              <Link
+                key={path}
+                to={path}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg transition-all",
+                  isActive(path)
+                    ? "bg-primary/10 text-primary font-medium"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted",
+                )}
+              >
+                <Icon className="h-4 w-4" />
+                {label}
+              </Link>
+            ))}
+
+            {/* Prompt templates */}
+            {promptTemplates.length > 0 && (
+              <>
+                <div className="px-3 pt-2 pb-1">
+                  <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    Prompts
+                  </span>
+                </div>
+                {promptTemplates.map((tmpl) => {
+                  const TmplIcon = ICON_MAP[tmpl.icon] || FileText;
+                  const path = `/prompts/${tmpl.slug}`;
+                  return (
+                    <Link
+                      key={tmpl._id}
+                      to={path}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={cn(
+                        "flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg transition-all pl-6",
+                        isActive(path)
+                          ? "bg-primary/10 text-primary font-medium"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted",
+                      )}
+                    >
+                      <TmplIcon className="h-4 w-4" />
+                      {tmpl.name}
+                    </Link>
+                  );
+                })}
+              </>
+            )}
+
+            {/* Trailing links */}
+            {allTrailingLinks.map(({ path, label, icon: Icon }) => (
               <Link
                 key={path}
                 to={path}

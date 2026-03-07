@@ -9,12 +9,14 @@ import {
   Clock,
   CalendarDays,
   CalendarRange,
+  FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import TaskFilters from "../components/tasks/TaskFilters";
 import TaskList from "../components/tasks/TaskList";
 import TaskFormModal from "../components/tasks/TaskFormModal";
+import PromptTemplateManager from "../components/admin/PromptTemplateManager";
 import { AuthContext } from "../context/AuthContext";
 import { Navigate } from "react-router-dom";
 import taskService from "../services/taskService";
@@ -23,7 +25,7 @@ import toast from "react-hot-toast";
 
 const AdminPanel = () => {
   const { user } = useContext(AuthContext);
-  const [activeTab, setActiveTab] = useState("tasks");
+  const [activeTab, setActiveTab] = useState("prompts");
   const [tasks, setTasks] = useState([]);
   const [pagination, setPagination] = useState({});
   const [loading, setLoading] = useState(false);
@@ -259,7 +261,14 @@ const AdminPanel = () => {
           onValueChange={setActiveTab}
           className="space-y-4 sm:space-y-6"
         >
-          <TabsList className="w-full sm:w-auto grid grid-cols-3 sm:inline-flex h-auto p-1">
+          <TabsList className="w-full sm:w-auto grid grid-cols-4 sm:inline-flex h-auto p-1">
+            <TabsTrigger
+              value="prompts"
+              className="gap-1.5 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4 py-2"
+            >
+              <FileText className="h-4 w-4" />
+              <span>Prompts</span>
+            </TabsTrigger>
             <TabsTrigger
               value="reports"
               className="gap-1.5 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4 py-2"
@@ -282,6 +291,11 @@ const AdminPanel = () => {
               <span>View</span>
             </TabsTrigger>
           </TabsList>
+
+          {/* Prompt Templates Tab */}
+          <TabsContent value="prompts" className="space-y-6">
+            <PromptTemplateManager />
+          </TabsContent>
 
           {/* Reports Tab */}
           <TabsContent value="reports" className="space-y-6">

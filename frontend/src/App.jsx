@@ -9,8 +9,7 @@ import { Toaster } from "react-hot-toast";
 import { AuthProvider, AuthContext } from "./context/AuthContext";
 import { useContext } from "react";
 import Home from "./pages/Home";
-import ProductPrompt from "./pages/ProductPrompt";
-import CategoryPrompt from "./pages/CategoryPrompt";
+import DynamicPrompt from "./pages/DynamicPrompt";
 import Reports from "./pages/Reports";
 import UserTasks from "./pages/UserTasks";
 import PublicTasks from "./pages/PublicTasks";
@@ -53,17 +52,17 @@ function App() {
           />
           <Route
             path="/product-prompt"
-            element={
-              <PrivateRoute>
-                <ProductPrompt />
-              </PrivateRoute>
-            }
+            element={<Navigate to="/prompts/product-prompt" replace />}
           />
           <Route
             path="/category-prompt"
+            element={<Navigate to="/prompts/category-prompt" replace />}
+          />
+          <Route
+            path="/prompts/:slug"
             element={
               <PrivateRoute>
-                <CategoryPrompt />
+                <DynamicPrompt />
               </PrivateRoute>
             }
           />
