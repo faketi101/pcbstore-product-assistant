@@ -85,7 +85,14 @@ const logout = async () => {
 };
 
 const getCurrentUser = () => {
-  return JSON.parse(localStorage.getItem("user"));
+  try {
+    return JSON.parse(localStorage.getItem("user"));
+  } catch {
+    // Corrupt localStorage data — clear it to prevent repeated crashes
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    return null;
+  }
 };
 
 const getPrompts = async () => {
