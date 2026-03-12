@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PCB Product Assistant
 // @namespace    http://tampermonkey.net/
-// @version      4.2
+// @version      4.3
 // @description  All-in-one productivity assistant: Short desc formatter, description paste cleaner, keyword highlighter, meta counters, field status dashboard, FAQ/Spec/Warranty importer
 // @author       faketi101
 // @match        https://admin.pcbstore.net/admin/product/*
@@ -52,6 +52,12 @@
   };
 
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  const showFillSuccess = (el) => {
+    if (!el) return;
+    el.classList.add("pa-fill-success");
+    setTimeout(() => el.classList.remove("pa-fill-success"), 1000);
+  };
 
   // ─── SVG ICONS ───────────────────────────────────────────────
   const I = {
@@ -497,6 +503,39 @@
         background-color: #fef08a;
         color: #000;
       }
+
+      /* ── Real-time input state colors ── */
+      .pa-input-ok { border-color: #22c55e !important; }
+      .pa-input-warn { border-color: #f59e0b !important; }
+      .pa-input-bad { border-color: #ef4444 !important; }
+
+      /* ── Fill success glow animation ── */
+      @keyframes pa-success-glow {
+        0%   { border-color: #22c55e; box-shadow: 0 0 0 3px rgba(34,197,94,0.25), 0 0 12px rgba(34,197,94,0.2); background: rgba(34,197,94,0.08); }
+        100% { border-color: rgba(255,255,255,0.08); box-shadow: none; background: rgba(255,255,255,0.03); }
+      }
+      .pa-fill-success { animation: pa-success-glow 2s ease forwards; }
+
+      /* ── Tab meta counter (shows MT/MD chars live) ── */
+      .pa-tab-ctr {
+        font-size: 9px;
+        opacity: 0.65;
+        font-weight: 400;
+        letter-spacing: 0;
+        text-transform: none;
+        display: block;
+        line-height: 1.2;
+        margin-top: 2px;
+      }
+
+      /* ── Inline char / line counter below inputs ── */
+      .pa-inline-ctr {
+        display: flex;
+        justify-content: flex-end;
+        font-size: 11px;
+        color: #666;
+        margin-top: 4px;
+      }
     `;
     document.head.appendChild(s);
   };
@@ -592,7 +631,7 @@
 
       <!-- TABS -->
       <div class="pa-tabs">
-        <div class="pa-tab active" data-tab="editor">${I.edit} Editor</div>
+        <div class="pa-tab active" data-tab="editor">${I.edit} Editor<span class="pa-tab-ctr" id="pa-tab-meta-ctr"></span></div>
         <div class="pa-tab" data-tab="import">${I.download} Import</div>
         <div class="pa-tab" data-tab="status">${I.checkCircle} Status</div>
       </div>
@@ -604,11 +643,12 @@
         <div class="pa-sec">
           <div class="pa-sec-title">${I.edit} Short Description</div>
           <textarea class="pa-textarea" id="pa-sd-input" rows="5" placeholder="Key Features&#10;WD Blue SN570&#10;3300MB/s Read Speed&#10;PCIe Gen3 NVMe&#10;250GB Storage Capacity"></textarea>
-          <div style="display:flex; gap:8px; margin-top:10px;">
+          <div class="pa-inline-ctr"><span id="pa-sd-line-ctr" style="color:#666;">0 / 10 lines</span></div>
+          <div style="display:flex; gap:8px; margin-top:8px;">
             <button class="pa-btn pa-btn-red" id="pa-sd-fill" style="flex:1;">Format & Fill</button>
             <button class="pa-btn pa-btn-dark" id="pa-sd-clear">Clear</button>
           </div>
-          <div class="pa-hint">First line becomes H2 bold heading. Rest become bullet points. BG colors stripped.</div>
+          <div class="pa-hint">First line must start with "Key Feature". Max 10 lines total. Rest become bullet points.</div>
         </div>
 
         <!-- Description Paste Editor -->
@@ -619,7 +659,7 @@
             <button class="pa-btn pa-btn-red" id="pa-desc-fill" style="flex:1;">Clean & Fill Description</button>
             <button class="pa-btn pa-btn-dark" id="pa-desc-clear-editor">Clear</button>
           </div>
-          <div class="pa-hint">Paste rich content here. All tags (h1, h2, etc.) preserved. Only background colors are stripped on fill.</div>
+          <div class="pa-hint">Paste rich content here. H1 tags are converted to H2. Trailing blank lines removed. BG colors stripped on fill.</div>
         </div>
 
         <!-- Keyword Highlighter -->
@@ -641,22 +681,24 @@
         <div class="pa-sec">
           <div class="pa-sec-title">${I.edit} Meta Title</div>
           <textarea class="pa-textarea" id="pa-meta-title-input" rows="2" placeholder="Enter meta title..."></textarea>
-          <div style="display:flex; gap:8px; margin-top:10px;">
+          <div class="pa-inline-ctr"><span id="pa-mt-inline-ctr" style="color:#666;">0 / 60 chars</span></div>
+          <div style="display:flex; gap:8px; margin-top:8px;">
             <button class="pa-btn pa-btn-red" id="pa-meta-title-fill" style="flex:1;">Fill Meta Title</button>
             <button class="pa-btn pa-btn-dark" id="pa-meta-title-clear">Clear</button>
           </div>
-          <div class="pa-hint">Fills the meta title field on the form. Recommended: under 60 chars.</div>
+          <div class="pa-hint">Will not fill if over 60 chars (red). Recommended: under 60 chars.</div>
         </div>
 
         <!-- Meta Description Editor -->
         <div class="pa-sec">
           <div class="pa-sec-title">${I.edit} Meta Description</div>
           <textarea class="pa-textarea" id="pa-meta-desc-input" rows="3" placeholder="Enter meta description..."></textarea>
-          <div style="display:flex; gap:8px; margin-top:10px;">
+          <div class="pa-inline-ctr"><span id="pa-md-inline-ctr" style="color:#666;">0 / 160 chars</span></div>
+          <div style="display:flex; gap:8px; margin-top:8px;">
             <button class="pa-btn pa-btn-red" id="pa-meta-desc-fill" style="flex:1;">Fill Meta Description</button>
             <button class="pa-btn pa-btn-dark" id="pa-meta-desc-clear">Clear</button>
           </div>
-          <div class="pa-hint">Fills the meta description field on the form. Recommended: under 160 chars.</div>
+          <div class="pa-hint">Will not fill if over 160 chars (red). Recommended: under 160 chars.</div>
         </div>
 
         <!-- Meta Counters -->
@@ -828,6 +870,26 @@
   };
 
   const fillShortDescription = (rawText) => {
+    const rawLines = rawText
+      .split("\n")
+      .map((l) => l.trim())
+      .filter((l) => l.length > 0);
+    if (rawLines.length === 0)
+      return showToast("No text to format", 2500, "warning");
+    if (!rawLines[0].toLowerCase().startsWith("key feature")) {
+      return showToast(
+        'First line must start with "Key Feature"',
+        2500,
+        "error",
+      );
+    }
+    if (rawLines.length > 10) {
+      return showToast(
+        `Too many lines (${rawLines.length}/10 max). Reduce before filling.`,
+        2500,
+        "error",
+      );
+    }
     const html = formatShortDescription(rawText);
     if (!html) return showToast("No text to format", 2500, "warning");
     const ed = document.querySelector("#editor .ql-editor");
@@ -839,6 +901,7 @@
     triggerQuillSync("#editor");
     // Clear the input textarea after filling
     const inp = document.getElementById("pa-sd-input");
+    if (inp) showFillSuccess(inp);
     if (inp) inp.value = "";
     // Count bullet items (lines after the heading)
     const sdLines = rawText
@@ -876,6 +939,22 @@
 
     // Clean backgrounds, inline text colors, and normalize whitespace
     let html = cleanBackgroundFromHtml(pasteEditor.innerHTML);
+
+    // Force H1 → H2
+    html = html
+      .replace(/<h1(\b[^>]*)?>/gi, "<h2$1>")
+      .replace(/<\/h1>/gi, "</h2>");
+
+    // Strip trailing empty block elements and whitespace (run multiple passes)
+    for (let _pass = 0; _pass < 5; _pass++) {
+      const _before = html;
+      html = html
+        .replace(/\s+$/, "")
+        .replace(/(<br\s*\/?>)\s*$/, "")
+        .replace(/<p[^>]*>\s*(<br\s*\/?>)?\s*<\/p>\s*$/, "")
+        .replace(/<div[^>]*>\s*(<br\s*\/?>)?\s*<\/div>\s*$/, "");
+      if (html === _before) break;
+    }
 
     // The contenteditable div wraps lines in <div>...</div> which causes
     // extra line spacing. Convert those to proper block elements or strip them.
@@ -1035,6 +1114,7 @@
     const stats = getStats();
     stats.descItems += 1;
     saveStats(stats);
+    showFillSuccess(pasteEditor);
     pasteEditor.innerHTML = "";
     showToast("Description filled!", 2500, "success");
     refreshFieldStatus();
@@ -1085,6 +1165,115 @@
       md.addEventListener("input", update);
       md.addEventListener("change", update);
       update();
+    }
+  };
+
+  // ─── 3b. PANEL REAL-TIME FEEDBACK ───────────────────────────
+  const updateTabMetaCtr = () => {
+    const el = document.getElementById("pa-tab-meta-ctr");
+    if (!el) return;
+    const mt = document.getElementById("pa-meta-title-input");
+    const md = document.getElementById("pa-meta-desc-input");
+    const mtLen = mt ? mt.value.length : 0;
+    const mdLen = md ? md.value.length : 0;
+    if (mtLen === 0 && mdLen === 0) {
+      el.textContent = "";
+      return;
+    }
+    const mtColor = mtLen > 60 ? "#ef4444" : mtLen > 50 ? "#f59e0b" : "#22c55e";
+    const mdColor =
+      mdLen > 160 ? "#ef4444" : mdLen > 140 ? "#f59e0b" : "#22c55e";
+    el.innerHTML = `<span style="color:${mtColor}">${mtLen}/60</span> · <span style="color:${mdColor}">${mdLen}/160</span>`;
+  };
+
+  const setupPanelRealtime = () => {
+    // ── Short description line counter ──
+    const sdInput = document.getElementById("pa-sd-input");
+    const sdCtr = document.getElementById("pa-sd-line-ctr");
+    if (sdInput && sdCtr) {
+      const updateSD = () => {
+        const lines = sdInput.value
+          .split("\n")
+          .map((l) => l.trim())
+          .filter((l) => l.length > 0);
+        const count = lines.length;
+        const overLimit = count > 10;
+        const firstOk =
+          count === 0 || lines[0].toLowerCase().startsWith("key feature");
+        const color = overLimit ? "#ef4444" : count > 8 ? "#f59e0b" : "#666";
+        let extra = "";
+        if (count > 0 && !firstOk)
+          extra = ` &nbsp;<span style="color:#ef4444;font-size:10px;">✗ first line must be "Key Feature"</span>`;
+        else if (count > 0 && !overLimit)
+          extra = ` &nbsp;<span style="color:#22c55e;font-size:10px;">✓</span>`;
+        sdCtr.innerHTML = `<span style="color:${color};font-weight:${count > 0 ? "700" : "400"}">${count}</span> / 10 lines${extra}`;
+      };
+      sdInput.addEventListener("input", updateSD);
+      sdInput.addEventListener("paste", () => setTimeout(updateSD, 10));
+    }
+
+    // ── Meta title real-time counter ──
+    const mtInput = document.getElementById("pa-meta-title-input");
+    const mtCtr = document.getElementById("pa-mt-inline-ctr");
+    if (mtInput && mtCtr) {
+      const updateMT = () => {
+        const len = mtInput.value.length;
+        const color = len > 60 ? "#ef4444" : len > 50 ? "#f59e0b" : "#22c55e";
+        mtCtr.innerHTML = `<span style="color:${color};font-weight:700;">${len}</span> / 60 chars`;
+        mtInput.classList.remove(
+          "pa-input-ok",
+          "pa-input-warn",
+          "pa-input-bad",
+        );
+        if (len > 0)
+          mtInput.classList.add(
+            len > 60
+              ? "pa-input-bad"
+              : len > 50
+                ? "pa-input-warn"
+                : "pa-input-ok",
+          );
+        const badge = document.getElementById("pa-mt-badge");
+        if (badge) {
+          badge.textContent = `${len} / 60 chars`;
+          badge.className = `pa-badge ${len > 60 ? "pa-badge-bad" : len > 50 ? "pa-badge-warn" : "pa-badge-ok"}`;
+        }
+        updateTabMetaCtr();
+      };
+      mtInput.addEventListener("input", updateMT);
+      mtInput.addEventListener("paste", () => setTimeout(updateMT, 10));
+    }
+
+    // ── Meta description real-time counter ──
+    const mdInput = document.getElementById("pa-meta-desc-input");
+    const mdCtr = document.getElementById("pa-md-inline-ctr");
+    if (mdInput && mdCtr) {
+      const updateMD = () => {
+        const len = mdInput.value.length;
+        const color = len > 160 ? "#ef4444" : len > 140 ? "#f59e0b" : "#22c55e";
+        mdCtr.innerHTML = `<span style="color:${color};font-weight:700;">${len}</span> / 160 chars`;
+        mdInput.classList.remove(
+          "pa-input-ok",
+          "pa-input-warn",
+          "pa-input-bad",
+        );
+        if (len > 0)
+          mdInput.classList.add(
+            len > 160
+              ? "pa-input-bad"
+              : len > 140
+                ? "pa-input-warn"
+                : "pa-input-ok",
+          );
+        const badge = document.getElementById("pa-md-badge");
+        if (badge) {
+          badge.textContent = `${len} / 160 chars`;
+          badge.className = `pa-badge ${len > 160 ? "pa-badge-bad" : len > 140 ? "pa-badge-warn" : "pa-badge-ok"}`;
+        }
+        updateTabMetaCtr();
+      };
+      mdInput.addEventListener("input", updateMD);
+      mdInput.addEventListener("paste", () => setTimeout(updateMD, 10));
     }
   };
 
@@ -2055,12 +2244,19 @@
           const val = inp.value.trim();
           if (!val)
             return showToast("Enter a meta title first", 2500, "warning");
+          if (val.length > 60)
+            return showToast(
+              "Meta title exceeds 60 chars — shorten it first",
+              2500,
+              "error",
+            );
           const field = document.querySelector("input#meta_title");
           if (!field)
             return showToast("Meta title field not found", 2500, "error");
           field.value = val;
           field.dispatchEvent(new Event("input", { bubbles: true }));
           field.dispatchEvent(new Event("change", { bubbles: true }));
+          showFillSuccess(inp);
           inp.value = "";
           showToast("Meta title filled!", 2500, "success");
           refreshFieldStatus();
@@ -2079,6 +2275,12 @@
           const val = inp.value.trim();
           if (!val)
             return showToast("Enter a meta description first", 2500, "warning");
+          if (val.length > 160)
+            return showToast(
+              "Meta description exceeds 160 chars — shorten it first",
+              2500,
+              "error",
+            );
           const field = document.querySelector(
             'textarea[name="meta_description"]',
           );
@@ -2087,6 +2289,7 @@
           field.value = val;
           field.dispatchEvent(new Event("input", { bubbles: true }));
           field.dispatchEvent(new Event("change", { bubbles: true }));
+          showFillSuccess(inp);
           inp.value = "";
           showToast("Meta description filled!", 2500, "success");
           refreshFieldStatus();
@@ -2200,6 +2403,7 @@
 
       // ── Setup counters (no paste interceptors — user pastes normally) ──
       setupMetaCounters();
+      setupPanelRealtime();
 
       // ── Initial render ──
       renderKeywordTags();
