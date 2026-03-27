@@ -476,10 +476,13 @@ const PromptTemplateManager = () => {
   const [editingTemplate, setEditingTemplate] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [isReorderingTemplates, setIsReorderingTemplates] = useState(false);
   const [draggedVariableIndex, setDraggedVariableIndex] = useState(null);
   const [draggedPromptIndex, setDraggedPromptIndex] = useState(null);
   const [dragOverVariableIndex, setDragOverVariableIndex] = useState(null);
   const [dragOverPromptIndex, setDragOverPromptIndex] = useState(null);
+  const [draggedTemplateIndex, setDraggedTemplateIndex] = useState(null);
+  const [dragOverTemplateIndex, setDragOverTemplateIndex] = useState(null);
 
   useEffect(() => {
     fetchTemplates();
@@ -627,6 +630,46 @@ const PromptTemplateManager = () => {
     }
     setDraggedPromptIndex(null);
     setDragOverPromptIndex(null);
+  };
+
+  const handleDragTemplates = (e, index) => {
+    setDraggedTemplateIndex(index);
+    e.dataTransfer.effectAllowed = "move";
+  };
+
+  const handleDropTemplates = async (e, targetIndex) => {
+    e.preventDefault();
+    if (draggedTemplateIndex !== null && draggedTemplateIndex !== targetIndex) {
+      const reorderedTemplates = [...templates];
+      const draggedTemplate = reorderedTemplates[draggedTemplateIndex];
+      reorderedTemplates.splice(draggedTemplateIndex, 1);
+      reorderedTemplates.splice(targetIndex, 0, draggedTemplate);
+
+      // Update all order fields based on new position
+      const updatedTemplates = reorderedTemplates.map((t, i) => ({
+        ...t,
+        order: i,
+      }));
+      setTemplates(updatedTemplates);
+      setIsReorderingTemplates(true);
+
+      // Save order changes to backend
+      try {
+        for (let i = 0; i < updatedTemplates.length; i++) {
+          await authService.updateAdminTemplate(updatedTemplates[i]._id, {
+            order: i,
+          });
+        }
+        toast.success("Templates reordered");
+      } catch {
+        toast.error("Failed to reorder templates");
+        fetchTemplates(); // Revert to server state on error
+      } finally {
+        setIsReorderingTemplates(false);
+      }
+    }
+    setDraggedTemplateIndex(null);
+    setDragOverTemplateIndex(null);
   };
 
   if (editingTemplate) {
@@ -911,11 +954,44 @@ const PromptTemplateManager = () => {
         </div>
       ) : (
         <div className="space-y-3">
-          {templates.map((t) => (
+          {templates.map((t, i) => (
             <div
               key={t._id}
-              className="flex items-center gap-4 p-4 rounded-lg border bg-card hover:shadow-sm transition-shadow"
+              onDragOver={(e) => {
+                if (!isReorderingTemplates) {
+                  e.preventDefault();
+                  e.dataTransfer.dropEffect = "move";
+                  setDragOverTemplateIndex(i);
+                }
+              }}
+              onDragLeave={() => setDragOverTemplateIndex(null)}
+              onDrop={(e) => handleDropTemplates(e, i)}
+              draggable={!isReorderingTemplates}
+              onDragStart={(e) => handleDragTemplates(e, i)}
+              className={cn(
+                "flex items-center gap-4 p-4 rounded-lg border bg-card transition-all duration-200",
+                isReorderingTemplates && "opacity-50 pointer-events-none",
+                draggedTemplateIndex === i &&
+                  "opacity-60 scale-95 border-green-400 bg-green-50/30 dark:bg-green-950/20 shadow-lg",
+                dragOverTemplateIndex === i &&
+                  draggedTemplateIndex !== null &&
+                  "bg-green-50/30 dark:bg-green-950/30 border-2 border-green-300 dark:border-green-600",
+                draggedTemplateIndex !== i &&
+                  !isReorderingTemplates &&
+                  "hover:shadow-sm",
+              )}
             >
+              <GripVertical
+                className={cn(
+                  "h-5 w-5 shrink-0 transition-colors",
+                  isReorderingTemplates && "cursor-not-allowed",
+                  !isReorderingTemplates &&
+                    "cursor-grab active:cursor-grabbing",
+                  draggedTemplateIndex === i
+                    ? "text-green-600 dark:text-green-400"
+                    : "text-muted-foreground",
+                )}
+              />
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="font-medium">{t.name}</span>
@@ -938,7 +1014,6 @@ const PromptTemplateManager = () => {
                 <div className="flex gap-3 mt-1 text-xs text-muted-foreground">
                   <span>{t.prompts?.length || 0} prompts</span>
                   <span>{t.variables?.length || 0} variables</span>
-                  <span>Order: {t.order}</span>
                 </div>
               </div>
               <div className="flex gap-1 shrink-0">
