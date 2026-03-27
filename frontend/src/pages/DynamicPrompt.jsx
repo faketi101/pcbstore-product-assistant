@@ -177,6 +177,15 @@ const DynamicPrompt = () => {
 
   // ── Variable replacement engine ─────────────────────
 
+  const buildVariableRegex = (key) => {
+    const escapedKey = key.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
+    // Support both ${key} and {{key}} styles with optional spaces.
+    return new RegExp(
+      `\\$\\{\\s*${escapedKey}\\s*\\}|\\{\\{\\s*${escapedKey}\\s*\\}\\}`,
+      "g",
+    );
+  };
+
   const generateForPrompt = (promptSection) => {
     if (!promptSection.hasVariables) {
       // Static prompt — return as-is
@@ -188,13 +197,7 @@ const DynamicPrompt = () => {
     // Build replacements from form data
     template.variables.forEach((v) => {
       const value = formData[v.key] || "";
-      const placeholder = `\${${v.key}}`;
-      const escapedKey = placeholder.replace(
-        // eslint-disable-next-line no-useless-escape
-        /([.*+?^=!:${}()|\[\]\/\\])/g,
-        "\\$1",
-      );
-      generated = generated.replace(new RegExp(escapedKey, "g"), value);
+      generated = generated.replace(buildVariableRegex(v.key), value);
     });
 
     return generated;
@@ -207,7 +210,7 @@ const DynamicPrompt = () => {
       // Only check if this prompt's template actually references this variable
       if (
         promptSection.hasVariables &&
-        promptSection.template.includes(`\${${v.key}}`)
+        buildVariableRegex(v.key).test(promptSection.template || "")
       ) {
         if (!formData[v.key]?.trim()) {
           toast.error(`${v.name} is required`);
@@ -454,10 +457,18 @@ const DynamicPrompt = () => {
   // ── Helper: render variables for a specific prompt tab ──
   const getVariablesForPrompt = (promptSection) => {
     if (!promptSection.hasVariables) return [];
-    // Return variables whose key appears in this prompt's template
-    return template.variables.filter((v) =>
-      promptSection.template.includes(`\${${v.key}}`),
+
+    const matchedVariables = template.variables.filter((v) =>
+      buildVariableRegex(v.key).test(promptSection.template || ""),
     );
+
+    // Fallback: if no placeholders matched but template has variables configured,
+    // still show all variables so users can fill fields and fix placeholders.
+    if (matchedVariables.length === 0 && template.variables.length > 0) {
+      return template.variables;
+    }
+
+    return matchedVariables;
   };
 
   // ── Helper: render a variable input field ───────────

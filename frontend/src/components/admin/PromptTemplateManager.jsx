@@ -128,6 +128,22 @@ const VariableEditor = ({ variable, onChange, onRemove, index }) => {
         ) : (
           <ChevronDown className="h-4 w-4 text-muted-foreground" />
         )}
+        {variable.key && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+            onClick={(e) => {
+              e.stopPropagation();
+              const placeholder = `\${${variable.key}}`;
+              navigator.clipboard.writeText(placeholder);
+              toast.success(`Copied: ${placeholder}`);
+            }}
+            title="Copy variable placeholder"
+          >
+            <Copy className="h-3.5 w-3.5" />
+          </Button>
+        )}
         <Button
           variant="ghost"
           size="icon"
@@ -145,11 +161,15 @@ const VariableEditor = ({ variable, onChange, onRemove, index }) => {
             <Input
               value={variable.name}
               onChange={(e) => {
-                update("name", e.target.value);
-                // Auto-generate key if key is empty or was auto-generated
-                if (!variable.key || variable.key === autoKey(variable.name)) {
-                  update("key", autoKey(e.target.value));
-                }
+                const nextName = e.target.value;
+                const shouldAutoGenerateKey =
+                  !variable.key || variable.key === autoKey(variable.name);
+
+                onChange({
+                  ...variable,
+                  name: nextName,
+                  ...(shouldAutoGenerateKey ? { key: autoKey(nextName) } : {}),
+                });
               }}
               placeholder="e.g. Product Name"
               className="h-8 text-sm"
@@ -323,10 +343,17 @@ const PromptSectionEditor = ({ prompt, onChange, onRemove, index }) => {
               <Input
                 value={prompt.name}
                 onChange={(e) => {
-                  update("name", e.target.value);
-                  if (!prompt.key || prompt.key === autoKey(prompt.name)) {
-                    update("key", autoKey(e.target.value));
-                  }
+                  const nextName = e.target.value;
+                  const shouldAutoGenerateKey =
+                    !prompt.key || prompt.key === autoKey(prompt.name);
+
+                  onChange({
+                    ...prompt,
+                    name: nextName,
+                    ...(shouldAutoGenerateKey
+                      ? { key: autoKey(nextName) }
+                      : {}),
+                  });
                 }}
                 placeholder="e.g. Main Prompt"
                 className="h-8 text-sm"
@@ -543,10 +570,17 @@ const PromptTemplateManager = () => {
               <Input
                 value={t.name}
                 onChange={(e) => {
-                  updateField("name", e.target.value);
-                  if (!t.slug || t.slug === autoSlug(t.name)) {
-                    updateField("slug", autoSlug(e.target.value));
-                  }
+                  const nextName = e.target.value;
+                  const shouldAutoGenerateSlug =
+                    !t.slug || t.slug === autoSlug(t.name);
+
+                  setEditingTemplate((prev) => ({
+                    ...prev,
+                    name: nextName,
+                    ...(shouldAutoGenerateSlug
+                      ? { slug: autoSlug(nextName) }
+                      : {}),
+                  }));
                 }}
                 placeholder="e.g. Product Prompt"
               />
