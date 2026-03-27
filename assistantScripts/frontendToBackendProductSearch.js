@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PCB Frontend Admin Search + Specs Copy
 // @namespace    http://tampermonkey.net/
-// @version      1.4
+// @version      1.6
 // @description  Open backend product search in a new tab and copy full frontend technical specs with product name.
 // @author       faketi101
 // @match        https://pcbstore.com.bd/product/*
@@ -17,6 +17,8 @@
   const SHORTCUT_KEY = "i"; // Alt+I
   const ADMIN_BUTTON_ID = "pcb-admin-search-btn";
   const COPY_BUTTON_ID = "pcb-copy-specs-btn";
+  const SEARCH_PRODUCT_BUTTON_ID = "pcb-search-product-btn";
+  const INDEX_CHECK_BUTTON_ID = "pcb-index-check-btn";
   const BUTTON_WRAP_ID = "pcb-admin-tools-wrap";
   const TOAST_WRAP_ID = "pcb-admin-tools-toast-wrap";
 
@@ -82,13 +84,25 @@
     toast.style.setProperty("color", "#ffffff", "important");
     toast.style.setProperty("padding", "10px 12px", "important");
     toast.style.setProperty("border-radius", "10px", "important");
-    toast.style.setProperty("font-family", "Segoe UI, Arial, sans-serif", "important");
+    toast.style.setProperty(
+      "font-family",
+      "Segoe UI, Arial, sans-serif",
+      "important",
+    );
     toast.style.setProperty("font-size", "12px", "important");
     toast.style.setProperty("font-weight", "600", "important");
-    toast.style.setProperty("box-shadow", "0 10px 24px rgba(0,0,0,0.35)", "important");
+    toast.style.setProperty(
+      "box-shadow",
+      "0 10px 24px rgba(0,0,0,0.35)",
+      "important",
+    );
     toast.style.setProperty("opacity", "0", "important");
     toast.style.setProperty("transform", "translateY(-4px)", "important");
-    toast.style.setProperty("transition", "opacity 180ms ease, transform 180ms ease", "important");
+    toast.style.setProperty(
+      "transition",
+      "opacity 180ms ease, transform 180ms ease",
+      "important",
+    );
 
     wrap.appendChild(toast);
 
@@ -107,7 +121,9 @@
   const collectSpecsText = () => {
     const productName = getProductNameFromDom();
     const technicalHeading = Array.from(document.querySelectorAll("h2")).find(
-      (el) => normalizeText(el.textContent || "").toLowerCase() === "technical specifications",
+      (el) =>
+        normalizeText(el.textContent || "").toLowerCase() ===
+        "technical specifications",
     );
 
     if (!productName || !technicalHeading) {
@@ -129,8 +145,12 @@
         ? Array.from(sectionNode.querySelectorAll("tr"))
         : [];
       rows.forEach((row) => {
-        const key = normalizeText(row.querySelector("td:first-child")?.textContent || "");
-        const value = normalizeText(row.querySelector("td:nth-child(2)")?.textContent || "");
+        const key = normalizeText(
+          row.querySelector("td:first-child")?.textContent || "",
+        );
+        const value = normalizeText(
+          row.querySelector("td:nth-child(2)")?.textContent || "",
+        );
         if (key && value) {
           lines.push(`${key}: ${value}`);
         }
@@ -147,8 +167,12 @@
       let node = h3.nextElementSibling;
       while (node && node.tagName !== "H3") {
         if (node.tagName === "TR") {
-          const key = normalizeText(node.querySelector("td:first-child")?.textContent || "");
-          const value = normalizeText(node.querySelector("td:nth-child(2)")?.textContent || "");
+          const key = normalizeText(
+            node.querySelector("td:first-child")?.textContent || "",
+          );
+          const value = normalizeText(
+            node.querySelector("td:nth-child(2)")?.textContent || "",
+          );
           if (key && value) {
             lines.push(`${key}: ${value}`);
           }
@@ -167,7 +191,10 @@
   const copySpecsToClipboard = async () => {
     const text = collectSpecsText();
     if (!text) {
-      showToast("Could not detect technical specifications on this page.", "error");
+      showToast(
+        "Could not detect technical specifications on this page.",
+        "error",
+      );
       return;
     }
 
@@ -204,6 +231,23 @@
     window.open(targetUrl, "_blank", "noopener");
   };
 
+  const searchProductName = () => {
+    const productName = getProductNameFromDom();
+    if (!productName) {
+      showToast("Could not detect product name on this page.", "error");
+      return;
+    }
+    const searchUrl = `https://www.google.com/search?q=${encodeSearchTerm(productName)}`;
+    window.open(searchUrl, "_blank", "noopener");
+  };
+
+  const checkGoogleIndex = () => {
+    const currentUrl = window.location.href;
+    const googleSearchUrl = `https://www.google.com/search?q=site:${encodeURIComponent(currentUrl)}`;
+    window.open(googleSearchUrl, "_blank", "noopener");
+    showToast("Checking Google index status...", "info");
+  };
+
   const applyButtonStyle = (button, backgroundColor) => {
     button.style.setProperty("display", "inline-flex", "important");
     button.style.setProperty("align-items", "center", "important");
@@ -220,15 +264,26 @@
     button.style.setProperty("font-weight", "700", "important");
     button.style.setProperty("line-height", "1.2", "important");
     button.style.setProperty("cursor", "pointer", "important");
-    button.style.setProperty("box-shadow", "0 8px 22px rgba(0,0,0,0.35)", "important");
-    button.style.setProperty("font-family", "Segoe UI, Arial, sans-serif", "important");
+    button.style.setProperty(
+      "box-shadow",
+      "0 8px 22px rgba(0,0,0,0.35)",
+      "important",
+    );
+    button.style.setProperty(
+      "font-family",
+      "Segoe UI, Arial, sans-serif",
+      "important",
+    );
     button.style.setProperty("white-space", "nowrap", "important");
   };
 
   const createActionButtons = () => {
     const existingAdmin = document.getElementById(ADMIN_BUTTON_ID);
     const existingCopy = document.getElementById(COPY_BUTTON_ID);
-    if (existingAdmin && existingCopy) return;
+    const existingSearch = document.getElementById(SEARCH_PRODUCT_BUTTON_ID);
+    const existingIndex = document.getElementById(INDEX_CHECK_BUTTON_ID);
+    if (existingAdmin && existingCopy && existingSearch && existingIndex)
+      return;
 
     let wrap = document.getElementById(BUTTON_WRAP_ID);
     if (!wrap) {
@@ -286,6 +341,50 @@
       });
 
       wrap.appendChild(copyButton);
+    }
+
+    if (!existingSearch) {
+      const searchButton = document.createElement("button");
+      searchButton.id = SEARCH_PRODUCT_BUTTON_ID;
+      searchButton.textContent = "Search Product";
+      searchButton.title = "Search product name in default search engine";
+      applyButtonStyle(searchButton, "#3b82f6");
+
+      searchButton.addEventListener("mouseenter", () => {
+        searchButton.style.background = "#2563eb";
+      });
+
+      searchButton.addEventListener("mouseleave", () => {
+        searchButton.style.background = "#3b82f6";
+      });
+
+      searchButton.addEventListener("click", () => {
+        searchProductName();
+      });
+
+      wrap.appendChild(searchButton);
+    }
+
+    if (!existingIndex) {
+      const indexButton = document.createElement("button");
+      indexButton.id = INDEX_CHECK_BUTTON_ID;
+      indexButton.textContent = "Check Google Index";
+      indexButton.title = "Check if this page is indexed in Google";
+      applyButtonStyle(indexButton, "#7c3aed");
+
+      indexButton.addEventListener("mouseenter", () => {
+        indexButton.style.background = "#6d28d9";
+      });
+
+      indexButton.addEventListener("mouseleave", () => {
+        indexButton.style.background = "#7c3aed";
+      });
+
+      indexButton.addEventListener("click", () => {
+        checkGoogleIndex();
+      });
+
+      wrap.appendChild(indexButton);
     }
   };
 
