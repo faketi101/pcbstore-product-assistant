@@ -13,6 +13,8 @@ import {
   X,
   Copy,
   Variable,
+  ArrowUp,
+  ArrowDown,
 } from "lucide-react";
 import authService from "../../services/api";
 import { Button } from "@/components/ui/button";
@@ -43,6 +45,8 @@ const ICON_OPTIONS = [
 const COLOR_OPTIONS = ["primary", "emerald", "blue", "purple", "amber", "rose"];
 const VARIABLE_TYPES = ["text", "textarea", "select"];
 const GRID_COLUMNS = ["full", "half"];
+
+// ── Empty defaults ────────────────────────────────────
 
 const emptyVariable = {
   name: "",
@@ -84,12 +88,13 @@ const VariableEditor = ({
   variable,
   onChange,
   onRemove,
+  onMoveUp,
+  onMoveDown,
   index,
-  onDrag,
-  draggedIndex,
+  canMoveUp,
+  canMoveDown,
 }) => {
   const [expanded, setExpanded] = useState(!variable.name);
-  const isDragging = draggedIndex === index;
 
   const update = (field, value) => {
     onChange({ ...variable, [field]: value });
@@ -102,26 +107,9 @@ const VariableEditor = ({
       .replace(/^\w/, (c) => c.toLowerCase());
 
   return (
-    <div
-      className={cn(
-        "border rounded-lg p-3 bg-muted/20 transition-all",
-        isDragging
-          ? "opacity-60 scale-95 border-blue-400 bg-blue-50/30 dark:bg-blue-950/20 shadow-lg"
-          : "border-transparent bg-muted/20 hover:bg-muted/30",
-      )}
-      draggable
-      onDragStart={(e) => onDrag(e, index)}
-      onDragOver={(e) => e.preventDefault()}
-    >
+    <div className="border rounded-lg p-3 bg-muted/20">
       <div className="flex items-center gap-2">
-        <GripVertical
-          className={cn(
-            "h-4 w-4 shrink-0 cursor-grab active:cursor-grabbing transition-colors",
-            isDragging
-              ? "text-blue-600 dark:text-blue-400"
-              : "text-muted-foreground",
-          )}
-        />
+        <GripVertical className="h-4 w-4 text-muted-foreground shrink-0" />
         <button
           onClick={() => setExpanded(!expanded)}
           className="flex-1 flex items-center gap-2 text-left"
@@ -150,6 +138,34 @@ const VariableEditor = ({
           <ChevronUp className="h-4 w-4 text-muted-foreground" />
         ) : (
           <ChevronDown className="h-4 w-4 text-muted-foreground" />
+        )}
+        {canMoveUp && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7"
+            onClick={(e) => {
+              e.stopPropagation();
+              onMoveUp();
+            }}
+            title="Move up"
+          >
+            <ArrowUp className="h-3.5 w-3.5" />
+          </Button>
+        )}
+        {canMoveDown && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7"
+            onClick={(e) => {
+              e.stopPropagation();
+              onMoveDown();
+            }}
+            title="Move down"
+          >
+            <ArrowDown className="h-3.5 w-3.5" />
+          </Button>
         )}
         {variable.key && (
           <Button
@@ -180,6 +196,7 @@ const VariableEditor = ({
               onRemove();
             }
           }}
+          title="Delete variable"
         >
           <Trash2 className="h-3.5 w-3.5" />
         </Button>
@@ -320,12 +337,13 @@ const PromptSectionEditor = ({
   prompt,
   onChange,
   onRemove,
+  onMoveUp,
+  onMoveDown,
   index,
-  onDrag,
-  draggedIndex,
+  canMoveUp,
+  canMoveDown,
 }) => {
   const [expanded, setExpanded] = useState(!prompt.name);
-  const isDragging = draggedIndex === index;
 
   const update = (field, value) => {
     onChange({ ...prompt, [field]: value });
@@ -338,26 +356,9 @@ const PromptSectionEditor = ({
       .replace(/^\w/, (c) => c.toLowerCase());
 
   return (
-    <div
-      className={cn(
-        "border-2 rounded-lg p-3 transition-all duration-200",
-        isDragging
-          ? "opacity-60 scale-95 border-blue-400 bg-blue-50/30 dark:bg-blue-950/20 shadow-lg"
-          : "border-transparent bg-muted/20 hover:bg-muted/30",
-      )}
-      draggable
-      onDragStart={(e) => onDrag(e, index)}
-      onDragOver={(e) => e.preventDefault()}
-    >
+    <div className="border rounded-lg p-3 bg-muted/20">
       <div className="flex items-center gap-2">
-        <GripVertical
-          className={cn(
-            "h-4 w-4 shrink-0 cursor-grab active:cursor-grabbing transition-colors",
-            isDragging
-              ? "text-purple-600 dark:text-purple-400"
-              : "text-muted-foreground",
-          )}
-        />
+        <GripVertical className="h-4 w-4 text-muted-foreground shrink-0" />
         <button
           onClick={() => setExpanded(!expanded)}
           className="flex-1 flex items-center gap-2 text-left"
@@ -381,6 +382,34 @@ const PromptSectionEditor = ({
         ) : (
           <ChevronDown className="h-4 w-4 text-muted-foreground" />
         )}
+        {canMoveUp && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7"
+            onClick={(e) => {
+              e.stopPropagation();
+              onMoveUp();
+            }}
+            title="Move up"
+          >
+            <ArrowUp className="h-3.5 w-3.5" />
+          </Button>
+        )}
+        {canMoveDown && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7"
+            onClick={(e) => {
+              e.stopPropagation();
+              onMoveDown();
+            }}
+            title="Move down"
+          >
+            <ArrowDown className="h-3.5 w-3.5" />
+          </Button>
+        )}
         <Button
           variant="ghost"
           size="icon"
@@ -394,6 +423,7 @@ const PromptSectionEditor = ({
               onRemove();
             }
           }}
+          title="Delete prompt"
         >
           <Trash2 className="h-3.5 w-3.5" />
         </Button>
@@ -476,10 +506,6 @@ const PromptTemplateManager = () => {
   const [editingTemplate, setEditingTemplate] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [draggedVariableIndex, setDraggedVariableIndex] = useState(null);
-  const [draggedPromptIndex, setDraggedPromptIndex] = useState(null);
-  const [dragOverVariableIndex, setDragOverVariableIndex] = useState(null);
-  const [dragOverPromptIndex, setDragOverPromptIndex] = useState(null);
 
   useEffect(() => {
     fetchTemplates();
@@ -545,6 +571,7 @@ const PromptTemplateManager = () => {
       return;
     }
 
+    // Validate prompts
     for (const p of editingTemplate.prompts) {
       if (!p.name?.trim() || !p.key?.trim()) {
         toast.error("All prompts must have a name and key");
@@ -552,6 +579,7 @@ const PromptTemplateManager = () => {
       }
     }
 
+    // Validate variables
     for (const v of editingTemplate.variables) {
       if (!v.name?.trim() || !v.key?.trim()) {
         toast.error("All variables must have a name and key");
@@ -559,6 +587,7 @@ const PromptTemplateManager = () => {
       }
     }
 
+    // Auto-assign order
     editingTemplate.prompts = editingTemplate.prompts.map((p, i) => ({
       ...p,
       order: i,
@@ -593,41 +622,7 @@ const PromptTemplateManager = () => {
     setEditingTemplate(null);
   };
 
-  const handleDragVariables = (e, index) => {
-    setDraggedVariableIndex(index);
-    e.dataTransfer.effectAllowed = "move";
-  };
-
-  const handleDropVariables = (e, targetIndex) => {
-    e.preventDefault();
-    if (draggedVariableIndex !== null && draggedVariableIndex !== targetIndex) {
-      const vars = [...editingTemplate.variables];
-      const draggedVar = vars[draggedVariableIndex];
-      vars.splice(draggedVariableIndex, 1);
-      vars.splice(targetIndex, 0, draggedVar);
-      setEditingTemplate((prev) => ({ ...prev, variables: vars }));
-    }
-    setDraggedVariableIndex(null);
-    setDragOverVariableIndex(null);
-  };
-
-  const handleDragPrompts = (e, index) => {
-    setDraggedPromptIndex(index);
-    e.dataTransfer.effectAllowed = "move";
-  };
-
-  const handleDropPrompts = (e, targetIndex) => {
-    e.preventDefault();
-    if (draggedPromptIndex !== null && draggedPromptIndex !== targetIndex) {
-      const prompts = [...editingTemplate.prompts];
-      const draggedPrompt = prompts[draggedPromptIndex];
-      prompts.splice(draggedPromptIndex, 1);
-      prompts.splice(targetIndex, 0, draggedPrompt);
-      setEditingTemplate((prev) => ({ ...prev, prompts }));
-    }
-    setDraggedPromptIndex(null);
-    setDragOverPromptIndex(null);
-  };
+  // ── Edit Form ──────────────────────────────────────
 
   if (editingTemplate) {
     const t = editingTemplate;
@@ -643,6 +638,7 @@ const PromptTemplateManager = () => {
 
     return (
       <div className="space-y-6">
+        {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <h3 className="text-lg font-semibold">
             {isCreating ? "Create New Template" : `Edit: ${t.name}`}
@@ -657,6 +653,7 @@ const PromptTemplateManager = () => {
           </div>
         </div>
 
+        {/* Basic Info */}
         <div className="border rounded-lg p-4 space-y-4">
           <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">
             Basic Information
@@ -759,6 +756,7 @@ const PromptTemplateManager = () => {
           </div>
         </div>
 
+        {/* Variables Section */}
         <div className="border rounded-lg p-4 space-y-4">
           <div className="flex justify-between items-center">
             <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">
@@ -785,43 +783,38 @@ const PromptTemplateManager = () => {
           ) : (
             <div className="space-y-2">
               {t.variables.map((v, i) => (
-                <div
+                <VariableEditor
                   key={i}
-                  onDragOver={(e) => {
-                    e.preventDefault();
-                    e.dataTransfer.dropEffect = "move";
-                    setDragOverVariableIndex(i);
+                  variable={v}
+                  index={i}
+                  canMoveUp={i > 0}
+                  canMoveDown={i < t.variables.length - 1}
+                  onChange={(updated) => {
+                    const vars = [...t.variables];
+                    vars[i] = updated;
+                    updateField("variables", vars);
                   }}
-                  onDragLeave={() => setDragOverVariableIndex(null)}
-                  onDrop={(e) => handleDropVariables(e, i)}
-                  className={cn(
-                    "transition-all",
-                    dragOverVariableIndex === i &&
-                      draggedVariableIndex !== null &&
-                      "bg-blue-50 dark:bg-blue-950/30 border-2 border-blue-300 dark:border-blue-600 rounded-lg p-2",
-                  )}
-                >
-                  <VariableEditor
-                    variable={v}
-                    index={i}
-                    draggedIndex={draggedVariableIndex}
-                    onChange={(updated) => {
-                      const vars = [...t.variables];
-                      vars[i] = updated;
-                      updateField("variables", vars);
-                    }}
-                    onRemove={() => {
-                      const vars = t.variables.filter((_, idx) => idx !== i);
-                      updateField("variables", vars);
-                    }}
-                    onDrag={handleDragVariables}
-                  />
-                </div>
+                  onRemove={() => {
+                    const vars = t.variables.filter((_, idx) => idx !== i);
+                    updateField("variables", vars);
+                  }}
+                  onMoveUp={() => {
+                    const vars = [...t.variables];
+                    [vars[i - 1], vars[i]] = [vars[i], vars[i - 1]];
+                    updateField("variables", vars);
+                  }}
+                  onMoveDown={() => {
+                    const vars = [...t.variables];
+                    [vars[i], vars[i + 1]] = [vars[i + 1], vars[i]];
+                    updateField("variables", vars);
+                  }}
+                />
               ))}
             </div>
           )}
         </div>
 
+        {/* Prompt Sections */}
         <div className="border rounded-lg p-4 space-y-4">
           <div className="flex justify-between items-center">
             <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">
@@ -848,38 +841,32 @@ const PromptTemplateManager = () => {
           ) : (
             <div className="space-y-2">
               {t.prompts.map((p, i) => (
-                <div
+                <PromptSectionEditor
                   key={i}
-                  onDragOver={(e) => {
-                    e.preventDefault();
-                    e.dataTransfer.dropEffect = "move";
-                    setDragOverPromptIndex(i);
+                  prompt={p}
+                  index={i}
+                  canMoveUp={i > 0}
+                  canMoveDown={i < t.prompts.length - 1}
+                  onChange={(updated) => {
+                    const prompts = [...t.prompts];
+                    prompts[i] = updated;
+                    updateField("prompts", prompts);
                   }}
-                  onDragLeave={() => setDragOverPromptIndex(null)}
-                  onDrop={(e) => handleDropPrompts(e, i)}
-                  className={cn(
-                    "transition-all",
-                    dragOverPromptIndex === i &&
-                      draggedPromptIndex !== null &&
-                      "bg-purple-50 dark:bg-purple-950/30 border-2 border-purple-300 dark:border-purple-600 rounded-lg p-2",
-                  )}
-                >
-                  <PromptSectionEditor
-                    prompt={p}
-                    index={i}
-                    draggedIndex={draggedPromptIndex}
-                    onChange={(updated) => {
-                      const prompts = [...t.prompts];
-                      prompts[i] = updated;
-                      updateField("prompts", prompts);
-                    }}
-                    onRemove={() => {
-                      const prompts = t.prompts.filter((_, idx) => idx !== i);
-                      updateField("prompts", prompts);
-                    }}
-                    onDrag={handleDragPrompts}
-                  />
-                </div>
+                  onRemove={() => {
+                    const prompts = t.prompts.filter((_, idx) => idx !== i);
+                    updateField("prompts", prompts);
+                  }}
+                  onMoveUp={() => {
+                    const prompts = [...t.prompts];
+                    [prompts[i - 1], prompts[i]] = [prompts[i], prompts[i - 1]];
+                    updateField("prompts", prompts);
+                  }}
+                  onMoveDown={() => {
+                    const prompts = [...t.prompts];
+                    [prompts[i], prompts[i + 1]] = [prompts[i + 1], prompts[i]];
+                    updateField("prompts", prompts);
+                  }}
+                />
               ))}
             </div>
           )}
@@ -887,6 +874,8 @@ const PromptTemplateManager = () => {
       </div>
     );
   }
+
+  // ── Template List ──────────────────────────────────
 
   return (
     <div className="space-y-6">
