@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PCB Frontend Admin Search + Specs Copy
 // @namespace    http://tampermonkey.net/
-// @version      1.6
+// @version      1.7
 // @description  Open backend product search in a new tab and copy full frontend technical specs with product name.
 // @author       faketi101
 // @match        https://pcbstore.com.bd/product/*
@@ -131,56 +131,45 @@
     }
 
     const lines = [productName, "", "Technical Specifications", ""];
-    let sectionNode = technicalHeading.parentElement;
-    if (sectionNode?.parentElement) {
-      sectionNode = sectionNode.parentElement;
+
+    // Find the container that holds all spec sections
+    let container = technicalHeading.parentElement;
+    while (container && !container.querySelector("h3")) {
+      container = container.parentElement;
     }
 
-    const sectionBlocks = sectionNode
-      ? Array.from(sectionNode.querySelectorAll("h3"))
-      : [];
-
-    if (!sectionBlocks.length) {
-      const rows = sectionNode
-        ? Array.from(sectionNode.querySelectorAll("tr"))
-        : [];
-      rows.forEach((row) => {
-        const key = normalizeText(
-          row.querySelector("td:first-child")?.textContent || "",
-        );
-        const value = normalizeText(
-          row.querySelector("td:nth-child(2)")?.textContent || "",
-        );
-        if (key && value) {
-          lines.push(`${key}: ${value}`);
-        }
-      });
-      return lines.join("\n").trim();
+    if (!container) {
+      return "";
     }
 
-    sectionBlocks.forEach((h3, index) => {
+    // Find all section containers (parent divs of h3 elements)
+    const sectionHeadings = Array.from(container.querySelectorAll("h3"));
+
+    sectionHeadings.forEach((h3, index) => {
       const heading = normalizeText(h3.textContent || "");
       if (heading) {
         lines.push(heading);
       }
 
-      let node = h3.nextElementSibling;
-      while (node && node.tagName !== "H3") {
-        if (node.tagName === "TR") {
-          const key = normalizeText(
-            node.querySelector("td:first-child")?.textContent || "",
-          );
-          const value = normalizeText(
-            node.querySelector("td:nth-child(2)")?.textContent || "",
-          );
+      // The section block is the parent div containing h3 and spec rows
+      const sectionBlock = h3.parentElement;
+      if (!sectionBlock) return;
+
+      // Find all flex row divs that contain key-value pairs
+      const specRows = Array.from(sectionBlock.querySelectorAll("div.flex"));
+
+      specRows.forEach((row) => {
+        const divs = Array.from(row.querySelectorAll(":scope > div"));
+        if (divs.length >= 2) {
+          const key = normalizeText(divs[0].textContent || "");
+          const value = normalizeText(divs[1].textContent || "");
           if (key && value) {
             lines.push(`${key}: ${value}`);
           }
         }
-        node = node.nextElementSibling;
-      }
+      });
 
-      if (index < sectionBlocks.length - 1) {
+      if (index < sectionHeadings.length - 1) {
         lines.push("");
       }
     });
