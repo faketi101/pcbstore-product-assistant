@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PCB Frontend Admin Search + Specs Copy
 // @namespace    http://tampermonkey.net/
-// @version      1.7
+// @version      1.8
 // @description  Open backend product search in a new tab and copy full frontend technical specs with product name.
 // @author       faketi101
 // @match        https://pcbstore.com.bd/product/*
@@ -155,14 +155,26 @@
       const sectionBlock = h3.parentElement;
       if (!sectionBlock) return;
 
-      // Find all flex row divs that contain key-value pairs
-      const specRows = Array.from(sectionBlock.querySelectorAll("div.flex"));
+      // Try both TR elements (new structure) and div.flex (old structure)
+      let specRows = Array.from(sectionBlock.querySelectorAll("tr"));
+      
+      if (specRows.length === 0) {
+        // Fallback to old div.flex structure
+        specRows = Array.from(sectionBlock.querySelectorAll("div.flex"));
+      }
 
       specRows.forEach((row) => {
-        const divs = Array.from(row.querySelectorAll(":scope > div"));
-        if (divs.length >= 2) {
-          const key = normalizeText(divs[0].textContent || "");
-          const value = normalizeText(divs[1].textContent || "");
+        // For TR elements, look for TD children
+        let cells = Array.from(row.querySelectorAll("td"));
+        
+        // If no TD elements, try div children (old structure)
+        if (cells.length === 0) {
+          cells = Array.from(row.querySelectorAll(":scope > div"));
+        }
+        
+        if (cells.length >= 2) {
+          const key = normalizeText(cells[0].textContent || "");
+          const value = normalizeText(cells[1].textContent || "");
           if (key && value) {
             lines.push(`${key}: ${value}`);
           }
