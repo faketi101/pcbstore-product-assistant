@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PCBStore Bulk Link Inserter
 // @namespace    http://tampermonkey.net/
-// @version      5.4.3
+// @version      5.4.4
 // @description  Bulk insert links into page text with brand quick-select buttons.
 // @author       You
 // @match        https://admin.pcbstore.net/admin/product
@@ -788,10 +788,12 @@
   }
 
   // ── Events ───────────────────────────────────────────────────────────────────
+  const EVENT_KEY = "w"
+  
   toggle.addEventListener('click', ()=>panel.classList.toggle('bali-visible'));
 
   document.addEventListener('keydown', e => {
-    if (e.altKey && e.key === 'q') {
+    if (e.altKey && e.key === EVENT_KEY) {
       e.preventDefault();
       panel.classList.toggle('bali-visible');
     }
