@@ -1,8 +1,8 @@
-// ==UserScript==
+﻿// ==UserScript==
 // @name         PCBStore Internal Link Assistant
 // @namespace    http://tampermonkey.net/
-// @version      5.6.0
-// @description  Bulk insert links with queue editing, searchable templates & template editor.
+// @version      5.7.0
+// @description  Bulk insert links with queue editing, searchable templates, editor & backup/restore.
 // @author       You
 // @match        https://admin.pcbstore.net/admin/product
 // @match        https://admin.pcbstore.net/admin/product/*
@@ -543,7 +543,8 @@
     .bali-divider { border:none; border-top:1px solid rgba(255,59,77,0.2); margin:2px 0; }
 
     #bali-entries {
-      max-height:160px; overflow-y:auto;
+      min-height:52px;
+      max-height:282px; overflow-y:auto;
       display:flex; flex-direction:column; gap:7px;
       scrollbar-width:thin; scrollbar-color:rgba(255,255,255,0.35) transparent;
     }
@@ -670,7 +671,7 @@
     /* Template row list */
     #bali-tpl-list {
       display:flex; flex-direction:column; gap:5px;
-      max-height:160px; overflow-y:auto;
+      max-height:200px; overflow-y:auto;
       scrollbar-width:thin; scrollbar-color:rgba(255,255,255,0.3) transparent;
     }
     .bali-tpl-row {
@@ -702,6 +703,27 @@
     .bali-tpl-action.del   { border-color:rgba(255,80,60,0.38); color:rgba(255,150,130,0.8); }
     .bali-tpl-action.del:hover   { background:rgba(255,60,40,0.15); border-color:#ff5040; color:#ffb0a0; }
     #bali-tpl-empty { font-size:12px; color:rgba(255,210,216,0.5); font-weight:500; padding:10px 0; text-align:center; }
+
+    /* ── Template Backup / Restore Bar ─────────────────────────────────── */
+    #bali-tpl-backup-bar {
+      display:flex; align-items:center; justify-content:space-between;
+      background:rgba(6,6,8,0.72); border:1px solid rgba(255,59,77,0.18);
+      border-radius:8px; padding:7px 12px; gap:8px;
+    }
+    #bali-tpl-backup-label {
+      font-size:11px; color:rgba(255,200,210,0.65); font-weight:600; white-space:nowrap;
+    }
+    #bali-tpl-backup-btns { display:flex; gap:7px; }
+    .bali-backup-btn {
+      display:flex; align-items:center; gap:5px;
+      background:rgba(18,18,20,0.9); border:1px solid rgba(255,59,77,0.35); color:#ffd8dc;
+      border-radius:6px; padding:5px 12px; cursor:pointer; font-size:11.5px; font-weight:700;
+      font-family:'Inter',system-ui,sans-serif; white-space:nowrap;
+      transition:background 0.15s, border-color 0.15s, box-shadow 0.15s;
+    }
+    .bali-backup-btn:hover { background:rgba(255,59,77,0.16); border-color:#ff3b4d; color:#fff; box-shadow:0 0 8px rgba(255,59,77,0.25); }
+    .bali-backup-btn.import { border-color:rgba(80,200,120,0.45); color:rgba(160,255,190,0.9); }
+    .bali-backup-btn.import:hover { background:rgba(60,180,100,0.15); border-color:#6dffaa; color:#afffcf; box-shadow:0 0 8px rgba(80,220,130,0.3); }
 
     /* ── Template Editor Overlay ─────────────────────────────────── */
     #bali-tpl-editor {
@@ -830,7 +852,7 @@
     <div id="bali-header">
       <div id="bali-header-left">
         <h2>⚓ PCBStore Link Inserter</h2>
-        <span id="bali-ver-badge">v5.6.0</span>
+    <span id="bali-ver-badge">v5.7.0</span>
       </div>
       <div id="bali-header-right">
         <span id="bali-queue-warn" title="Queue has unrun links — don't navigate away!">⚠ Queue has links</span>
@@ -899,6 +921,16 @@
         </div>
         <input id="bali-tpl-search" type="text" placeholder="🔍 Search templates…">
         <div id="bali-tpl-list"><span id="bali-tpl-empty">No templates saved yet.</span></div>
+        <!-- Backup / Restore -->
+        <div id="bali-tpl-backup-bar">
+          <span id="bali-tpl-backup-label">💾 Backup / Restore templates</span>
+          <div id="bali-tpl-backup-btns">
+            <button class="bali-backup-btn" id="bali-tpl-export-btn">↓ Export JSON</button>
+            <label class="bali-backup-btn import" id="bali-tpl-import-label">↑ Import JSON
+              <input type="file" id="bali-tpl-import-input" accept=".json,application/json" style="display:none">
+            </label>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -1024,7 +1056,7 @@
 
       const nameEl = document.createElement('span'); nameEl.className = 'bali-tpl-row-name'; nameEl.textContent = name;
       const countEl = document.createElement('span'); countEl.className = 'bali-tpl-row-count';
-      countEl.textContent = `${tpls[name].length} link${tpls[name].length===1?'':'s'}`;
+      countEl.textContent = `${tpls[name].length} link${tpls[name].length === 1 ? '' : 's'}`;
 
       // ▼ Load (replace queue)
       const loadBtn = document.createElement('button'); loadBtn.className = 'bali-tpl-action'; loadBtn.title = 'Load into queue (replace)'; loadBtn.textContent = '▼';
@@ -1036,7 +1068,7 @@
       // + Merge into queue
       const mergeBtn = document.createElement('button'); mergeBtn.className = 'bali-tpl-action'; mergeBtn.title = 'Merge into queue (add new)'; mergeBtn.textContent = '+';
       mergeBtn.addEventListener('click', () => {
-        tpls[name].forEach(e => { if (!entries.some(x => x.text === e.text)) entries.push({...e}); });
+        tpls[name].forEach(e => { if (!entries.some(x => x.text === e.text)) entries.push({ ...e }); });
         renderEntries(); updateCount();
         setStatus(`Merged "${name}" into queue.`, 'ok');
       });
@@ -1093,7 +1125,7 @@
       row.querySelectorAll('.bali-entry-icon-btn')[1].addEventListener('click', () => {
         const tpls = loadTemplates(), names = Object.keys(tpls);
         if (!names.length) { setStatus('No templates saved yet.', 'warn'); return; }
-        const choice = prompt('Update which template?\n\n' + names.map((n,j)=>`${j+1}. ${n} (${tpls[n].length})`).join('\n'), '1');
+        const choice = prompt('Update which template?\n\n' + names.map((n, j) => `${j + 1}. ${n} (${tpls[n].length})`).join('\n'), '1');
         if (!choice) return;
         const idx = parseInt(choice, 10) - 1;
         if (isNaN(idx) || idx < 0 || idx >= names.length) { setStatus('Invalid selection.', 'err'); return; }
@@ -1115,7 +1147,7 @@
   }
 
   // Escape HTML for safe display
-  function escH(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function escH(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 
   // Inline temp edit
   function startInlineEdit(row, i) {
@@ -1285,7 +1317,7 @@
   function openTemplateEditor(name) {
     const tpls = loadTemplates();
     editorName = name;
-    editorEntries = tpls[name] ? tpls[name].map(e => ({...e})) : [];
+    editorEntries = tpls[name] ? tpls[name].map(e => ({ ...e })) : [];
     $('bali-tpl-ed-title').textContent = `Editing: ${name}`;
     renderEditorEntries();
     $('bali-tpl-editor').classList.add('active');
@@ -1300,12 +1332,12 @@
     editorEntries.forEach((e, i) => {
       const row = document.createElement('div'); row.className = 'bali-tpl-ed-entry';
       const tInp = document.createElement('input'); tInp.className = 'bali-tpl-ed-inp'; tInp.value = e.text; tInp.placeholder = 'Anchor text';
-      const uInp = document.createElement('input'); uInp.className = 'bali-tpl-ed-inp'; uInp.value = e.url;  uInp.placeholder = 'URL';
+      const uInp = document.createElement('input'); uInp.className = 'bali-tpl-ed-inp'; uInp.value = e.url; uInp.placeholder = 'URL';
       // live update editorEntries on change
       tInp.addEventListener('input', () => { editorEntries[i].text = tInp.value; });
-      uInp.addEventListener('input', () => { editorEntries[i].url  = uInp.value; });
+      uInp.addEventListener('input', () => { editorEntries[i].url = uInp.value; });
 
-      const delBtn = document.createElement('button'); delBtn.className = 'bali-entry-icon-btn'; delBtn.style.borderColor='rgba(255,59,77,0.55)'; delBtn.title = 'Remove row'; delBtn.textContent = '✕';
+      const delBtn = document.createElement('button'); delBtn.className = 'bali-entry-icon-btn'; delBtn.style.borderColor = 'rgba(255,59,77,0.55)'; delBtn.title = 'Remove row'; delBtn.textContent = '✕';
       delBtn.addEventListener('click', () => { editorEntries.splice(i, 1); renderEditorEntries(); });
 
       row.append(tInp, uInp, delBtn);
@@ -1345,6 +1377,56 @@
     $('bali-tpl-editor').classList.remove('active');
     editorName = null; editorEntries = [];
     setStatus('Template editor closed (no changes saved).', 'warn');
+  });
+
+  // -- Backup: Export templates as JSON file
+  $('bali-tpl-export-btn').addEventListener('click', () => {
+    const tpls = loadTemplates();
+    const count = Object.keys(tpls).length;
+    if (!count) { setStatus('No templates to export.', 'warn'); return; }
+    const payload = JSON.stringify({ _version: 1, _exported: new Date().toISOString(), templates: tpls }, null, 2);
+    const blob = new Blob([payload], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const stamp = new Date().toISOString().slice(0, 10);
+    a.href = url; a.download = `pcbstore-link-templates-${stamp}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    setStatus(`Exported ${count} template${count === 1 ? "" : "s"} to JSON.`, "ok");
+  });
+
+  // -- Restore: Import templates from JSON file
+  $('bali-tpl-import-input').addEventListener('change', function () {
+    const file = this.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function (ev) {
+      try {
+        const parsed = JSON.parse(ev.target.result);
+        const incoming = (parsed && parsed.templates) ? parsed.templates : parsed;
+        if (typeof incoming !== 'object' || Array.isArray(incoming)) throw new Error('bad');
+        const inKeys = Object.keys(incoming);
+        const existing = loadTemplates();
+        const exKeys = Object.keys(existing);
+        const conflicts = inKeys.filter(k => exKeys.includes(k));
+        const newKeys = inKeys.filter(k => !exKeys.includes(k));
+        let msg = `Import ${inKeys.length} template${inKeys.length === 1 ? "" : "s"}:`;
+        if (newKeys.length) msg += `\n- ${newKeys.length} new`;
+        if (conflicts.length) msg += `\n- ${conflicts.length} conflict(s) (same name exists)`;
+        msg += conflicts.length
+          ? '\n\n[OK] Merge - keep existing, add only new\n[Cancel] Replace ALL'
+          : '\n\n[OK] to confirm import.';
+        const doMerge = confirm(msg);
+        const result = doMerge ? { ...incoming, ...existing } : { ...incoming };
+        saveTemplates(result); renderTemplates();
+        const total = Object.keys(result).length;
+        setStatus(`Imported: ${total} template${total === 1 ? "" : "s"} in library.`, "ok");
+      } catch (_) {
+        setStatus('Import failed - invalid JSON format.', 'err');
+      }
+    };
+    reader.readAsText(file);
+    this.value = '';
   });
 
 })();
