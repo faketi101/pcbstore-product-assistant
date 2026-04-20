@@ -44,20 +44,45 @@ const SITE_CONFIGS = {
 
   "ryans.com": {
     name: "Ryans",
+    /**
+     * Ryans price structure (from product page screenshot):
+     *   Special Price:  Tk 11,400   ← current/sale price
+     *   Regular Price:  Tk 12,370   ← original price
+     *   EMI TK 1,031
+     *
+     * They also use: .special-price, .regular-price, .price-box classes
+     * Cloudflare blocks simple requests — we send full browser-like headers.
+     */
     pricePatterns: [
-      /class="[^"]*current-price[^"]*"[^>]*>[\s\S]*?(\d[\d,]*)/i,
-      /class="[^"]*pr-total[^"]*"[^>]*>[\s\S]*?(\d[\d,]*)/i,
-      /class="[^"]*att-product-price[^"]*"[^>]*>[\s\S]*?(\d[\d,]*)/i,
+      // Special Price block: "Special Price\nTk 11,400"
+      /Special\s+Price[\s\S]{0,60}Tk\s*([\d,]+)/i,
+      // .special-price class
+      /class="[^"]*special-price[^"]*"[\s\S]{0,200}Tk\s*([\d,]+)/i,
+      // price-box / price-new
+      /class="[^"]*price-new[^"]*"[\s\S]{0,100}Tk\s*([\d,]+)/i,
+      // Fallback: first "Tk X,XXX" on page
+      /\bTk\s*([\d,]{4,})/i,
     ],
-    priceAnchors: ["current-price", "att-product-price"],
-    // Ryans blocks simple fetches; send browser-like headers
+    originalPricePatterns: [
+      /Regular\s+Price[\s\S]{0,60}Tk\s*([\d,]+)/i,
+      /class="[^"]*regular-price[^"]*"[\s\S]{0,200}Tk\s*([\d,]+)/i,
+      /class="[^"]*price-old[^"]*"[\s\S]{0,100}Tk\s*([\d,]+)/i,
+    ],
+    // Ryans uses Cloudflare — send full browser headers to avoid 403
     extraHeaders: {
-      "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-      "Accept-Language": "en-US,en;q=0.5",
+      "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+      "Accept-Language": "en-US,en;q=0.9",
       "Accept-Encoding": "gzip, deflate, br",
+      "Cache-Control": "max-age=0",
+      "Sec-Ch-Ua": '"Chromium";v="131", "Not_A Brand";v="24", "Google Chrome";v="131"',
+      "Sec-Ch-Ua-Mobile": "?0",
+      "Sec-Ch-Ua-Platform": '"Windows"',
       "Sec-Fetch-Dest": "document",
       "Sec-Fetch-Mode": "navigate",
       "Sec-Fetch-Site": "none",
+      "Sec-Fetch-User": "?1",
+      "Upgrade-Insecure-Requests": "1",
+      "Referer": "https://www.google.com/",
     },
   },
 

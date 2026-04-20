@@ -214,8 +214,10 @@
           <th>#</th>
           <th>Product</th>
           <th>Brand</th>
+          <th>Category</th>
           <th>Your Price</th>
           <th>Your Discount</th>
+          <th>Stock Status</th>
           <th>Competitor Prices</th>
           <th>Cheapest</th>
           <th>Diff</th>
@@ -229,7 +231,7 @@
   </div>
 
   <script>
-    const API = "http://localhost:4060";
+    const API = "http://localhost:4050";
 
     const state = {
       products: [],
@@ -345,13 +347,14 @@
       state.products.forEach(p => { productMap[p.productId] = p; });
 
       for (const pid of linkedProductIds) {
-        const product = productMap[pid] || { productId: pid, name: "Unknown Product", price: "0", discountPrice: "0", brand: "" };
+        const product = productMap[pid] || { productId: pid, name: "Unknown Product", price: "0", discountPrice: "0", brand: "", categoryText: "", stockStatus: "" };
         const priceInfo = state.priceData[pid];
         const competitorResults = priceInfo ? priceInfo.results : [];
         const competitorUrls = state.links[pid] || [];
 
         const yourPrice = parseFloat(product.discountPrice) > 0 ? parseFloat(product.discountPrice) : parseFloat(product.price);
         const yourOriginal = parseFloat(product.price);
+        const yourInStock = product.stockStatus ? product.stockStatus.toLowerCase().includes("in stock") : true;
 
         const validPrices = competitorResults.filter(r => r.price !== null && r.price > 0);
         const cheapestComp = validPrices.length ? Math.min(...validPrices.map(r => r.price)) : null;
@@ -376,6 +379,8 @@
           categories: product.categoryText || "",
           yourPrice,
           yourOriginal,
+          yourInStock,
+          yourStockText: product.stockStatus || "In Stock",
           competitorResults,
           competitorUrls,
           validPrices,
@@ -469,8 +474,10 @@
             </div>
           </td>
           <td>${esc(item.brand)}</td>
+          <td><span style="font-size:10px; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,.05); border:1px solid var(--line);">${esc(item.categories)}</span></td>
           <td class="price-cell">৳${fmt(item.yourOriginal)}</td>
           <td class="price-cell">${item.yourPrice !== item.yourOriginal ? "৳" + fmt(item.yourPrice) : "—"}</td>
+          <td>${renderStock(item)}</td>
           <td>${renderCompetitors(item)}</td>
           <td class="price-cell">${item.cheapestComp !== null ? "৳" + fmt(item.cheapestComp) : '<span style="color:var(--muted)">—</span>'}</td>
           <td>${renderDiff(item)}</td>
@@ -481,6 +488,29 @@
       });
       el.tbody.appendChild(frag);
     }
+    function renderStock(item) {
+      const frag = [];
+      // Your stock
+      const yourCls = item.yourInStock ? "stock-in" : "stock-out";
+      frag.push(`<div style="margin-bottom:8px;"><span style="font-size:9px; color:var(--muted); display:block; margin-bottom:2px;">Your Site:</span><span class="stock-badge ${yourCls}">${item.yourStockText}</span></div>`);
+
+      // Competitor stock summary
+      if (item.competitorResults.length) {
+        frag.push(`<span style="font-size:9px; color:var(--muted); display:block; margin-bottom:2px;">Competitors:</span>`);
+        item.competitorResults.forEach(r => {
+          if (r.error) return;
+          const cls = r.inStock === true ? "stock-in" : r.inStock === false ? "stock-out" : "";
+          const label = r.inStock === true ? "In Stock" : r.inStock === false ? "Out of Stock" : "Unknown";
+          if (cls) {
+            frag.push(`<div style="display:flex; align-items:center; gap:6px; margin-bottom:2px;">
+              <span style="font-size:10px; min-width:60px; color:var(--muted); overflow:hidden; text-overflow:ellipsis;">${esc(r.siteName)}</span>
+              <span class="stock-badge ${cls}" style="font-size:9px; padding:1px 5px;">${label}</span>
+            </div>`);
+          }
+        });
+      }
+      return '<div class="stock-col">' + frag.join("") + '</div>';
+    }
 
     function renderCompetitors(item) {
       if (!item.competitorResults.length && item.competitorUrls.length) {
@@ -490,7 +520,11 @@
 
       return '<div class="comp-row">' + item.competitorResults.map(r => {
         if (r.error) {
-          return `<div class="comp-item"><span class="comp-site">${esc(r.siteName)}</span><span class="comp-err">✕ ${esc(r.error)}</span></div>`;
+          // Always show as hyperlink even on error so you can click to check manually
+          return `<div class="comp-item">
+            <a class="comp-site" href="${esc(r.url)}" target="_blank" title="${esc(r.url)}">${esc(r.siteName)}</a>
+            <span class="comp-err">✕ ${esc(r.error)}</span>
+          </div>`;
         }
         const priceClass = r.price !== null && item.yourPrice > 0
           ? (r.price < item.yourPrice ? "price-cheaper" : r.price > item.yourPrice ? "price-expensive" : "price-same")

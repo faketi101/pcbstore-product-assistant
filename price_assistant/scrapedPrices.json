@@ -11,22 +11,8 @@
         "currency": "BDT",
         "inStock": true,
         "method": "meta-tag",
-        "fetchTimeMs": 40,
-        "scrapedAt": "2026-04-20T17:34:30.637Z",
-        "error": null
-      },
-      {
-        "url": "https://www.startech.com.bd/western-digital-my-passport-2-tb",
-        "siteName": "Star Tech",
-        "domain": "startech.com.bd",
-        "price": 10800,
-        "originalPrice": 10999,
-        "discountPrice": 10800,
-        "currency": "BDT",
-        "inStock": true,
-        "method": "site-pattern",
-        "fetchTimeMs": 649,
-        "scrapedAt": "2026-04-20T17:34:31.243Z",
+        "fetchTimeMs": 32,
+        "scrapedAt": "2026-04-20T17:46:16.408Z",
         "error": null
       },
       {
@@ -39,26 +25,40 @@
         "currency": "BDT",
         "inStock": true,
         "method": "json-ld",
-        "fetchTimeMs": 820,
-        "scrapedAt": "2026-04-20T17:34:31.457Z",
+        "fetchTimeMs": 844,
+        "scrapedAt": "2026-04-20T17:46:17.252Z",
+        "error": null
+      },
+      {
+        "url": "https://www.startech.com.bd/western-digital-my-passport-2-tb",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 10800,
+        "originalPrice": 10999,
+        "discountPrice": 10800,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 959,
+        "scrapedAt": "2026-04-20T17:46:17.299Z",
         "error": null
       },
       {
         "url": "https://www.ryans.com/western-digital-my-passport-2tb-usb-3.0-black-external-hdd",
         "siteName": "Ryans",
         "domain": "ryans.com",
-        "price": null,
+        "price": 11400,
         "originalPrice": null,
         "discountPrice": null,
         "currency": "BDT",
-        "inStock": null,
-        "method": "failed",
-        "fetchTimeMs": 3001,
-        "scrapedAt": "2026-04-20T17:34:33.597Z",
-        "error": "HTTP 403"
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 10314,
+        "scrapedAt": "2026-04-20T17:46:26.689Z",
+        "error": null
       }
     ],
-    "scrapedAt": "2026-04-20T17:34:34.322Z"
+    "scrapedAt": "2026-04-20T17:46:26.694Z"
   },
   "5949": {
     "results": [
@@ -72,8 +72,8 @@
         "currency": "BDT",
         "inStock": true,
         "method": "generic-bdt",
-        "fetchTimeMs": 733,
-        "scrapedAt": "2026-04-20T17:34:31.976Z",
+        "fetchTimeMs": 869,
+        "scrapedAt": "2026-04-20T17:46:18.121Z",
         "error": null
       },
       {
@@ -86,12 +86,12 @@
         "currency": "BDT",
         "inStock": true,
         "method": "json-ld",
-        "fetchTimeMs": 1134,
-        "scrapedAt": "2026-04-20T17:34:32.591Z",
+        "fetchTimeMs": 1246,
+        "scrapedAt": "2026-04-20T17:46:18.545Z",
         "error": null
       }
     ],
-    "scrapedAt": "2026-04-20T17:34:34.322Z"
+    "scrapedAt": "2026-04-20T17:46:26.694Z"
   },
   "5995": {
     "results": [
@@ -105,8 +105,8 @@
         "currency": "BDT",
         "inStock": true,
         "method": "site-pattern",
-        "fetchTimeMs": 278,
-        "scrapedAt": "2026-04-20T17:34:32.869Z",
+        "fetchTimeMs": 583,
+        "scrapedAt": "2026-04-20T17:46:19.128Z",
         "error": null
       },
       {
@@ -119,11 +119,11 @@
         "currency": "BDT",
         "inStock": true,
         "method": "json-ld",
-        "fetchTimeMs": 2341,
-        "scrapedAt": "2026-04-20T17:34:34.317Z",
+        "fetchTimeMs": 3536,
+        "scrapedAt": "2026-04-20T17:46:21.657Z",
         "error": null
       }
     ],
-    "scrapedAt": "2026-04-20T17:34:34.322Z"
+    "scrapedAt": "2026-04-20T17:46:26.694Z"
   }
 }

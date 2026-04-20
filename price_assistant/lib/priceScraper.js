@@ -119,13 +119,19 @@ function fetchPage(url, extraHeaders = {}) {
       {
         headers,
         timeout: TIMEOUT_MS,
-        rejectUnauthorized: false, // some BD sites have cert issues
+        rejectUnauthorized: false,
       },
       (res) => {
         // Follow redirects (up to 5)
         if ([301, 302, 303, 307, 308].includes(res.statusCode) && res.headers.location) {
           const redirectUrl = new URL(res.headers.location, url).toString();
           return fetchPage(redirectUrl, extraHeaders).then(resolve).catch(reject);
+        }
+
+        // On 403, fallback to curl which has a real TLS fingerprint
+        if (res.statusCode === 403) {
+          res.resume();
+          return fetchWithCurl(url, headers).then(resolve).catch(reject);
         }
 
         if (res.statusCode !== 200) {
@@ -157,6 +163,45 @@ function fetchPage(url, extraHeaders = {}) {
       reject(new Error("Request timed out"));
     });
     req.on("error", reject);
+  });
+}
+
+/**
+ * Fallback fetcher using system curl — bypasses Cloudflare TLS fingerprinting.
+ * Used automatically when Node.js https gets a 403.
+ */
+function fetchWithCurl(url, headers = {}) {
+  const { execFile } = require("child_process");
+
+  const args = [
+    "-s",                       // silent
+    "-L",                       // follow redirects
+    "--max-time", "20",         // 20s timeout
+    "--compressed",             // handle gzip/br
+    "-A", DEFAULT_HEADERS["User-Agent"],
+    "-H", `Accept: ${DEFAULT_HEADERS["Accept"]}`,
+    "-H", `Accept-Language: ${DEFAULT_HEADERS["Accept-Language"]}`,
+  ];
+
+  // Add any extra headers from site config
+  for (const [key, value] of Object.entries(headers)) {
+    if (key.toLowerCase() !== "user-agent" &&
+        key.toLowerCase() !== "accept" &&
+        key.toLowerCase() !== "accept-language") {
+      args.push("-H", `${key}: ${value}`);
+    }
+  }
+
+  args.push(url);
+
+  return new Promise((resolve, reject) => {
+    execFile("curl", args, { maxBuffer: 10 * 1024 * 1024 }, (err, stdout, stderr) => {
+      if (err) {
+        reject(new Error(`curl failed: ${err.message}`));
+      } else {
+        resolve(stdout);
+      }
+    });
   });
 }
 

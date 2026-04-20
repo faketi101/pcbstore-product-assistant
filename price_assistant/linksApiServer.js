@@ -5,7 +5,7 @@ const path = require("path");
 const { scrapePrice, scrapeMultiple } = require("./lib/priceScraper");
 const { getSiteName } = require("./lib/siteConfigs");
 
-const PORT = 4060;
+const PORT = 4050;
 const ROOT = __dirname;
 const LINKS_FILE = path.join(ROOT, "competitorProductLink.json");
 const PRICE_CACHE_FILE = path.join(ROOT, "scrapedPrices.json");
