@@ -383,13 +383,13 @@
 
   <script>
     const COMPETITOR_LINK_FILE_NAME = "competitorProductLink.json";
+    const LINKS_API_URL = "http://localhost:4070/api/links";
 
     const state = {
       raw: [],
       filtered: [],
       linksMap: {},
       linksAutoLoaded: false,
-      linksFileHandle: null,
       fsWriteWarned: false,
     };
 
@@ -455,6 +455,16 @@
     async function autoLoadCompetitorLinks() {
       if (state.linksAutoLoaded) return;
       state.linksAutoLoaded = true;
+
+      try {
+        const res = await fetch(LINKS_API_URL);
+        if (!res.ok) return;
+        const data = await res.json();
+        state.linksMap = mergeLinksMaps(state.linksMap, normalizeLinksPayload(data));
+        return;
+      } catch {
+        // Fallback for static mode without Node API.
+      }
 
       try {
         const res = await fetch(`./${COMPETITOR_LINK_FILE_NAME}`);
@@ -761,7 +771,7 @@
 
     async function exportLinksJson() {
       const payload = buildCompetitorLinksPayload();
-      const wrote = await writeLinksToFilesystem(payload);
+      const wrote = await saveLinksViaApi(payload);
       if (!wrote) {
         downloadText(JSON.stringify(payload, null, 2), COMPETITOR_LINK_FILE_NAME, "application/json;charset=utf-8");
       }
@@ -769,10 +779,10 @@
 
     async function autoSyncCompetitorLinkFile() {
       const payload = buildCompetitorLinksPayload();
-      const wrote = await writeLinksToFilesystem(payload);
+      const wrote = await saveLinksViaApi(payload);
       if (!wrote && !state.fsWriteWarned) {
         state.fsWriteWarned = true;
-        alert("Direct file write is unavailable in this browser/session. A download will be used as fallback.");
+        alert("Node links API is unavailable. Start the server and open http://localhost:4070/outputViewer.html for direct filesystem writes. Falling back to download.");
         downloadText(JSON.stringify(payload, null, 2), COMPETITOR_LINK_FILE_NAME, "application/json;charset=utf-8");
       }
     }
@@ -942,25 +952,14 @@
       return (state.linksMap[key] || []).length;
     }
 
-    async function writeLinksToFilesystem(payload) {
-      const supported = typeof window.showSaveFilePicker === "function";
-      if (!supported) return false;
-
+    async function saveLinksViaApi(payload) {
       try {
-        if (!state.linksFileHandle) {
-          state.linksFileHandle = await window.showSaveFilePicker({
-            suggestedName: COMPETITOR_LINK_FILE_NAME,
-            types: [{
-              description: "JSON",
-              accept: { "application/json": [".json"] }
-            }]
-          });
-        }
-
-        const writable = await state.linksFileHandle.createWritable();
-        await writable.write(JSON.stringify(payload, null, 2));
-        await writable.close();
-        return true;
+        const res = await fetch(LINKS_API_URL, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        return res.ok;
       } catch {
         return false;
       }
