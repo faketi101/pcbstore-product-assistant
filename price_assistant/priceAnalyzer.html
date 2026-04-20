@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PCB Price Analyzer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    :root {
+      --bg: #070c1a;
+      --bg2: #0c1228;
+      --card: rgba(12,18,38,.92);
+      --line: rgba(255,255,255,.1);
+      --text: #e2ecff;
+      --muted: #8a9dc4;
+      --green: #22d3a7;
+      --green-bg: rgba(34,211,167,.12);
+      --red: #ff6b8a;
+      --red-bg: rgba(255,107,138,.12);
+      --yellow: #f5b84f;
+      --yellow-bg: rgba(245,184,79,.12);
+      --accent: #5a82ff;
+      --accent2: #8b5cf6;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; margin: 0; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      color: var(--text);
+      background: radial-gradient(ellipse 900px 400px at 10% -10%, rgba(90,130,255,.18), transparent),
+                  radial-gradient(ellipse 800px 300px at 90% -5%, rgba(139,92,246,.12), transparent),
+                  var(--bg);
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    .header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--line);
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+      background: rgba(7,12,26,.7); backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .header h1 { font-size: 20px; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .header-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    /* ── Buttons ── */
+    .btn {
+      border: 1px solid var(--line); border-radius: 10px; padding: 9px 16px;
+      font: 600 13px/1 'Inter', sans-serif; cursor: pointer;
+      color: var(--text); background: rgba(255,255,255,.04); transition: all .2s;
+    }
+    .btn:hover { background: rgba(255,255,255,.08); }
+    .btn-primary { border-color: transparent; background: linear-gradient(130deg, var(--accent), var(--green)); color: #fff; }
+    .btn-primary:hover { opacity: .9; }
+    .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+
+    /* ── Summary Cards ── */
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; padding: 16px 24px; }
+    .card {
+      border: 1px solid var(--line); border-radius: var(--radius); padding: 16px;
+      background: var(--card); backdrop-filter: blur(8px);
+    }
+    .card-label { font-size: 11px; text-transform: uppercase; color: var(--muted); letter-spacing: .5px; margin-bottom: 6px; }
+    .card-value { font-size: 28px; font-weight: 700; }
+    .card-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .card.green .card-value { color: var(--green); }
+    .card.red .card-value { color: var(--red); }
+    .card.yellow .card-value { color: var(--yellow); }
+    .card.accent .card-value { color: var(--accent); }
+
+    /* ── Controls ── */
+    .controls {
+      padding: 12px 24px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+      border-bottom: 1px solid var(--line);
+    }
+    .controls input, .controls select {
+      border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px;
+      font: 13px 'Inter', sans-serif; color: var(--text); background: rgba(255,255,255,.04);
+      min-width: 160px;
+    }
+    .controls select option { color: #111; background: #f8fbff; }
+
+    /* ── Status ── */
+    .status-bar {
+      padding: 10px 24px; display: flex; align-items: center; gap: 10px;
+      font-size: 13px; color: var(--muted);
+    }
+    .spinner { width: 16px; height: 16px; border: 2px solid var(--line); border-top-color: var(--accent); border-radius: 50%; animation: spin .6s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .progress-bar { flex: 1; max-width: 300px; height: 6px; border-radius: 99px; background: rgba(255,255,255,.08); overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--green)); transition: width .3s; width: 0%; }
+
+    /* ── Nav bar ── */
+    .nav-bar {
+      padding: 8px 24px; border-bottom: 1px solid var(--line);
+      display: flex; align-items: center; gap: 8px; background: rgba(7,12,26,.5);
+    }
+    .nav-link {
+      font-size: 12px; font-weight: 600; padding: 5px 14px; border-radius: 8px;
+      border: 1px solid var(--line); color: var(--muted); text-decoration: none;
+      transition: all .2s;
+    }
+    .nav-link:hover { color: var(--text); background: rgba(255,255,255,.06); }
+    .nav-link.active { color: var(--accent); border-color: var(--accent); background: rgba(90,130,255,.1); }
+
+    /* ── Table ── */
+    .table-wrap { padding: 0 24px 24px; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th, td { border-bottom: 1px solid var(--line); padding: 10px 8px; text-align: left; vertical-align: top; white-space: nowrap; }
+    th { font-size: 11px; text-transform: uppercase; color: #a0b4e0; background: var(--bg); letter-spacing: .3px; }
+    thead { position: sticky; top: 0; z-index: 10; }
+    tr:hover td { background: rgba(90,130,255,.04); }
+    a { color: #8db3ff; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Price cells ── */
+    .price-cell { font-weight: 600; font-variant-numeric: tabular-nums; }
+    .price-cheaper { color: var(--green); }
+    .price-same { color: var(--yellow); }
+    .price-expensive { color: var(--red); }
+    .diff-badge {
+      display: inline-block; padding: 2px 7px; border-radius: 99px; font-size: 10px; font-weight: 600;
+    }
+    .diff-badge.good { background: var(--green-bg); color: var(--green); border: 1px solid rgba(34,211,167,.3); }
+    .diff-badge.warn { background: var(--yellow-bg); color: var(--yellow); border: 1px solid rgba(245,184,79,.3); }
+    .diff-badge.bad { background: var(--red-bg); color: var(--red); border: 1px solid rgba(255,107,138,.3); }
+    .stock-badge {
+      display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 10px;
+    }
+    .stock-in { color: #d8fff6; background: rgba(34,211,167,.15); border: 1px solid rgba(34,211,167,.35); }
+    .stock-out { color: #ffd0da; background: rgba(255,107,138,.15); border: 1px solid rgba(255,107,138,.35); }
+
+    .comp-row { display: flex; flex-direction: column; gap: 4px; }
+    .comp-item { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+    .comp-site { font-size: 11px; color: var(--muted); min-width: 80px; overflow: hidden; text-overflow: ellipsis; }
+    .comp-price { font-weight: 600; font-size: 12px; }
+    .comp-method { font-size: 9px; padding: 1px 5px; border-radius: 4px; background: rgba(255,255,255,.06); color: var(--muted); }
+    .comp-err { font-size: 10px; color: var(--red); }
+
+    /* ── Bar chart ── */
+    .bar-wrap { display: flex; align-items: end; gap: 3px; height: 40px; }
+    .bar {
+      width: 24px; border-radius: 4px 4px 0 0; transition: height .4s; position: relative;
+      background: linear-gradient(180deg, var(--accent), rgba(90,130,255,.3));
+    }
+    .bar.yours { background: linear-gradient(180deg, var(--green), rgba(34,211,167,.3)); }
+    .bar.expensive { background: linear-gradient(180deg, var(--red), rgba(255,107,138,.3)); }
+
+    .empty-msg { padding: 40px; text-align: center; color: var(--muted); font-size: 14px; }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .cards { grid-template-columns: repeat(2, 1fr); padding: 12px; }
+      .controls { padding: 10px 12px; }
+      .table-wrap { padding: 0 12px 12px; }
+      .header { padding: 14px 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>💰 PCB Price Analyzer</h1>
+    <div class="header-actions">
+      <button class="btn" id="loadCacheBtn">Load Cached</button>
+      <button class="btn btn-primary" id="scrapeAllBtn">🔍 Scrape All Prices</button>
+      <button class="btn" id="exportCsvBtn">📥 CSV</button>
+      <button class="btn" id="exportXlsxBtn">📊 XLSX</button>
+    </div>
+  </div>
+  <div class="nav-bar">
+    <a class="nav-link" href="/outputViewer.html">📋 Product Viewer</a>
+    <a class="nav-link active" href="/priceAnalyzer.html">💰 Price Analyzer</a>
+  </div>
+
+  <div class="cards" id="summaryCards">
+    <div class="card accent"><div class="card-label">Products Tracked</div><div class="card-value" id="statTracked">0</div><div class="card-sub">with competitor links</div></div>
+    <div class="card green"><div class="card-label">You're Cheapest</div><div class="card-value" id="statCheapest">0</div><div class="card-sub">best price position</div></div>
+    <div class="card red"><div class="card-label">You're Most Expensive</div><div class="card-value" id="statExpensive">0</div><div class="card-sub">consider adjusting</div></div>
+    <div class="card yellow"><div class="card-label">Avg. Price Diff</div><div class="card-value" id="statAvgDiff">—</div><div class="card-sub">vs cheapest competitor</div></div>
+  </div>
+
+  <div class="controls">
+    <input id="searchInput" type="text" placeholder="Search product name or ID..." />
+    <select id="brandFilter"><option value="">All Brands</option></select>
+    <select id="categoryFilter"><option value="">All Categories</option></select>
+    <select id="positionFilter">
+      <option value="">All Positions</option>
+      <option value="cheapest">You're Cheapest</option>
+      <option value="mid">Mid Range</option>
+      <option value="expensive">You're Most Expensive</option>
+      <option value="no-data">No Price Data</option>
+    </select>
+    <select id="sortSelect">
+      <option value="">Default</option>
+      <option value="diff_asc">Diff % (Low→High)</option>
+      <option value="diff_desc">Diff % (High→Low)</option>
+      <option value="price_asc">Your Price (Low→High)</option>
+      <option value="price_desc">Your Price (High→Low)</option>
+    </select>
+  </div>
+
+  <div class="status-bar" id="statusBar" style="display:none;">
+    <div class="spinner"></div>
+    <span id="statusText">Scraping...</span>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Product</th>
+          <th>Brand</th>
+          <th>Your Price</th>
+          <th>Your Discount</th>
+          <th>Competitor Prices</th>
+          <th>Cheapest</th>
+          <th>Diff</th>
+          <th>Position</th>
+          <th>Visual</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    <div id="emptyMsg" class="empty-msg">Load product data first. Click "Load Cached" to use saved prices or "Scrape All Prices" to fetch live data.</div>
+  </div>
+
+  <script>
+    const API = "http://localhost:4060";
+
+    const state = {
+      products: [],
+      links: {},
+      priceData: {},
+      comparison: [],
+      filtered: [],
+    };
+
+    const el = {
+      scrapeAllBtn: document.getElementById("scrapeAllBtn"),
+      loadCacheBtn: document.getElementById("loadCacheBtn"),
+      exportCsvBtn: document.getElementById("exportCsvBtn"),
+      exportXlsxBtn: document.getElementById("exportXlsxBtn"),
+      searchInput: document.getElementById("searchInput"),
+      brandFilter: document.getElementById("brandFilter"),
+      categoryFilter: document.getElementById("categoryFilter"),
+      positionFilter: document.getElementById("positionFilter"),
+      sortSelect: document.getElementById("sortSelect"),
+      tbody: document.getElementById("tbody"),
+      emptyMsg: document.getElementById("emptyMsg"),
+      statusBar: document.getElementById("statusBar"),
+      statusText: document.getElementById("statusText"),
+      progressFill: document.getElementById("progressFill"),
+      statTracked: document.getElementById("statTracked"),
+      statCheapest: document.getElementById("statCheapest"),
+      statExpensive: document.getElementById("statExpensive"),
+      statAvgDiff: document.getElementById("statAvgDiff"),
+    };
+
+    // ── Init ──
+    init();
+
+    async function init() {
+      el.scrapeAllBtn.addEventListener("click", scrapeAll);
+      el.loadCacheBtn.addEventListener("click", loadCached);
+      el.exportCsvBtn.addEventListener("click", exportCSV);
+      el.exportXlsxBtn.addEventListener("click", exportXLSX);
+      el.searchInput.addEventListener("input", applyFilters);
+      el.brandFilter.addEventListener("change", applyFilters);
+      el.categoryFilter.addEventListener("change", applyFilters);
+      el.positionFilter.addEventListener("change", applyFilters);
+      el.sortSelect.addEventListener("change", applyFilters);
+
+      await loadProducts();
+      await loadLinks();
+      await loadCached();
+    }
+
+    async function loadProducts() {
+      try {
+        const res = await fetch(API + "/output.json");
+        if (!res.ok) return;
+        state.products = await res.json();
+        buildBrandOptions();
+        buildCategoryOptions();
+      } catch {}
+    }
+
+    async function loadLinks() {
+      try {
+        const res = await fetch(API + "/api/links");
+        if (!res.ok) return;
+        state.links = await res.json();
+      } catch {}
+    }
+
+    async function loadCached() {
+      try {
+        const res = await fetch(API + "/api/price-cache");
+        if (!res.ok) return;
+        state.priceData = await res.json();
+        buildComparison();
+        applyFilters();
+      } catch (e) {
+        console.error("Failed to load cache:", e);
+      }
+    }
+
+    async function scrapeAll() {
+      el.scrapeAllBtn.disabled = true;
+      el.statusBar.style.display = "flex";
+      el.statusText.textContent = "Scraping all competitor prices... This may take a minute.";
+      el.progressFill.style.width = "10%";
+
+      try {
+        const res = await fetch(API + "/api/scrape-all", { method: "POST" });
+        el.progressFill.style.width = "90%";
+        if (!res.ok) throw new Error("Scrape failed");
+        const data = await res.json();
+        state.priceData = {};
+        for (const [pid, results] of Object.entries(data.results || {})) {
+          state.priceData[pid] = { results, scrapedAt: data.scrapedAt };
+        }
+        el.progressFill.style.width = "100%";
+        el.statusText.textContent = `Done! Scraped ${data.totalUrls} URLs across ${data.totalProducts} products.`;
+        buildComparison();
+        applyFilters();
+      } catch (e) {
+        el.statusText.textContent = "Scrape failed: " + e.message;
+      }
+
+      setTimeout(() => { el.statusBar.style.display = "none"; }, 4000);
+      el.scrapeAllBtn.disabled = false;
+    }
+
+    // ── Build comparison data ──
+    function buildComparison() {
+      state.comparison = [];
+
+      const linkedProductIds = Object.keys(state.links);
+      const productMap = {};
+      state.products.forEach(p => { productMap[p.productId] = p; });
+
+      for (const pid of linkedProductIds) {
+        const product = productMap[pid] || { productId: pid, name: "Unknown Product", price: "0", discountPrice: "0", brand: "" };
+        const priceInfo = state.priceData[pid];
+        const competitorResults = priceInfo ? priceInfo.results : [];
+        const competitorUrls = state.links[pid] || [];
+
+        const yourPrice = parseFloat(product.discountPrice) > 0 ? parseFloat(product.discountPrice) : parseFloat(product.price);
+        const yourOriginal = parseFloat(product.price);
+
+        const validPrices = competitorResults.filter(r => r.price !== null && r.price > 0);
+        const cheapestComp = validPrices.length ? Math.min(...validPrices.map(r => r.price)) : null;
+
+        let diff = null;
+        let diffPct = null;
+        let position = "no-data";
+
+        if (cheapestComp !== null && yourPrice > 0) {
+          diff = yourPrice - cheapestComp;
+          diffPct = ((diff / cheapestComp) * 100);
+
+          if (diffPct <= -1) position = "cheapest";
+          else if (diffPct <= 5) position = "mid";
+          else position = "expensive";
+        }
+
+        state.comparison.push({
+          productId: pid,
+          name: product.name,
+          brand: product.brand || "",
+          categories: product.categoryText || "",
+          yourPrice,
+          yourOriginal,
+          competitorResults,
+          competitorUrls,
+          validPrices,
+          cheapestComp,
+          diff,
+          diffPct,
+          position,
+          scrapedAt: priceInfo ? priceInfo.scrapedAt : null,
+          frontendUrl: product.frontendUrl || "",
+          editUrl: product.editUrl || "",
+        });
+      }
+    }
+
+    function buildBrandOptions() {
+      const brands = [...new Set(state.products.map(p => p.brand).filter(Boolean))].sort();
+      el.brandFilter.innerHTML = '<option value="">All Brands</option>';
+      brands.forEach(b => {
+        const opt = document.createElement("option");
+        opt.value = b; opt.textContent = b;
+        el.brandFilter.appendChild(opt);
+      });
+    }
+
+
+    function buildCategoryOptions() {
+      const cats = [...new Set(state.products.map(p => p.categoryText).filter(Boolean))].sort();
+      el.categoryFilter.innerHTML = '<option value="">All Categories</option>';
+      cats.forEach(c => {
+        const opt = document.createElement("option");
+        opt.value = c; opt.textContent = c;
+        el.categoryFilter.appendChild(opt);
+      });
+    }
+
+    // ── Filters & Sort ──
+    function applyFilters() {
+      const q = el.searchInput.value.trim().toLowerCase();
+      const brand = el.brandFilter.value;
+      const cat = el.categoryFilter.value;
+      const pos = el.positionFilter.value;
+      const sort = el.sortSelect.value;
+
+      state.filtered = state.comparison.filter(item => {
+        if (q && !`${item.productId} ${item.name} ${item.brand} ${item.categories}`.toLowerCase().includes(q)) return false;
+        if (brand && item.brand !== brand) return false;
+        if (cat && item.categories !== cat) return false;
+        if (pos && item.position !== pos) return false;
+        return true;
+      });
+
+      if (sort === "diff_asc") state.filtered.sort((a, b) => (a.diffPct ?? 999) - (b.diffPct ?? 999));
+      else if (sort === "diff_desc") state.filtered.sort((a, b) => (b.diffPct ?? -999) - (a.diffPct ?? -999));
+      else if (sort === "price_asc") state.filtered.sort((a, b) => a.yourPrice - b.yourPrice);
+      else if (sort === "price_desc") state.filtered.sort((a, b) => b.yourPrice - a.yourPrice);
+
+      render();
+      updateSummary();
+    }
+
+    // ── Summary ──
+    function updateSummary() {
+      const tracked = state.comparison.length;
+      const cheapest = state.comparison.filter(c => c.position === "cheapest").length;
+      const expensive = state.comparison.filter(c => c.position === "expensive").length;
+      const diffs = state.comparison.filter(c => c.diffPct !== null).map(c => c.diffPct);
+      const avgDiff = diffs.length ? (diffs.reduce((a, b) => a + b, 0) / diffs.length) : null;
+
+      el.statTracked.textContent = tracked;
+      el.statCheapest.textContent = cheapest;
+      el.statExpensive.textContent = expensive;
+      el.statAvgDiff.textContent = avgDiff !== null ? (avgDiff > 0 ? "+" : "") + avgDiff.toFixed(1) + "%" : "—";
+    }
+
+    // ── Render ──
+    function render() {
+      el.tbody.innerHTML = "";
+      el.emptyMsg.style.display = state.filtered.length ? "none" : "block";
+
+      const frag = document.createDocumentFragment();
+      state.filtered.forEach((item, i) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${i + 1}</td>
+          <td>
+            <div style="font-weight:600; max-width:280px; white-space:normal;">${esc(item.name)}</div>
+            <div style="font-size:10px; color:var(--muted); margin-top:2px;">
+              ID: ${esc(item.productId)}
+              ${item.editUrl ? `· <a href="${esc(item.editUrl)}" target="_blank">edit</a>` : ""}
+              ${item.frontendUrl ? `· <a href="${esc(item.frontendUrl)}" target="_blank">view</a>` : ""}
+            </div>
+          </td>
+          <td>${esc(item.brand)}</td>
+          <td class="price-cell">৳${fmt(item.yourOriginal)}</td>
+          <td class="price-cell">${item.yourPrice !== item.yourOriginal ? "৳" + fmt(item.yourPrice) : "—"}</td>
+          <td>${renderCompetitors(item)}</td>
+          <td class="price-cell">${item.cheapestComp !== null ? "৳" + fmt(item.cheapestComp) : '<span style="color:var(--muted)">—</span>'}</td>
+          <td>${renderDiff(item)}</td>
+          <td>${renderPosition(item)}</td>
+          <td>${renderBars(item)}</td>
+        `;
+        frag.appendChild(tr);
+      });
+      el.tbody.appendChild(frag);
+    }
+
+    function renderCompetitors(item) {
+      if (!item.competitorResults.length && item.competitorUrls.length) {
+        return `<span style="color:var(--muted); font-size:11px;">${item.competitorUrls.length} link(s) — not scraped yet</span>`;
+      }
+      if (!item.competitorResults.length) return '<span style="color:var(--muted)">—</span>';
+
+      return '<div class="comp-row">' + item.competitorResults.map(r => {
+        if (r.error) {
+          return `<div class="comp-item"><span class="comp-site">${esc(r.siteName)}</span><span class="comp-err">✕ ${esc(r.error)}</span></div>`;
+        }
+        const priceClass = r.price !== null && item.yourPrice > 0
+          ? (r.price < item.yourPrice ? "price-cheaper" : r.price > item.yourPrice ? "price-expensive" : "price-same")
+          : "";
+        return `<div class="comp-item">
+          <a class="comp-site" href="${esc(r.url)}" target="_blank" title="${esc(r.url)}">${esc(r.siteName)}</a>
+          <span class="comp-price ${priceClass}">${r.price !== null ? "৳" + fmt(r.price) : "N/A"}</span>
+          <span class="comp-method">${esc(r.method)}</span>
+        </div>`;
+      }).join("") + '</div>';
+    }
+
+    function renderDiff(item) {
+      if (item.diffPct === null) return '<span style="color:var(--muted)">—</span>';
+      const cls = item.diffPct <= -1 ? "good" : item.diffPct <= 5 ? "warn" : "bad";
+      const sign = item.diffPct > 0 ? "+" : "";
+      return `<span class="diff-badge ${cls}">${sign}${item.diffPct.toFixed(1)}%</span>
+              <div style="font-size:10px; color:var(--muted); margin-top:2px;">${item.diff > 0 ? "+" : ""}৳${fmt(Math.abs(item.diff))}</div>`;
+    }
+
+    function renderPosition(item) {
+      const map = {
+        cheapest: ["🟢 Cheapest", "good"],
+        mid: ["🟡 Mid Range", "warn"],
+        expensive: ["🔴 Expensive", "bad"],
+        "no-data": ["⚪ No Data", ""],
+      };
+      const [label, cls] = map[item.position] || map["no-data"];
+      return `<span class="diff-badge ${cls}">${label}</span>`;
+    }
+
+    function renderBars(item) {
+      if (!item.validPrices.length) return "";
+      const allPrices = [{ price: item.yourPrice, yours: true }, ...item.validPrices.map(r => ({ price: r.price, yours: false }))];
+      const maxP = Math.max(...allPrices.map(p => p.price));
+      if (maxP <= 0) return "";
+
+      return '<div class="bar-wrap">' + allPrices.map(p => {
+        const h = Math.max(4, (p.price / maxP) * 36);
+        const cls = p.yours ? "yours" : (p.price > item.yourPrice ? "expensive" : "");
+        return `<div class="bar ${cls}" style="height:${h}px" title="${p.yours ? 'You' : 'Competitor'}: ৳${fmt(p.price)}"></div>`;
+      }).join("") + '</div>';
+    }
+
+    // ── Export helpers ──
+    function buildExportRows() {
+      return state.filtered.map(item => ({
+        "Product ID": item.productId,
+        "Name": item.name,
+        "Brand": item.brand,
+        "Category": item.categories,
+        "Your Price (BDT)": item.yourOriginal,
+        "Your Discount Price (BDT)": item.yourPrice !== item.yourOriginal ? item.yourPrice : "",
+        "Cheapest Competitor (BDT)": item.cheapestComp || "",
+        "Diff (BDT)": item.diff !== null ? item.diff.toFixed(0) : "",
+        "Diff %": item.diffPct !== null ? item.diffPct.toFixed(1) + "%" : "",
+        "Position": item.position,
+        "Competitor Details": item.competitorResults.map(r => `${r.siteName}: ${r.price ?? "N/A"}`).join(" | "),
+        "Scraped At": item.scrapedAt || "",
+      }));
+    }
+
+    function exportCSV() {
+      if (!state.filtered.length) return;
+      const rows = buildExportRows();
+      const headers = Object.keys(rows[0]);
+      const csv = [headers.map(h => csvCell(h)).join(","),
+        ...rows.map(r => headers.map(h => csvCell(r[h])).join(","))
+      ].join("\n");
+      download(csv, `price-comparison-${Date.now()}.csv`, "text/csv;charset=utf-8");
+    }
+
+    function exportXLSX() {
+      if (!state.filtered.length) return;
+      const rows = buildExportRows();
+      const ws = XLSX.utils.json_to_sheet(rows);
+      // Auto column widths
+      const colWidths = Object.keys(rows[0]).map(k => ({ wch: Math.max(k.length, 14) }));
+      ws["!cols"] = colWidths;
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Price Comparison");
+      XLSX.writeFile(wb, `price-comparison-${Date.now()}.xlsx`);
+    }
+
+    // ── Helpers ──
+    function fmt(n) { return Number(n || 0).toLocaleString("en-BD", { maximumFractionDigits: 0 }); }
+    function esc(s) { return String(s ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+    function csvCell(v) { return `"${String(v ?? "").replace(/"/g, '""')}"`; }
+    function download(text, name, mime) {
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([text], { type: mime }));
+      a.download = name; a.click(); URL.revokeObjectURL(a.href);
+    }
+  </script>
+</body>
+</html>

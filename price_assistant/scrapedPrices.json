@@ -1,0 +1,129 @@
+{
+  "5924": {
+    "results": [
+      {
+        "url": "https://www.perennial.com.bd/western-digital-my-passport-2-tb",
+        "siteName": "Perennial",
+        "domain": "perennial.com.bd",
+        "price": 11400,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "meta-tag",
+        "fetchTimeMs": 40,
+        "scrapedAt": "2026-04-20T17:34:30.637Z",
+        "error": null
+      },
+      {
+        "url": "https://www.startech.com.bd/western-digital-my-passport-2-tb",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 10800,
+        "originalPrice": 10999,
+        "discountPrice": 10800,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 649,
+        "scrapedAt": "2026-04-20T17:34:31.243Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/wd-2tb-portable-hard-drive",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 10800,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 820,
+        "scrapedAt": "2026-04-20T17:34:31.457Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/western-digital-my-passport-2tb-usb-3.0-black-external-hdd",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": null,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "failed",
+        "fetchTimeMs": 3001,
+        "scrapedAt": "2026-04-20T17:34:33.597Z",
+        "error": "HTTP 403"
+      }
+    ],
+    "scrapedAt": "2026-04-20T17:34:34.322Z"
+  },
+  "5949": {
+    "results": [
+      {
+        "url": "https://smartbd.com/product/pny-256gb-nvme-cs1031-solid-state-drive-m280cs1031/",
+        "siteName": "Smart BD",
+        "domain": "smartbd.com",
+        "price": 4200,
+        "originalPrice": 11600,
+        "discountPrice": 4200,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "generic-bdt",
+        "fetchTimeMs": 733,
+        "scrapedAt": "2026-04-20T17:34:31.976Z",
+        "error": null
+      },
+      {
+        "url": "https://www.globalbrand.com.bd/pny-cs1031-256gb-m-2-2280-nvme-gen3x4-ssd",
+        "siteName": "Global Brand",
+        "domain": "globalbrand.com.bd",
+        "price": 8000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 1134,
+        "scrapedAt": "2026-04-20T17:34:32.591Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-20T17:34:34.322Z"
+  },
+  "5995": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/corsair-6500x-mid-tower-casing",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 21499,
+        "originalPrice": 22000,
+        "discountPrice": 21499,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 278,
+        "scrapedAt": "2026-04-20T17:34:32.869Z",
+        "error": null
+      },
+      {
+        "url": "https://www.skyland.com.bd/corsair-6500x-mid-tower-dual-chamber-pc-case",
+        "siteName": "Skyland",
+        "domain": "skyland.com.bd",
+        "price": 20500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 2341,
+        "scrapedAt": "2026-04-20T17:34:34.317Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-20T17:34:34.322Z"
+  }
+}
