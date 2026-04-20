@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PCB In-Stock Product Lister
 // @namespace    http://tampermonkey.net/
-// @version      1.6.0
+// @version      1.7.0
 // @description  Crawl all product pages, collect only in-stock products, fetch slug from edit page, and show results in a modern UI.
 // @author       faketi101
 // @match        https://admin.pcbstore.net/admin/products*
@@ -433,6 +433,7 @@
               <thead>
                 <tr>
                   <th>#</th>
+                  <th>Product ID</th>
                   <th>Name</th>
                   <th>Price</th>
                   <th>Discount</th>
@@ -659,6 +660,8 @@
 
         try {
           const detail = await fetchProductDetail(item.viewUrl, item.editUrl);
+          item.productId = detail.productId || item.productId || "";
+          item.name = detail.name || item.name || "";
           item.slug = detail.slug || "";
           item.brand = detail.brand || item.brand || "";
           item.categories = Array.isArray(detail.categories) ? detail.categories : [];
@@ -700,6 +703,7 @@
     const isStockOut = /stock\s*out/i.test(quantity) || qtyNumber <= 0;
 
     return {
+      productId: extractProductIdFromUrl(viewUrl) || extractProductIdFromUrl(editUrl),
       name,
       viewUrl,
       editUrl,
@@ -746,6 +750,8 @@
 
     const fallback = await fetchProductDetailFromEdit(editUrl);
     return {
+      productId: detailFromShow.productId || fallback.productId,
+      name: detailFromShow.name || fallback.name,
       slug: detailFromShow.slug || fallback.slug,
       brand: detailFromShow.brand || fallback.brand,
       categories: detailFromShow.categories?.length ? detailFromShow.categories : fallback.categories,
@@ -756,12 +762,16 @@
 
   async function fetchProductDetailFromShow(showUrl) {
     if (!showUrl) {
-      return { slug: "", brand: "", categories: [], price: "", discountPrice: "" };
+      return { productId: "", name: "", slug: "", brand: "", categories: [], price: "", discountPrice: "" };
     }
 
     const res = await fetch(showUrl, { credentials: "include" });
     const html = await res.text();
     const doc = new DOMParser().parseFromString(html, "text/html");
+
+    const name =
+      extractProductNameFromDoc(doc) ||
+      "";
 
     const slugValue = findTableValueByLabel(doc, /^slug$/i);
     const brandValue = findTableValueByLabel(doc, /^brand$/i);
@@ -785,6 +795,8 @@
       : [];
 
     return {
+      productId: extractProductIdFromUrl(showUrl),
+      name,
       slug: slug.trim(),
       brand: (brandValue || "").trim(),
       categories,
@@ -795,7 +807,7 @@
 
   async function fetchProductDetailFromEdit(editUrl) {
     if (!editUrl) {
-      return { slug: "", brand: "", categories: [] };
+      return { productId: "", slug: "", brand: "", categories: [] };
     }
 
     const res = await fetch(editUrl, { credentials: "include" });
@@ -816,7 +828,18 @@
     }
 
     const categories = extractCategoriesFromDoc(doc);
-    return { slug: slug.trim(), brand, categories };
+    return {
+      productId: extractProductIdFromUrl(editUrl),
+      slug: slug.trim(),
+      brand,
+      categories,
+    };
+  }
+
+  function extractProductIdFromUrl(url) {
+    if (!url) return "";
+    const m = String(url).match(/\/admin\/product\/(\d+)\/(?:show|edit)(?:[/?#]|$)/i);
+    return m ? m[1] : "";
   }
 
   function findTableValueByLabel(doc, labelRegex) {
@@ -839,6 +862,66 @@
       .replace(/\u00a0/g, " ")
       .replace(/\s+/g, " ")
       .trim();
+  }
+
+  function extractProductNameFromDoc(doc) {
+    const nameFromTable = findTableValueByLabel(doc, /^(product\s*)?name$/i);
+    if (isValidProductTitle(nameFromTable)) {
+      return normalizeShowTableText(nameFromTable);
+    }
+
+    const candidates = [
+      "h3.mb-2.mt-3.pb-1.fz-24",
+      "h3.fz-24",
+      "h1.fz-24",
+      "h1",
+      "h2.fz-24",
+      "h2",
+      ".page-title",
+      ".product-name",
+      ".product-title",
+      "meta[property='og:title']",
+      "title"
+    ];
+
+    for (const selector of candidates) {
+      const node = doc.querySelector(selector);
+      if (!node) continue;
+
+      let value = "";
+      if (node.tagName === "META") value = node.getAttribute("content") || "";
+      else value = node.textContent || "";
+
+      value = normalizeShowTableText(value);
+      if (!value) continue;
+
+      value = value
+        .replace(/\s*\|\s*.*$/, "")
+        .trim();
+
+      if (isValidProductTitle(value)) return value;
+    }
+
+    return "";
+  }
+
+  function isValidProductTitle(value) {
+    const text = normalizeShowTableText(value).toLowerCase();
+    if (!text) return false;
+
+    const blocked = new Set([
+      "key features",
+      "price information",
+      "product information",
+      "product details",
+      "description",
+      "specification",
+      "specifications",
+      "general information",
+      "overview",
+    ]);
+
+    return !blocked.has(text);
   }
 
   function extractCategoriesFromDoc(doc) {
@@ -890,7 +973,7 @@
     state.filteredData = state.data.filter((item) => {
       if (item.stockStatus !== "InStock") return false;
 
-      const haystack = `${item.name} ${item.brand} ${item.slug} ${item.price} ${item.discountPrice} ${item.categoryText || ""}`.toLowerCase();
+      const haystack = `${item.productId || ""} ${item.name} ${item.brand} ${item.slug} ${item.price} ${item.discountPrice} ${item.categoryText || ""}`.toLowerCase();
       if (keyword && !haystack.includes(keyword)) return false;
 
       if (!excludes.length) return true;
@@ -918,6 +1001,7 @@
       tr.style.animation = "none";
       tr.innerHTML = `
         <td>${index + 1}</td>
+        <td>${escapeHtml(item.productId || "")}</td>
         <td>${escapeHtml(item.name)}</td>
         <td>${escapeHtml(item.price)}</td>
         <td>${escapeHtml(item.discountPrice)}</td>
@@ -944,11 +1028,12 @@
       return;
     }
 
-    const headers = ["name", "price", "discountPrice", "quantity", "stockStatus", "brand", "categories", "slug", "adminViewUrl", "adminEditUrl", "frontendUrl"];
+    const headers = ["productId", "name", "price", "discountPrice", "quantity", "stockStatus", "brand", "categories", "slug", "adminViewUrl", "adminEditUrl", "frontendUrl"];
     const lines = [headers.join(",")];
 
     state.filteredData.forEach((r) => {
       lines.push([
+        csvCell(r.productId || ""),
         csvCell(r.name),
         csvCell(r.price),
         csvCell(r.discountPrice),
