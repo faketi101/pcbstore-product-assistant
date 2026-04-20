@@ -1,0 +1,848 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PCB Price List Viewer</title>
+  <style>
+    :root {
+      --bg: #0b1120;
+      --bg-soft: #121a2f;
+      --card: #0f172a;
+      --line: rgba(255,255,255,0.12);
+      --text: #e5edff;
+      --muted: #9aaed6;
+      --ok: #1fc3a2;
+      --warn: #f5b84f;
+      --accent: #5a82ff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(900px 300px at -10% -20%, rgba(90,130,255,.28), transparent),
+        radial-gradient(1000px 260px at 120% -30%, rgba(31,195,162,.18), transparent),
+        var(--bg);
+    }
+
+    .wrap {
+      width: min(1500px, 96vw);
+      margin: 18px auto;
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 14px;
+      min-height: calc(100vh - 36px);
+    }
+
+    .panel, .main {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(10,16,32,.9);
+      min-height: 0;
+    }
+
+    .panel {
+      overflow: auto;
+    }
+
+    .section {
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section:last-child { border-bottom: 0; }
+
+    h1 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .muted { color: var(--muted); font-size: 12px; }
+
+    .mini-link {
+      display: inline-block;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 1px 7px;
+      font-size: 11px;
+      margin-right: 6px;
+      color: #d6e4ff;
+      background: rgba(255,255,255,.04);
+      text-decoration: none;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    input, select, textarea, button {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      padding: 9px 10px;
+      font-size: 13px;
+    }
+
+    /* Force readable native dropdown options on Windows/light popups. */
+    select option {
+      color: #111827;
+      background: #f8fbff;
+    }
+
+    button {
+      cursor: pointer;
+      font-weight: 600;
+      background: rgba(255,255,255,.05);
+    }
+
+    .btn-primary {
+      border-color: transparent;
+      background: linear-gradient(120deg, var(--accent), var(--ok));
+      color: #f6fbff;
+    }
+
+    .row2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .main {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .topbar {
+      border-bottom: 1px solid var(--line);
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 12px;
+      color: #d9e5ff;
+      background: rgba(90,130,255,.2);
+    }
+
+    .table-wrap {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 8px;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      text-transform: uppercase;
+      font-size: 11px;
+      color: #bfd0ff;
+      background: rgba(9,14,29,.96);
+    }
+
+    a { color: #8db3ff; text-decoration: none; }
+
+    .stock {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      color: #d8fff6;
+      border: 1px solid rgba(31,195,162,.45);
+      background: rgba(31,195,162,.2);
+    }
+
+    .links {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 180px;
+    }
+
+    .link-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .link-item a {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 180px;
+    }
+
+    .link-remove {
+      width: 22px;
+      height: 22px;
+      border-radius: 7px;
+      padding: 0;
+      font-size: 11px;
+      line-height: 1;
+    }
+
+    .link-add {
+      display: flex;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .link-add input {
+      min-width: 160px;
+      padding: 6px 8px;
+      font-size: 12px;
+    }
+
+    .link-add button {
+      width: auto;
+      padding: 6px 10px;
+      font-size: 12px;
+    }
+
+    .empty {
+      padding: 26px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    @media (max-width: 1100px) {
+      .wrap { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <aside class="panel">
+      <div class="section">
+        <h1>Price List Viewer</h1>
+        <div class="muted">Local JSON viewer with filters and multi-link support.</div>
+      </div>
+
+      <div class="section">
+        <label>Load JSON File</label>
+        <input id="fileInput" type="file" accept="application/json,.json" />
+        <div style="height:8px"></div>
+        <button id="loadDefaultBtn">Load output.json (same folder)</button>
+      </div>
+
+      <div class="section">
+        <label for="searchInput">Search</label>
+        <input id="searchInput" type="text" placeholder="name, brand, slug" />
+
+        <div style="height:8px"></div>
+        <label for="brandSelect">Brand</label>
+        <select id="brandSelect"><option value="">All</option></select>
+
+        <div style="height:8px"></div>
+        <label for="categorySelect">Category</label>
+        <input id="categorySelect" list="categoryOptions" type="text" placeholder="Search or pick category..." />
+        <datalist id="categoryOptions"></datalist>
+
+        <div style="height:8px"></div>
+        <label for="excludeBrands">Exclude Brands (comma/newline)</label>
+        <textarea id="excludeBrands" rows="3" placeholder="ASUS, MSI"></textarea>
+      </div>
+
+      <div class="section">
+        <div class="row2">
+          <div>
+            <label for="minPrice">Min Price</label>
+            <input id="minPrice" type="number" step="0.01" />
+          </div>
+          <div>
+            <label for="maxPrice">Max Price</label>
+            <input id="maxPrice" type="number" step="0.01" />
+          </div>
+        </div>
+
+        <div style="height:8px"></div>
+        <div class="row2">
+          <div>
+            <label for="minDiscount">Min Discount Price</label>
+            <input id="minDiscount" type="number" step="0.01" />
+          </div>
+          <div>
+            <label for="maxDiscount">Max Discount Price</label>
+            <input id="maxDiscount" type="number" step="0.01" />
+          </div>
+        </div>
+
+        <div style="height:8px"></div>
+        <div class="row2">
+          <div>
+            <label for="minQty">Min Qty</label>
+            <input id="minQty" type="number" />
+          </div>
+          <div>
+            <label for="maxQty">Max Qty</label>
+            <input id="maxQty" type="number" />
+          </div>
+        </div>
+
+        <div style="height:8px"></div>
+        <div class="row2">
+          <div>
+            <label for="sortSelect">Sort</label>
+            <select id="sortSelect">
+              <option value="">Default</option>
+              <option value="price_asc">Price Low to High</option>
+              <option value="price_desc">Price High to Low</option>
+              <option value="discount_asc">Discount Low to High</option>
+              <option value="discount_desc">Discount High to Low</option>
+              <option value="qty_desc">Qty High to Low</option>
+              <option value="qty_asc">Qty Low to High</option>
+            </select>
+          </div>
+          <div>
+            <label for="hasLinks">Links Filter</label>
+            <select id="hasLinks">
+              <option value="">All</option>
+              <option value="yes">Has competitor links</option>
+              <option value="no">No competitor links</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="actions">
+          <button id="applyBtn" class="btn-primary">Apply Filters</button>
+          <button id="resetBtn">Reset Filters</button>
+          <button id="exportBtn">Export Merged JSON</button>
+          <button id="csvBtn">Export CSV</button>
+        </div>
+      </div>
+    </aside>
+
+    <section class="main">
+      <div class="topbar">
+        <span id="statTotal" class="chip">Total: 0</span>
+        <span id="statFiltered" class="chip">Filtered: 0</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Brand</th>
+              <th>Categories</th>
+              <th>Price</th>
+              <th>Discount</th>
+              <th>Qty</th>
+              <th>Status</th>
+              <th>Slug</th>
+              <th>Links (multiple)</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+        <div id="empty" class="empty">Load a JSON file to start.</div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const LINKS_STORE_KEY = "pcb_local_competitor_links_v1";
+
+    const state = {
+      raw: [],
+      filtered: [],
+      linksMap: loadLinksMap(),
+    };
+
+    const el = {
+      fileInput: document.getElementById("fileInput"),
+      loadDefaultBtn: document.getElementById("loadDefaultBtn"),
+      searchInput: document.getElementById("searchInput"),
+      brandSelect: document.getElementById("brandSelect"),
+      categorySelect: document.getElementById("categorySelect"),
+      categoryOptions: document.getElementById("categoryOptions"),
+      excludeBrands: document.getElementById("excludeBrands"),
+      minPrice: document.getElementById("minPrice"),
+      maxPrice: document.getElementById("maxPrice"),
+      minDiscount: document.getElementById("minDiscount"),
+      maxDiscount: document.getElementById("maxDiscount"),
+      minQty: document.getElementById("minQty"),
+      maxQty: document.getElementById("maxQty"),
+      sortSelect: document.getElementById("sortSelect"),
+      hasLinks: document.getElementById("hasLinks"),
+      applyBtn: document.getElementById("applyBtn"),
+      resetBtn: document.getElementById("resetBtn"),
+      exportBtn: document.getElementById("exportBtn"),
+      csvBtn: document.getElementById("csvBtn"),
+      tbody: document.getElementById("tbody"),
+      empty: document.getElementById("empty"),
+      statTotal: document.getElementById("statTotal"),
+      statFiltered: document.getElementById("statFiltered"),
+    };
+
+    bindEvents();
+
+    function bindEvents() {
+      el.fileInput.addEventListener("change", onFilePicked);
+      el.loadDefaultBtn.addEventListener("click", loadDefaultJson);
+      el.applyBtn.addEventListener("click", applyFilters);
+      el.resetBtn.addEventListener("click", resetFilters);
+      el.exportBtn.addEventListener("click", exportMergedJson);
+      el.csvBtn.addEventListener("click", exportCsv);
+
+      el.tbody.addEventListener("click", onTableClick);
+      el.tbody.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" && event.target.matches(".new-link-input")) {
+          event.preventDefault();
+          const btn = event.target.parentElement.querySelector(".add-link-btn");
+          if (btn) btn.click();
+        }
+      });
+    }
+
+    async function loadDefaultJson() {
+      try {
+        const res = await fetch("./output.json");
+        if (!res.ok) throw new Error("output.json not found");
+        const data = await res.json();
+        setData(data);
+      } catch (err) {
+        alert("Could not load ./output.json directly. If you opened HTML using file://, browser may block fetch. Use the file picker instead.");
+      }
+    }
+
+    async function onFilePicked(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const text = await file.text();
+      let data = [];
+      try {
+        data = JSON.parse(text);
+      } catch {
+        alert("Invalid JSON file.");
+        return;
+      }
+      setData(data);
+    }
+
+    function setData(data) {
+      if (!Array.isArray(data)) {
+        alert("JSON root must be an array.");
+        return;
+      }
+
+      state.raw = data.map((item, idx) => normalizeItem(item, idx));
+      rebuildBrandOptions();
+      applyFilters();
+    }
+
+    function normalizeItem(item, idx) {
+      const p = normalizeMoney(item.price);
+      const d = normalizeMoney(item.discountPrice);
+      const qtyNum = normalizeQty(item.quantity);
+
+      const normalized = {
+        name: String(item.name || ""),
+        viewUrl: String(item.viewUrl || ""),
+        editUrl: String(item.editUrl || ""),
+        price: p.num.toFixed(2),
+        discountPrice: d.num.toFixed(2),
+        quantity: String(qtyNum),
+        priceNum: p.num,
+        discountNum: d.num,
+        qtyNum,
+        stockStatus: String(item.stockStatus || ""),
+        brand: String(item.brand || ""),
+        categories: normalizeCategories(item.categories),
+        slug: String(item.slug || ""),
+        frontendUrl: String(item.frontendUrl || ""),
+      };
+
+      normalized.categoryText = normalized.categories.join(", ");
+
+      const key = productKey(normalized, idx);
+      const fromJsonLinks = pickLinks(item);
+      const persistedLinks = state.linksMap[key] || [];
+      state.linksMap[key] = uniqueLinks([...fromJsonLinks, ...persistedLinks]);
+
+      return normalized;
+    }
+
+    function pickLinks(item) {
+      const candidates = [];
+      const fields = ["competitorLinks", "externalLinks", "links"];
+      for (const f of fields) {
+        const value = item?.[f];
+        if (!value) continue;
+        if (Array.isArray(value)) {
+          value.forEach((v) => {
+            if (typeof v === "string") candidates.push(v);
+            else if (v && typeof v.url === "string") candidates.push(v.url);
+          });
+        }
+      }
+      return uniqueLinks(candidates);
+    }
+
+    function applyFilters() {
+      const q = el.searchInput.value.trim().toLowerCase();
+      const brand = el.brandSelect.value.trim().toLowerCase();
+      const category = el.categorySelect.value.trim().toLowerCase();
+      const excludes = parseExclude(el.excludeBrands.value);
+
+      const minPrice = numOrNull(el.minPrice.value);
+      const maxPrice = numOrNull(el.maxPrice.value);
+      const minDiscount = numOrNull(el.minDiscount.value);
+      const maxDiscount = numOrNull(el.maxDiscount.value);
+      const minQty = intOrNull(el.minQty.value);
+      const maxQty = intOrNull(el.maxQty.value);
+      const hasLinks = el.hasLinks.value;
+
+      state.filtered = state.raw.filter((item, idx) => {
+        const key = productKey(item, idx);
+        const links = state.linksMap[key] || [];
+
+        const hay = `${item.name} ${item.brand} ${item.slug} ${item.categoryText || ""}`.toLowerCase();
+        if (q && !hay.includes(q)) return false;
+
+        if (brand && item.brand.toLowerCase() !== brand) return false;
+
+        if (category) {
+          const foundCategory = (item.categories || []).some((c) => c.toLowerCase() === category);
+          if (!foundCategory) return false;
+        }
+
+        if (excludes.length && excludes.includes(item.brand.toLowerCase())) return false;
+
+        if (minPrice !== null && item.priceNum < minPrice) return false;
+        if (maxPrice !== null && item.priceNum > maxPrice) return false;
+
+        if (minDiscount !== null && item.discountNum < minDiscount) return false;
+        if (maxDiscount !== null && item.discountNum > maxDiscount) return false;
+
+        if (minQty !== null && item.qtyNum < minQty) return false;
+        if (maxQty !== null && item.qtyNum > maxQty) return false;
+
+        if (hasLinks === "yes" && !links.length) return false;
+        if (hasLinks === "no" && links.length) return false;
+
+        return true;
+      });
+
+      sortRows();
+      render();
+    }
+
+    function sortRows() {
+      const mode = el.sortSelect.value;
+      if (!mode) return;
+
+      const get = {
+        price_asc: (x) => x.priceNum,
+        price_desc: (x) => -x.priceNum,
+        discount_asc: (x) => x.discountNum,
+        discount_desc: (x) => -x.discountNum,
+        qty_asc: (x) => x.qtyNum,
+        qty_desc: (x) => -x.qtyNum,
+      }[mode];
+
+      if (!get) return;
+      state.filtered.sort((a, b) => get(a) - get(b));
+    }
+
+    function render() {
+      el.tbody.innerHTML = "";
+      el.statTotal.textContent = `Total: ${state.raw.length}`;
+      el.statFiltered.textContent = `Filtered: ${state.filtered.length}`;
+      el.empty.style.display = state.filtered.length ? "none" : "block";
+
+      const frag = document.createDocumentFragment();
+      state.filtered.forEach((item, i) => {
+        const key = productKey(item, i);
+        const links = state.linksMap[key] || [];
+
+        const tr = document.createElement("tr");
+        tr.dataset.key = key;
+        tr.innerHTML = `
+          <td>${i + 1}</td>
+          <td>
+            <div>${escapeHtml(item.name)}</div>
+            <div class="muted">
+              ${item.viewUrl ? `<a class="mini-link" href="${escapeHtml(item.viewUrl)}" target="_blank">show</a>` : ""}
+              ${item.editUrl ? `<a class="mini-link" href="${escapeHtml(item.editUrl)}" target="_blank">edit</a>` : ""}
+              ${item.frontendUrl ? `<a class="mini-link" href="${escapeHtml(item.frontendUrl)}" target="_blank">frontend</a>` : ""}
+            </div>
+          </td>
+          <td>${escapeHtml(item.brand)}</td>
+          <td>${escapeHtml(item.categoryText)}</td>
+          <td>${item.priceNum.toFixed(2)}</td>
+          <td>${item.discountNum.toFixed(2)}</td>
+          <td>${item.qtyNum}</td>
+          <td><span class="stock">${escapeHtml(item.stockStatus || "InStock")}</span></td>
+          <td>${escapeHtml(item.slug)}</td>
+          <td>
+            <div class="links">
+              ${links.map((link, idx) => `
+                <div class="link-item">
+                  <a href="${escapeHtml(link)}" target="_blank" title="${escapeHtml(link)}">${escapeHtml(link)}</a>
+                  <button class="link-remove" data-index="${idx}">x</button>
+                </div>
+              `).join("")}
+            </div>
+            <div class="link-add">
+              <input class="new-link-input" type="url" placeholder="https://competitor-site/product..." />
+              <button class="add-link-btn">Add</button>
+            </div>
+          </td>
+        `;
+        frag.appendChild(tr);
+      });
+
+      el.tbody.appendChild(frag);
+    }
+
+    function onTableClick(event) {
+      const tr = event.target.closest("tr[data-key]");
+      if (!tr) return;
+      const key = tr.dataset.key;
+
+      if (event.target.classList.contains("add-link-btn")) {
+        const input = tr.querySelector(".new-link-input");
+        const value = (input?.value || "").trim();
+        if (!value) return;
+        if (!/^https?:\/\//i.test(value)) {
+          alert("Please provide a valid http/https link.");
+          return;
+        }
+        const current = state.linksMap[key] || [];
+        state.linksMap[key] = uniqueLinks([...current, value]);
+        persistLinks();
+        if (input) input.value = "";
+        render();
+        return;
+      }
+
+      if (event.target.classList.contains("link-remove")) {
+        const index = Number(event.target.dataset.index || "-1");
+        if (index < 0) return;
+        const current = [...(state.linksMap[key] || [])];
+        current.splice(index, 1);
+        state.linksMap[key] = current;
+        persistLinks();
+        render();
+      }
+    }
+
+    function rebuildBrandOptions() {
+      const brands = Array.from(new Set(state.raw.map((x) => x.brand).filter(Boolean))).sort((a, b) => a.localeCompare(b));
+      el.brandSelect.innerHTML = "<option value=''>All</option>";
+      brands.forEach((b) => {
+        const op = document.createElement("option");
+        op.value = b;
+        op.textContent = b;
+        el.brandSelect.appendChild(op);
+      });
+
+      rebuildCategoryOptions();
+    }
+
+    function rebuildCategoryOptions() {
+      const categories = Array.from(new Set(
+        state.raw.flatMap((x) => x.categories || []).filter(Boolean)
+      )).sort((a, b) => a.localeCompare(b));
+
+      el.categoryOptions.innerHTML = "";
+      categories.forEach((c) => {
+        const op = document.createElement("option");
+        op.value = c;
+        el.categoryOptions.appendChild(op);
+      });
+    }
+
+    function resetFilters() {
+      el.searchInput.value = "";
+      el.brandSelect.value = "";
+      el.categorySelect.value = "";
+      el.excludeBrands.value = "";
+      el.minPrice.value = "";
+      el.maxPrice.value = "";
+      el.minDiscount.value = "";
+      el.maxDiscount.value = "";
+      el.minQty.value = "";
+      el.maxQty.value = "";
+      el.sortSelect.value = "";
+      el.hasLinks.value = "";
+      applyFilters();
+    }
+
+    function exportMergedJson() {
+      if (!state.raw.length) return;
+      const merged = state.raw.map((item, idx) => {
+        const key = productKey(item, idx);
+        return {
+          ...item,
+          price: item.priceNum.toFixed(2),
+          discountPrice: item.discountNum.toFixed(2),
+          quantity: String(item.qtyNum),
+          categories: item.categories || [],
+          competitorLinks: state.linksMap[key] || [],
+        };
+      });
+      downloadText(JSON.stringify(merged, null, 2), `merged-products-${Date.now()}.json`, "application/json;charset=utf-8");
+    }
+
+    function exportCsv() {
+      if (!state.filtered.length) return;
+      const headers = ["name", "brand", "categories", "price", "discountPrice", "quantity", "stockStatus", "slug", "viewUrl", "editUrl", "frontendUrl", "competitorLinks"];
+      const lines = [headers.join(",")];
+      state.filtered.forEach((item, idx) => {
+        const key = productKey(item, idx);
+        const links = (state.linksMap[key] || []).join(" | ");
+        lines.push([
+          csvCell(item.name),
+          csvCell(item.brand),
+          csvCell((item.categories || []).join(" | ")),
+          csvCell(item.priceNum.toFixed(2)),
+          csvCell(item.discountNum.toFixed(2)),
+          csvCell(item.qtyNum),
+          csvCell(item.stockStatus),
+          csvCell(item.slug),
+          csvCell(item.viewUrl),
+          csvCell(item.editUrl),
+          csvCell(item.frontendUrl),
+          csvCell(links),
+        ].join(","));
+      });
+      downloadText(lines.join("\n"), `filtered-products-${Date.now()}.csv`, "text/csv;charset=utf-8");
+    }
+
+    function downloadText(text, fileName, mime) {
+      const blob = new Blob([text], { type: mime });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = fileName;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function productKey(item, idx) {
+      return item.slug || item.editUrl || `${item.name}__${idx}`;
+    }
+
+    function parseExclude(text) {
+      return (text || "")
+        .split(/[\n,]+/)
+        .map((x) => x.trim().toLowerCase())
+        .filter(Boolean);
+    }
+
+    function normalizeMoney(value) {
+      const cleaned = String(value || "").replace(/[^\d.-]/g, "");
+      const n = Number(cleaned);
+      return {
+        raw: value,
+        num: Number.isFinite(n) ? n : 0,
+      };
+    }
+
+    function normalizeQty(value) {
+      const cleaned = String(value || "").replace(/[^\d-]/g, "");
+      const n = Number(cleaned);
+      return Number.isFinite(n) ? n : 0;
+    }
+
+    function normalizeCategories(value) {
+      if (Array.isArray(value)) {
+        return Array.from(new Set(value
+          .map((x) => String(x || "").trim())
+          .filter(Boolean)));
+      }
+      if (typeof value === "string" && value.trim()) {
+        return Array.from(new Set(value
+          .split(/[|,]+/)
+          .map((x) => x.trim())
+          .filter(Boolean)));
+      }
+      return [];
+    }
+
+    function numOrNull(value) {
+      if (value === "") return null;
+      const n = Number(value);
+      return Number.isFinite(n) ? n : null;
+    }
+
+    function intOrNull(value) {
+      if (value === "") return null;
+      const n = parseInt(value, 10);
+      return Number.isFinite(n) ? n : null;
+    }
+
+    function uniqueLinks(arr) {
+      return Array.from(new Set((arr || [])
+        .map((x) => String(x || "").trim())
+        .filter((x) => /^https?:\/\//i.test(x))));
+    }
+
+    function loadLinksMap() {
+      try {
+        const raw = localStorage.getItem(LINKS_STORE_KEY);
+        return raw ? JSON.parse(raw) : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function persistLinks() {
+      localStorage.setItem(LINKS_STORE_KEY, JSON.stringify(state.linksMap));
+    }
+
+    function csvCell(v) {
+      return `"${String(v ?? "").replace(/"/g, '""')}"`;
+    }
+
+    function escapeHtml(str) {
+      return String(str ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+  </script>
+</body>
+</html>
