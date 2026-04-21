@@ -1,20 +1,194 @@
 {
-  "5924": {
+  "124": {
     "results": [
       {
-        "url": "https://www.perennial.com.bd/western-digital-my-passport-2-tb",
-        "siteName": "Perennial",
-        "domain": "perennial.com.bd",
-        "price": 11400,
+        "url": "https://www.startech.com.bd/amd-ryzen-5-5600gt-processor",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 16990,
+        "originalPrice": 17700,
+        "discountPrice": 16990,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 193,
+        "scrapedAt": "2026-04-21T05:33:50.885Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ultratech.com.bd/amd-ryzen-5-5600gt-6-core-12-thread-am4-processor",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 16500,
         "originalPrice": null,
         "discountPrice": null,
         "currency": "BDT",
         "inStock": true,
-        "method": "meta-tag",
-        "fetchTimeMs": 162,
-        "scrapedAt": "2026-04-21T03:35:58.341Z",
+        "method": "json-ld",
+        "fetchTimeMs": 289,
+        "scrapedAt": "2026-04-21T05:33:50.983Z",
         "error": null
       },
+      {
+        "url": "https://www.ryans.com/amd-ryzen-5-5600gt-processor",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 18500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 779,
+        "scrapedAt": "2026-04-21T05:33:51.474Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T05:33:57.998Z"
+  },
+  "264": {
+    "results": [
+      {
+        "url": "https://www.ultratech.com.bd/amd-ryzen-7-7700-gaming-processor",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 21500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 104,
+        "scrapedAt": "2026-04-21T05:33:51.098Z",
+        "error": null
+      },
+      {
+        "url": "https://www.startech.com.bd/amd-ryzen-7-7700-processor",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 22600,
+        "originalPrice": 26500,
+        "discountPrice": 22600,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 175,
+        "scrapedAt": "2026-04-21T05:33:51.169Z",
+        "error": null
+      },
+      {
+        "url": "https://www.universal.com.bd/amd-ryzen-7-7700-gaming-processor",
+        "siteName": "universal.com.bd",
+        "domain": "universal.com.bd",
+        "price": 24000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 494,
+        "scrapedAt": "2026-04-21T05:33:51.592Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T05:33:57.998Z"
+  },
+  "374": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/amd-ryzen-5-5600-processor",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 13800,
+        "originalPrice": 14500,
+        "discountPrice": 13800,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 185,
+        "scrapedAt": "2026-04-21T05:57:28.404Z",
+        "error": null
+      },
+      {
+        "url": "https://neton.com.bd/product/amd-ryzen-5-5600-processor/",
+        "siteName": "Neton Tech",
+        "domain": "neton.com.bd",
+        "price": 32900,
+        "originalPrice": 35800,
+        "discountPrice": 32900,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "generic-bdt",
+        "fetchTimeMs": 1237,
+        "scrapedAt": "2026-04-21T05:57:29.464Z",
+        "error": null
+      },
+      {
+        "url": "https://computerimporter.com/amd-ryzen-5-5600-processor-price-in-bd",
+        "siteName": "computerimporter.com",
+        "domain": "computerimporter.com",
+        "price": 11100,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "json-ld",
+        "fetchTimeMs": 1265,
+        "scrapedAt": "2026-04-21T05:57:29.493Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T05:57:29.493Z"
+  },
+  "627": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/amd-ryzen-9-9950x3d-processor",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 78600,
+        "originalPrice": 86500,
+        "discountPrice": 78600,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 216,
+        "scrapedAt": "2026-04-21T05:33:51.831Z",
+        "error": null
+      },
+      {
+        "url": "https://www.computervillage.com.bd/amd-ryzen-9-9950x3d-gaming-and-content-creation-processor",
+        "siteName": "computervillage.com.bd",
+        "domain": "computervillage.com.bd",
+        "price": 79500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "json-ld",
+        "fetchTimeMs": 113,
+        "scrapedAt": "2026-04-21T05:33:51.944Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ultratech.com.bd/amd-ryzen-9-9950x3d-gaming-and-content-creation-processor",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 77000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 406,
+        "scrapedAt": "2026-04-21T05:33:52.350Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T05:33:57.998Z"
+  },
+  "5924": {
+    "results": [
       {
         "url": "https://www.startech.com.bd/western-digital-my-passport-2-tb",
         "siteName": "Star Tech",
@@ -25,8 +199,22 @@
         "currency": "BDT",
         "inStock": true,
         "method": "site-pattern",
-        "fetchTimeMs": 327,
-        "scrapedAt": "2026-04-21T03:35:58.475Z",
+        "fetchTimeMs": 148,
+        "scrapedAt": "2026-04-21T05:33:52.498Z",
+        "error": null
+      },
+      {
+        "url": "https://www.perennial.com.bd/western-digital-my-passport-2-tb",
+        "siteName": "Perennial",
+        "domain": "perennial.com.bd",
+        "price": 11400,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "meta-tag",
+        "fetchTimeMs": 47,
+        "scrapedAt": "2026-04-21T05:33:52.755Z",
         "error": null
       },
       {
@@ -39,8 +227,8 @@
         "currency": "BDT",
         "inStock": true,
         "method": "json-ld",
-        "fetchTimeMs": 341,
-        "scrapedAt": "2026-04-21T03:35:58.682Z",
+        "fetchTimeMs": 283,
+        "scrapedAt": "2026-04-21T05:33:53.038Z",
         "error": null
       },
       {
@@ -53,12 +241,12 @@
         "currency": "BDT",
         "inStock": true,
         "method": "json-ld",
-        "fetchTimeMs": 818,
-        "scrapedAt": "2026-04-21T03:35:58.995Z",
+        "fetchTimeMs": 838,
+        "scrapedAt": "2026-04-21T05:33:53.336Z",
         "error": null
       }
     ],
-    "scrapedAt": "2026-04-21T03:35:59.973Z"
+    "scrapedAt": "2026-04-21T05:33:57.998Z"
   },
   "5949": {
     "results": [
@@ -72,8 +260,8 @@
         "currency": "BDT",
         "inStock": true,
         "method": "generic-bdt",
-        "fetchTimeMs": 879,
-        "scrapedAt": "2026-04-21T03:35:59.355Z",
+        "fetchTimeMs": 891,
+        "scrapedAt": "2026-04-21T05:33:53.929Z",
         "error": null
       },
       {
@@ -86,12 +274,139 @@
         "currency": "BDT",
         "inStock": true,
         "method": "json-ld",
-        "fetchTimeMs": 1270,
-        "scrapedAt": "2026-04-21T03:35:59.952Z",
+        "fetchTimeMs": 1234,
+        "scrapedAt": "2026-04-21T05:33:54.570Z",
         "error": null
       }
     ],
-    "scrapedAt": "2026-04-21T03:35:59.973Z"
+    "scrapedAt": "2026-04-21T05:33:57.998Z"
+  },
+  "5954": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/team-t-force-delta-rgb-white-16gb-6000mhz-ddr5-ram",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 32500,
+        "originalPrice": 34000,
+        "discountPrice": 32500,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 171,
+        "scrapedAt": "2026-04-21T05:33:54.100Z",
+        "error": null
+      },
+      {
+        "url": "https://www.selltech.com.bd/TEAM-T-FORCE-DELTA-RGB-White-16GB-6000MHz-DDR5-RAM",
+        "siteName": "selltech.com.bd",
+        "domain": "selltech.com.bd",
+        "price": 31000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 216,
+        "scrapedAt": "2026-04-21T05:33:54.316Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T05:33:57.998Z"
+  },
+  "5973": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/pny-xlr8-16gb-desktop-gaming-ram",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 12499,
+        "originalPrice": 13800,
+        "discountPrice": 12499,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 154,
+        "scrapedAt": "2026-04-21T05:33:54.724Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ultratech.com.bd/pny-xlr8-16gb-ddr4-3200mhz-desktop-gaming-ram",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 12500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 246,
+        "scrapedAt": "2026-04-21T05:33:54.970Z",
+        "error": null
+      },
+      {
+        "url": "https://www.globalbrand.com.bd/pny-xlr8-gaming-16gb-ddr4-3200mhz-desktop-ram",
+        "siteName": "Global Brand",
+        "domain": "globalbrand.com.bd",
+        "price": 21500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 1089,
+        "scrapedAt": "2026-04-21T05:33:55.405Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T05:33:57.998Z"
+  },
+  "5975": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/pny-elite-x-128gb-pen-drive",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 2400,
+        "originalPrice": 2500,
+        "discountPrice": 2400,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 156,
+        "scrapedAt": "2026-04-21T05:33:55.126Z",
+        "error": null
+      },
+      {
+        "url": "https://www.globalbrand.com.bd/pny-elite-x-128gb-usb-32-pen-drive",
+        "siteName": "Global Brand",
+        "domain": "globalbrand.com.bd",
+        "price": 2800,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 1037,
+        "scrapedAt": "2026-04-21T05:33:56.163Z",
+        "error": null
+      },
+      {
+        "url": "https://www.skyland.com.bd/pny-elite-x-128gb-pen-drive",
+        "siteName": "Skyland",
+        "domain": "skyland.com.bd",
+        "price": 2800,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 2100,
+        "scrapedAt": "2026-04-21T05:33:57.505Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T05:33:57.998Z"
   },
   "5995": {
     "results": [
@@ -105,8 +420,8 @@
         "currency": "BDT",
         "inStock": true,
         "method": "site-pattern",
-        "fetchTimeMs": 189,
-        "scrapedAt": "2026-04-21T03:35:59.544Z",
+        "fetchTimeMs": 145,
+        "scrapedAt": "2026-04-21T05:33:56.308Z",
         "error": null
       },
       {
@@ -119,11 +434,11 @@
         "currency": "BDT",
         "inStock": true,
         "method": "json-ld",
-        "fetchTimeMs": 975,
-        "scrapedAt": "2026-04-21T03:35:59.970Z",
+        "fetchTimeMs": 2216,
+        "scrapedAt": "2026-04-21T05:33:57.993Z",
         "error": null
       }
     ],
-    "scrapedAt": "2026-04-21T03:35:59.973Z"
+    "scrapedAt": "2026-04-21T05:33:57.998Z"
   }
 }

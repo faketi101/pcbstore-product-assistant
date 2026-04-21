@@ -5,7 +5,9 @@ const path = require("path");
 const { scrapePrice, scrapeMultiple } = require("./lib/priceScraper");
 const { getSiteName } = require("./lib/siteConfigs");
 
-const PORT = 4070;
+const CONFIG = (() => { try { return JSON.parse(fs.readFileSync(path.join(__dirname, "config.json"), "utf8")); } catch { return {}; } })();
+const PORT = CONFIG.PORT || 4070;
+const HOST = CONFIG.HOST || "localhost";
 const ROOT = __dirname;
 const LINKS_FILE = path.join(ROOT, "competitorProductLink.json");
 const PRICE_CACHE_FILE = path.join(ROOT, "scrapedPrices.json");
@@ -292,7 +294,12 @@ const server = http.createServer(async (req, res) => {
     // ── Health ─────────────────────────────────────────────────
 
     if (url.pathname === "/health") {
-      sendJson(res, 200, { ok: true, port: PORT });
+      sendJson(res, 200, { ok: true, port: PORT, host: HOST });
+      return;
+    }
+
+    if (url.pathname === "/api/config" && req.method === "GET") {
+      sendJson(res, 200, { PORT, HOST, API_URL: `http://${HOST}:${PORT}` });
       return;
     }
 
@@ -321,14 +328,16 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-server.listen(PORT, () => {
+server.listen(PORT, HOST, () => {
   console.log(`\n  ┌─────────────────────────────────────────────────┐`);
   console.log(`  │  PCB Price Assistant Server                     │`);
-  console.log(`  │  Running on http://localhost:${PORT}              │`);
+  console.log(`  │  Running on http://${HOST}:${PORT}              │`);
   console.log(`  ├─────────────────────────────────────────────────┤`);
   console.log(`  │  📋 Product Viewer:  /outputViewer.html         │`);
   console.log(`  │  💰 Price Analyzer:  /priceAnalyzer.html        │`);
   console.log(`  │  🔗 Links API:       GET/PUT /api/links         │`);
   console.log(`  │  🕷️  Scrape API:      POST /api/scrape-all      │`);
+  console.log(`  │  ⚙️  Config:          GET /api/config           │`);
   console.log(`  └─────────────────────────────────────────────────┘\n`);
+  console.log(`  Open: http://${HOST}:${PORT}/priceAnalyzer.html\n`);
 });

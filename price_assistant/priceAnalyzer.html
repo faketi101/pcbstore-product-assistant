@@ -156,6 +156,30 @@
       flex: 1 1 220px;
       min-width: 0;
     }
+    .comp-orig {
+      font-size: 10px;
+      color: var(--muted);
+      text-decoration: line-through;
+    }
+    .comp-sale {
+      font-size: 10px;
+      color: var(--green);
+      font-weight: 600;
+    }
+
+    /* ── Per-row scrape button ── */
+    .btn-scrape-row {
+      border: 1px solid var(--line); border-radius: 8px; padding: 5px 10px;
+      font: 600 11px/1 'Inter', sans-serif; cursor: pointer;
+      color: var(--muted); background: rgba(255,255,255,.03); transition: all .2s;
+      white-space: nowrap;
+    }
+    .btn-scrape-row:hover { background: rgba(90,130,255,.1); color: var(--accent); border-color: var(--accent); }
+    .btn-scrape-row:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-scrape-row.scraping { color: var(--yellow); border-color: var(--yellow); }
+
+    /* ── Timestamp ── */
+    .ts-label { font-size: 9px; color: var(--muted); margin-top: 4px; display: block; }
 
     /* ── Bar chart ── */
     .bar-wrap { display: flex; align-items: end; gap: 3px; height: 40px; }
@@ -202,7 +226,8 @@
   <div class="controls">
     <input id="searchInput" type="text" placeholder="Search product name or ID..." />
     <select id="brandFilter"><option value="">All Brands</option></select>
-    <select id="categoryFilter"><option value="">All Categories</option></select>
+    <input id="categoryFilter" type="text" placeholder="🔍 Search category..." list="categoryDatalist" autocomplete="off" />
+    <datalist id="categoryDatalist"></datalist>
     <select id="positionFilter">
       <option value="">All Positions</option>
       <option value="cheapest">You're Cheapest</option>
@@ -241,6 +266,8 @@
           <th>Diff</th>
           <th>Position</th>
           <th>Visual</th>
+          <th>Last Fetched</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody id="tbody"></tbody>
@@ -249,7 +276,8 @@
   </div>
 
   <script>
-    const API = "http://localhost:4050";
+    // Relative URL — works from any port since page is served by the same server
+    const API = "";
 
     const state = {
       products: [],
@@ -290,7 +318,7 @@
       el.exportXlsxBtn.addEventListener("click", exportXLSX);
       el.searchInput.addEventListener("input", applyFilters);
       el.brandFilter.addEventListener("change", applyFilters);
-      el.categoryFilter.addEventListener("change", applyFilters);
+      el.categoryFilter.addEventListener("input", applyFilters);
       el.positionFilter.addEventListener("change", applyFilters);
       el.sortSelect.addEventListener("change", applyFilters);
 
@@ -426,12 +454,8 @@
 
     function buildCategoryOptions() {
       const cats = [...new Set(state.products.map(p => p.categoryText).filter(Boolean))].sort();
-      el.categoryFilter.innerHTML = '<option value="">All Categories</option>';
-      cats.forEach(c => {
-        const opt = document.createElement("option");
-        opt.value = c; opt.textContent = c;
-        el.categoryFilter.appendChild(opt);
-      });
+      const dl = document.getElementById("categoryDatalist");
+      dl.innerHTML = cats.map(c => `<option value="${esc(c)}">` ).join("");
     }
 
     // ── Filters & Sort ──
@@ -445,7 +469,8 @@
       state.filtered = state.comparison.filter(item => {
         if (q && !`${item.productId} ${item.name} ${item.brand} ${item.categories}`.toLowerCase().includes(q)) return false;
         if (brand && item.brand !== brand) return false;
-        if (cat && item.categories !== cat) return false;
+        // Category: partial text match (user can type partial category name)
+        if (cat && !item.categories.toLowerCase().includes(cat.toLowerCase())) return false;
         if (pos && item.position !== pos) return false;
         return true;
       });
@@ -501,7 +526,15 @@
           <td>${renderDiff(item)}</td>
           <td>${renderPosition(item)}</td>
           <td>${renderBars(item)}</td>
+          <td style="min-width:110px;">
+            ${item.scrapedAt ? `<span style="font-size:10px; color:var(--muted); white-space:nowrap;">${fmtTs(item.scrapedAt)}</span>` : '<span style="color:var(--muted); font-size:10px;">—</span>'}
+          </td>
+          <td>
+            <button class="btn-scrape-row" data-pid="${esc(item.productId)}" title="Re-scrape this product only">🔄 Scrape</button>
+          </td>
         `;
+        const rowBtn = tr.querySelector(".btn-scrape-row");
+        if (rowBtn) rowBtn.addEventListener("click", () => scrapeRow(item.productId, rowBtn));
         frag.appendChild(tr);
       });
       el.tbody.appendChild(frag);
@@ -538,7 +571,6 @@
 
       return '<div class="comp-row">' + item.competitorResults.map(r => {
         if (r.error) {
-          // Always show as hyperlink even on error so you can click to check manually
           return `<div class="comp-item">
             <a class="comp-site" href="${esc(r.url)}" target="_blank" title="${esc(r.url)}">${esc(r.siteName)}</a>
             <span class="comp-err">✕ ${esc(r.error)}</span>
@@ -547,9 +579,25 @@
         const priceClass = r.price !== null && item.yourPrice > 0
           ? (r.price < item.yourPrice ? "price-cheaper" : r.price > item.yourPrice ? "price-expensive" : "price-same")
           : "";
+
+        // Build price display: show sale price + original if both present
+        let priceDisplay;
+        if (r.price !== null) {
+          const salePrice = r.discountPrice ?? r.price;
+          const origPrice = r.originalPrice;
+          if (origPrice && origPrice !== salePrice) {
+            priceDisplay = `<span class="comp-price ${priceClass}">৳${fmt(salePrice)}</span>
+              <span class="comp-orig">৳${fmt(origPrice)}</span>`;
+          } else {
+            priceDisplay = `<span class="comp-price ${priceClass}">৳${fmt(r.price)}</span>`;
+          }
+        } else {
+          priceDisplay = `<span class="comp-price">N/A</span>`;
+        }
+
         return `<div class="comp-item">
           <a class="comp-site" href="${esc(r.url)}" target="_blank" title="${esc(r.url)}">${esc(r.siteName)}</a>
-          <span class="comp-price ${priceClass}">${r.price !== null ? "৳" + fmt(r.price) : "N/A"}</span>
+          ${priceDisplay}
           <span class="comp-method">${esc(r.method)}</span>
         </div>`;
       }).join("") + '</div>';
@@ -587,22 +635,100 @@
       }).join("") + '</div>';
     }
 
+    // ── Per-row scrape ──
+    async function scrapeRow(productId, btn) {
+      btn.disabled = true;
+      btn.classList.add("scraping");
+      btn.textContent = "⏳ Scraping…";
+      try {
+        const res = await fetch(API + "/api/scrape-product", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ productId }),
+        });
+        if (!res.ok) throw new Error("Scrape failed");
+        const data = await res.json();
+        // Update priceData for this product
+        state.priceData[productId] = {
+          results: data.results,
+          scrapedAt: new Date().toISOString(),
+        };
+        buildComparison();
+        applyFilters();
+      } catch (e) {
+        btn.textContent = "✕ Error";
+        setTimeout(() => {
+          btn.textContent = "🔄 Retry";
+          btn.disabled = false;
+          btn.classList.remove("scraping");
+        }, 2000);
+        return;
+      }
+      btn.disabled = false;
+      btn.classList.remove("scraping");
+      btn.textContent = "✓ Done";
+      setTimeout(() => { btn.textContent = "🔄 Scrape"; }, 2500);
+    }
+
     // ── Export helpers ──
     function buildExportRows() {
-      return state.filtered.map(item => ({
-        "Product ID": item.productId,
-        "Name": item.name,
-        "Brand": item.brand,
-        "Category": item.categories,
-        "Your Price (BDT)": item.yourOriginal,
-        "Your Discount Price (BDT)": item.yourPrice !== item.yourOriginal ? item.yourPrice : "",
-        "Cheapest Competitor (BDT)": item.cheapestComp || "",
-        "Diff (BDT)": item.diff !== null ? item.diff.toFixed(0) : "",
-        "Diff %": item.diffPct !== null ? item.diffPct.toFixed(1) + "%" : "",
-        "Position": item.position,
-        "Competitor Details": item.competitorResults.map(r => `${r.siteName}: ${r.price ?? "N/A"}`).join(" | "),
-        "Scraped At": item.scrapedAt || "",
-      }));
+      // Collect all unique competitor site names across all filtered items
+      const allSiteNames = [];
+      const siteSet = new Set();
+      state.filtered.forEach(item => {
+        (item.competitorResults || []).forEach(r => {
+          if (r.siteName && !siteSet.has(r.siteName)) {
+            siteSet.add(r.siteName);
+            allSiteNames.push(r.siteName);
+          }
+        });
+      });
+
+      return state.filtered.map(item => {
+        // Build a lookup of siteName -> result for this item
+        const siteMap = {};
+        (item.competitorResults || []).forEach(r => { siteMap[r.siteName] = r; });
+
+        // Find cheapest competitor name
+        let cheapestName = "";
+        if (item.cheapestComp !== null) {
+          const cheapestResult = (item.competitorResults || []).find(r => r.price === item.cheapestComp);
+          if (cheapestResult) cheapestName = cheapestResult.siteName;
+        }
+
+        const row = {
+          "Product ID": item.productId,
+          "Name": item.name,
+          "Brand": item.brand,
+          "Category": item.categories,
+          "Your Price (BDT)": item.yourOriginal,
+          "Your Discount Price (BDT)": item.yourPrice !== item.yourOriginal ? item.yourPrice : "",
+        };
+
+        // One column per competitor site
+        allSiteNames.forEach(site => {
+          const r = siteMap[site];
+          if (!r) {
+            row[site] = "";
+          } else if (r.error) {
+            row[site] = "Error";
+          } else {
+            const sale = r.discountPrice ?? r.price;
+            const orig = r.originalPrice;
+            row[site] = sale !== null ? (orig && orig !== sale ? `${sale} (orig: ${orig})` : `${sale}`) : "N/A";
+          }
+        });
+
+        row["Cheapest Competitor (BDT)"] = item.cheapestComp !== null
+          ? (cheapestName ? `${cheapestName}: ${item.cheapestComp}` : `${item.cheapestComp}`)
+          : "";
+        row["Diff (BDT)"] = item.diff !== null ? item.diff.toFixed(0) : "";
+        row["Diff %"] = item.diffPct !== null ? item.diffPct.toFixed(1) + "%" : "";
+        row["Position"] = item.position;
+        row["Updated At"] = item.scrapedAt || "";
+
+        return row;
+      });
     }
 
     function exportCSV() {
@@ -629,6 +755,15 @@
 
     // ── Helpers ──
     function fmt(n) { return Number(n || 0).toLocaleString("en-BD", { maximumFractionDigits: 0 }); }
+    function fmtTs(iso) {
+      if (!iso) return "—";
+      try {
+        const d = new Date(iso);
+        const date = d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+        const time = d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false });
+        return `${date} ${time}`;
+      } catch { return iso; }
+    }
     function esc(s) { return String(s ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
     function csvCell(v) { return `"${String(v ?? "").replace(/"/g, '""')}"`; }
     function download(text, name, mime) {

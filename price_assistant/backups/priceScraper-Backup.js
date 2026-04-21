@@ -8,6 +8,14 @@
  *   4. Generic BDT price detection (regex for ৳, BDT, Tk patterns)
  *
  * Works on ANY website — site configs are optional enhancements.
+ *
+ * Fetch strategy (per request, tried in order):
+ *   A. Node https.get         — fast, works for most sites
+ *   B. curl                   — better TLS fingerprint, handles more CF configs
+ *   C. Node native fetch()    — different TLS stack than both above (Node 18+)
+ *   D. Playwright/Chromium    — real browser, defeats all bot protection
+ *                               (optional; only runs if siteConfig.usePlaywright=true
+ *                                OR all above return a challenge page)
  */
 
 const https = require("https");
@@ -18,14 +26,43 @@ const { getConfigForUrl, getSiteName } = require("./siteConfigs");
 const DEFAULT_HEADERS = {
   "User-Agent":
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
-  Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+  Accept:
+    "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
   "Accept-Language": "en-US,en;q=0.5",
-  "Accept-Encoding": "gzip, deflate",
+  // NOTE: deliberately NO Accept-Encoding here — Node's zlib handles it explicitly.
+  // We add it only for curl where --compressed controls decompression.
   Connection: "keep-alive",
   "Cache-Control": "no-cache",
 };
 
 const TIMEOUT_MS = 15000;
+
+// ─── Cloudflare / bot-protection detection ────────────────────
+
+/**
+ * Returns true when the HTML is a Cloudflare challenge page or other bot-wall,
+ * meaning we got a response but it contains no real product data.
+ */
+function isChallengePage(html) {
+  if (!html || html.length < 200) return true; // empty / near-empty body
+  const lower = html.toLowerCase();
+  return (
+    // Cloudflare challenge markers
+    lower.includes("cf-browser-verification") ||
+    lower.includes("checking your browser") ||
+    lower.includes("enable javascript and cookies") ||
+    lower.includes("cf_chl_") ||
+    lower.includes("jschl_vc") ||
+    lower.includes("ray id") && lower.includes("cloudflare") ||
+    // Turnstile widget
+    lower.includes("challenges.cloudflare.com") ||
+    // Generic bot walls
+    lower.includes("access denied") && lower.includes("bot") ||
+    lower.includes("please wait while we verify") ||
+    // Completely empty / whitespace only
+    html.trim().length === 0
+  );
+}
 
 // ─── Main export ──────────────────────────────────────────────
 
@@ -40,7 +77,7 @@ async function scrapePrice(url) {
   const siteName = getSiteName(url);
 
   try {
-    const html = await fetchPage(url, siteConfig.extraHeaders || {});
+    const html = await fetchWithFallbacks(url, siteConfig);
     const result = extractPriceFromHtml(html, url, siteConfig);
 
     return {
@@ -101,56 +138,132 @@ async function scrapeMultiple(urls, concurrency = 4) {
     }
   };
 
-  await Promise.all(Array.from({ length: Math.min(concurrency, urls.length) }, () => worker()));
+  await Promise.all(
+    Array.from({ length: Math.min(concurrency, urls.length) }, () => worker())
+  );
   return results;
 }
 
-// ─── HTML Fetcher ─────────────────────────────────────────────
+// ─── Multi-layer Fetch Strategy ───────────────────────────────
+
+/**
+ * Try each fetch method in order, moving to the next one when:
+ *   - the current method throws (network error, non-200, etc.), OR
+ *   - the response is a challenge/bot-wall page
+ *
+ * @param {string} url
+ * @param {object} siteConfig
+ * @returns {Promise<string>} HTML
+ */
+async function fetchWithFallbacks(url, siteConfig) {
+  const extraHeaders = siteConfig.extraHeaders || {};
+  const usePlaywright = siteConfig.usePlaywright || false;
+  const errors = [];
+
+  // ── A: Node https.get ──────────────────────────────────────
+  try {
+    const html = await fetchPage(url, extraHeaders);
+    if (!isChallengePage(html)) return html;
+    errors.push("Node https: challenge page");
+  } catch (err) {
+    errors.push(`Node https: ${err.message}`);
+  }
+
+  // ── B: curl with safe Accept-Encoding ─────────────────────
+  try {
+    // Strip brotli from Accept-Encoding to avoid curl builds without brotli
+    // support exiting non-zero. --compressed already handles gzip/deflate/br
+    // if curl supports it; passing a mismatched header crashes it otherwise.
+    const safeHeaders = buildSafeCurlHeaders(extraHeaders);
+    const html = await fetchWithCurl(url, safeHeaders);
+    if (!isChallengePage(html)) return html;
+    errors.push("curl: challenge page");
+  } catch (err) {
+    errors.push(`curl: ${err.message}`);
+  }
+
+  // ── C: Node native fetch() — different TLS fingerprint ────
+  try {
+    const html = await fetchWithNativeFetch(url, extraHeaders);
+    if (!isChallengePage(html)) return html;
+    errors.push("native fetch: challenge page");
+  } catch (err) {
+    errors.push(`native fetch: ${err.message}`);
+  }
+
+  // ── D: Playwright (real Chromium) ─────────────────────────
+  // Only attempted when explicitly configured OR all above failed with challenge
+  const allChallenges = errors.every(
+    (e) => e.includes("challenge page") || e.includes("403")
+  );
+  if (usePlaywright || allChallenges) {
+    try {
+      const html = await fetchWithPlaywright(url, extraHeaders);
+      if (!isChallengePage(html)) return html;
+      errors.push("playwright: challenge page");
+    } catch (err) {
+      errors.push(`playwright: ${err.message}`);
+    }
+  }
+
+  throw new Error(
+    `All fetch methods failed for ${url}. Attempts: ${errors.join(" | ")}`
+  );
+}
+
+/**
+ * Build curl-safe headers: remove Accept-Encoding to avoid brotli crashes.
+ * curl --compressed handles decompression natively; we don't need to advertise
+ * encodings manually. If the original config overrides Accept/Accept-Language,
+ * keep those because they affect content negotiation (not decompression).
+ */
+function buildSafeCurlHeaders(extraHeaders) {
+  const safe = { ...extraHeaders };
+  // Remove Accept-Encoding — --compressed flag already handles this correctly
+  delete safe["Accept-Encoding"];
+  delete safe["accept-encoding"];
+  return safe;
+}
+
+// ─── Fetch Method A: Node https.get ──────────────────────────
 
 function fetchPage(url, extraHeaders = {}) {
   return new Promise((resolve, reject) => {
     const parsedUrl = new URL(url);
     const client = parsedUrl.protocol === "https:" ? https : http;
-
     const headers = { ...DEFAULT_HEADERS, ...extraHeaders };
 
     const req = client.get(
       url,
-      {
-        headers,
-        timeout: TIMEOUT_MS,
-        rejectUnauthorized: false,
-      },
+      { headers, timeout: TIMEOUT_MS, rejectUnauthorized: false },
       (res) => {
         // Follow redirects (up to 5)
-        if ([301, 302, 303, 307, 308].includes(res.statusCode) && res.headers.location) {
+        if (
+          [301, 302, 303, 307, 308].includes(res.statusCode) &&
+          res.headers.location
+        ) {
           const redirectUrl = new URL(res.headers.location, url).toString();
           return fetchPage(redirectUrl, extraHeaders).then(resolve).catch(reject);
         }
 
-        // On 403, fallback to curl which has a real TLS fingerprint
+        // 403 → let fetchWithFallbacks try curl next
         if (res.statusCode === 403) {
           res.resume();
-          return fetchWithCurl(url, headers).then(resolve).catch(reject);
+          return reject(new Error("HTTP 403"));
         }
 
         if (res.statusCode !== 200) {
-          reject(new Error(`HTTP ${res.statusCode}`));
           res.resume();
-          return;
+          return reject(new Error(`HTTP ${res.statusCode}`));
         }
 
         const chunks = [];
         const encoding = (res.headers["content-encoding"] || "").toLowerCase();
         let stream = res;
 
-        if (encoding === "gzip") {
-          stream = res.pipe(zlib.createGunzip());
-        } else if (encoding === "deflate") {
-          stream = res.pipe(zlib.createInflate());
-        } else if (encoding === "br") {
-          stream = res.pipe(zlib.createBrotliDecompress());
-        }
+        if (encoding === "gzip") stream = res.pipe(zlib.createGunzip());
+        else if (encoding === "deflate") stream = res.pipe(zlib.createInflate());
+        else if (encoding === "br") stream = res.pipe(zlib.createBrotliDecompress());
 
         stream.on("data", (chunk) => chunks.push(chunk));
         stream.on("end", () => resolve(Buffer.concat(chunks).toString("utf-8")));
@@ -158,36 +271,41 @@ function fetchPage(url, extraHeaders = {}) {
       }
     );
 
-    req.on("timeout", () => {
-      req.destroy();
-      reject(new Error("Request timed out"));
-    });
+    req.on("timeout", () => { req.destroy(); reject(new Error("Request timed out")); });
     req.on("error", reject);
   });
 }
 
+// ─── Fetch Method B: curl ─────────────────────────────────────
+
 /**
- * Fallback fetcher using system curl — bypasses Cloudflare TLS fingerprinting.
- * Used automatically when Node.js https gets a 403.
+ * curl has a better TLS fingerprint than Node's https module.
+ * Uses execFile (array args) so no shell injection is possible.
+ *
+ * Key fixes vs original:
+ *  - Resolves with stdout even on non-zero exit (Cloudflare may return
+ *    a challenge page with exit 0, or reset connection with exit 35/56)
+ *  - Does NOT pass Accept-Encoding header — --compressed handles encoding
+ *  - Strips Connection header (HTTP/2 forbids it; causes curl error 92)
  */
-function fetchWithCurl(url, headers = {}) {
+function fetchWithCurl(url, safeExtraHeaders = {}) {
   const { execFile } = require("child_process");
 
   const args = [
-    "-s",                       // silent
-    "-L",                       // follow redirects
-    "--max-time", "20",         // 20s timeout
-    "--compressed",             // handle gzip/br
+    "-s",                   // silent (no progress)
+    "-L",                   // follow redirects
+    "--max-time", "20",     // 20s hard timeout
+    "--compressed",         // auto decompress gzip/deflate/br (if curl supports br)
+    "--http1.1",            // force HTTP/1.1 — avoids HTTP/2 fingerprint checks
     "-A", DEFAULT_HEADERS["User-Agent"],
     "-H", `Accept: ${DEFAULT_HEADERS["Accept"]}`,
     "-H", `Accept-Language: ${DEFAULT_HEADERS["Accept-Language"]}`,
   ];
 
-  // Add any extra headers from site config
-  for (const [key, value] of Object.entries(headers)) {
-    if (key.toLowerCase() !== "user-agent" &&
-        key.toLowerCase() !== "accept" &&
-        key.toLowerCase() !== "accept-language") {
+  // Append safe extra headers (Accept-Encoding already stripped by buildSafeCurlHeaders)
+  const skipKeys = new Set(["user-agent", "accept", "accept-language", "connection"]);
+  for (const [key, value] of Object.entries(safeExtraHeaders)) {
+    if (!skipKeys.has(key.toLowerCase())) {
       args.push("-H", `${key}: ${value}`);
     }
   }
@@ -195,20 +313,143 @@ function fetchWithCurl(url, headers = {}) {
   args.push(url);
 
   return new Promise((resolve, reject) => {
-    execFile("curl", args, { maxBuffer: 10 * 1024 * 1024 }, (err, stdout, stderr) => {
-      if (err) {
-        reject(new Error(`curl failed: ${err.message}`));
-      } else {
+    execFile(
+      "curl",
+      args,
+      { maxBuffer: 10 * 1024 * 1024 },
+      (err, stdout, stderr) => {
+        if (err) {
+          // Non-zero exit code from curl.
+          // Common codes: 6=DNS fail, 7=connect refused, 35/56=SSL/recv error
+          // If stdout has content despite the error, try to use it
+          // (some CF configs reset after sending partial body → exit 56)
+          if (stdout && stdout.trim().length > 200) {
+            return resolve(stdout);
+          }
+          return reject(new Error(`curl exited ${err.code}: ${err.message}`));
+        }
         resolve(stdout);
       }
-    });
+    );
   });
+}
+
+// ─── Fetch Method C: Node native fetch() ─────────────────────
+
+/**
+ * Node 18+ has a built-in fetch() backed by undici.
+ * undici uses a different TLS implementation and HTTP/2 stack than Node's
+ * https module, giving a slightly different fingerprint — worth one more try
+ * before reaching for a real browser.
+ */
+async function fetchWithNativeFetch(url, extraHeaders = {}) {
+  if (typeof globalThis.fetch !== "function") {
+    throw new Error("Native fetch not available (Node < 18)");
+  }
+
+  const headers = {
+    "User-Agent": DEFAULT_HEADERS["User-Agent"],
+    Accept: DEFAULT_HEADERS["Accept"],
+    "Accept-Language": DEFAULT_HEADERS["Accept-Language"],
+    "Cache-Control": "no-cache",
+    // Merge site-specific headers, but skip encoding (undici handles it)
+    ...Object.fromEntries(
+      Object.entries(extraHeaders).filter(
+        ([k]) =>
+          !["accept-encoding", "connection"].includes(k.toLowerCase())
+      )
+    ),
+  };
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+
+  try {
+    const res = await globalThis.fetch(url, {
+      headers,
+      redirect: "follow",
+      signal: controller.signal,
+    });
+
+    if (res.status === 403) throw new Error("HTTP 403");
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    return await res.text();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+// ─── Fetch Method D: Playwright (real Chromium) ───────────────
+
+/**
+ * Uses a real Chromium browser — defeats virtually all bot-protection.
+ *
+ * Prerequisites (run once):
+ *   npx playwright install chromium
+ *
+ * siteConfig opt-in:
+ *   usePlaywright: true   → always use Playwright for this site
+ *
+ * Automatic fallback:
+ *   fetchWithFallbacks() calls this when A/B/C all return challenge pages.
+ */
+async function fetchWithPlaywright(url, extraHeaders = {}) {
+  let playwright;
+  try {
+    playwright = require("playwright");
+  } catch {
+    throw new Error(
+      "Playwright not installed. Run: npm install playwright && npx playwright install chromium"
+    );
+  }
+
+  const { chromium } = playwright;
+  let browser;
+
+  try {
+    browser = await chromium.launch({ headless: true });
+    const context = await browser.newContext({
+      userAgent: DEFAULT_HEADERS["User-Agent"],
+      extraHTTPHeaders: Object.fromEntries(
+        Object.entries(extraHeaders).filter(
+          ([k]) =>
+            !["accept-encoding", "user-agent"].includes(k.toLowerCase())
+        )
+      ),
+      // Mimic a real Chrome install
+      locale: "en-US",
+      timezoneId: "Asia/Dhaka",
+    });
+
+    const page = await context.newPage();
+
+    // Block images/fonts/media to speed up load
+    await page.route("**/*", (route) => {
+      const type = route.request().resourceType();
+      if (["image", "font", "media", "stylesheet"].includes(type)) {
+        route.abort();
+      } else {
+        route.continue();
+      }
+    });
+
+    await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30000 });
+
+    // Wait a tick for any inline JS price rendering
+    await page.waitForTimeout(1500);
+
+    return await page.content();
+  } finally {
+    if (browser) await browser.close();
+  }
 }
 
 // ─── Multi-layer Price Extraction ─────────────────────────────
 
 function extractPriceFromHtml(html, url, siteConfig) {
-  const hasSitePatterns = siteConfig.pricePatterns && siteConfig.pricePatterns.length > 0;
+  const hasSitePatterns =
+    siteConfig.pricePatterns && siteConfig.pricePatterns.length > 0;
 
   // Layer 1: JSON-LD (always most reliable)
   const jsonLd = extractFromJsonLd(html);
@@ -247,17 +488,23 @@ function extractPriceFromHtml(html, url, siteConfig) {
 // ─── Layer 1: JSON-LD Schema.org ──────────────────────────────
 
 function extractFromJsonLd(html) {
-  const result = { price: null, originalPrice: null, discountPrice: null, currency: "BDT", inStock: null, method: "json-ld" };
+  const result = {
+    price: null,
+    originalPrice: null,
+    discountPrice: null,
+    currency: "BDT",
+    inStock: null,
+    method: "json-ld",
+  };
 
-  // Find all JSON-LD blocks
-  const jsonLdPattern = /<script[^>]*type\s*=\s*["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
+  const jsonLdPattern =
+    /<script[^>]*type\s*=\s*["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
   let match;
 
   while ((match = jsonLdPattern.exec(html)) !== null) {
     try {
       let data = JSON.parse(match[1].trim());
 
-      // Handle @graph wrapper
       if (data["@graph"] && Array.isArray(data["@graph"])) {
         data = data["@graph"];
       }
@@ -270,22 +517,32 @@ function extractFromJsonLd(html) {
 
         const offerList = Array.isArray(offers) ? offers : [offers];
         for (const offer of offerList) {
-          const price = parsePrice(offer.price || offer.lowPrice || offer.highPrice);
+          const price = parsePrice(
+            offer.price || offer.lowPrice || offer.highPrice
+          );
           if (price !== null) {
             result.price = price;
             result.currency = offer.priceCurrency || "BDT";
 
-            // Check for original vs sale price
-            if (offer.price && offer.lowPrice && offer.price !== offer.lowPrice) {
+            if (
+              offer.price &&
+              offer.lowPrice &&
+              offer.price !== offer.lowPrice
+            ) {
               result.originalPrice = parsePrice(offer.price);
               result.discountPrice = parsePrice(offer.lowPrice);
             }
 
-            // Stock status
             const availability = String(offer.availability || "").toLowerCase();
-            if (availability.includes("instock") || availability.includes("in_stock")) {
+            if (
+              availability.includes("instock") ||
+              availability.includes("in_stock")
+            ) {
               result.inStock = true;
-            } else if (availability.includes("outofstock") || availability.includes("out_of_stock")) {
+            } else if (
+              availability.includes("outofstock") ||
+              availability.includes("out_of_stock")
+            ) {
               result.inStock = false;
             }
 
@@ -294,7 +551,7 @@ function extractFromJsonLd(html) {
         }
       }
     } catch {
-      // Invalid JSON-LD, continue
+      // Invalid JSON-LD block, continue to next
     }
   }
 
@@ -306,10 +563,13 @@ function findProductObjects(items) {
   for (const item of items) {
     if (!item || typeof item !== "object") continue;
     const type = String(item["@type"] || "").toLowerCase();
-    if (type === "product" || type === "individualproduct" || type === "productmodel") {
+    if (
+      type === "product" ||
+      type === "individualproduct" ||
+      type === "productmodel"
+    ) {
       products.push(item);
     }
-    // Recurse into arrays
     for (const val of Object.values(item)) {
       if (Array.isArray(val)) {
         products.push(...findProductObjects(val));
@@ -324,7 +584,14 @@ function findProductObjects(items) {
 // ─── Layer 2: Meta Tags ───────────────────────────────────────
 
 function extractFromMetaTags(html) {
-  const result = { price: null, originalPrice: null, discountPrice: null, currency: "BDT", inStock: null, method: "meta-tag" };
+  const result = {
+    price: null,
+    originalPrice: null,
+    discountPrice: null,
+    currency: "BDT",
+    inStock: null,
+    method: "meta-tag",
+  };
 
   const metaPatterns = [
     /meta\s[^>]*property\s*=\s*["'](?:og:|product:)price:amount["'][^>]*content\s*=\s*["']([^"']+)["']/gi,
@@ -338,7 +605,6 @@ function extractFromMetaTags(html) {
       if (price !== null) {
         result.price = price;
 
-        // Try to find currency meta
         const currencyMatch = html.match(
           /meta\s[^>]*property\s*=\s*["'](?:og:|product:)price:currency["'][^>]*content\s*=\s*["']([^"']+)["']/i
         );
@@ -356,7 +622,14 @@ function extractFromMetaTags(html) {
 // ─── Layer 3: Site-specific Patterns ──────────────────────────
 
 function extractFromSitePatterns(html, siteConfig) {
-  const result = { price: null, originalPrice: null, discountPrice: null, currency: "BDT", inStock: null, method: "site-pattern" };
+  const result = {
+    price: null,
+    originalPrice: null,
+    discountPrice: null,
+    currency: "BDT",
+    inStock: null,
+    method: "site-pattern",
+  };
 
   if (!siteConfig.pricePatterns || !siteConfig.pricePatterns.length) {
     return result;
@@ -386,12 +659,10 @@ function extractFromSitePatterns(html, siteConfig) {
         }
       }
     }
-    // If we got both, the lower one is the sale/discount price
     if (result.price !== null && result.originalPrice !== null) {
       if (result.price < result.originalPrice) {
-        result.discountPrice = result.price; // current price is the discounted one
+        result.discountPrice = result.price;
       } else if (result.price > result.originalPrice) {
-        // Regex matched old price first; swap
         result.discountPrice = result.originalPrice;
         result.originalPrice = result.price;
         result.price = result.discountPrice;
@@ -400,7 +671,6 @@ function extractFromSitePatterns(html, siteConfig) {
   } else if (result.price === null) {
     return result;
   } else {
-    // No dedicated original patterns: try second pricePattern for original
     for (let i = 1; i < siteConfig.pricePatterns.length; i++) {
       const match = siteConfig.pricePatterns[i].exec(html);
       if (match && match[1]) {
@@ -420,7 +690,6 @@ function extractFromSitePatterns(html, siteConfig) {
     }
   }
 
-  // Extract stock status using site-specific stock patterns if defined
   if (siteConfig.stockPatterns && siteConfig.stockPatterns.length) {
     for (const pattern of siteConfig.stockPatterns) {
       const match = pattern.exec(html);
@@ -440,20 +709,20 @@ function extractFromSitePatterns(html, siteConfig) {
 // ─── Layer 4: Generic BDT Price Detection ─────────────────────
 
 function extractGenericBdtPrice(html) {
-  const result = { price: null, originalPrice: null, discountPrice: null, currency: "BDT", inStock: null, method: "generic-bdt" };
+  const result = {
+    price: null,
+    originalPrice: null,
+    discountPrice: null,
+    currency: "BDT",
+    inStock: null,
+    method: "generic-bdt",
+  };
 
-  // Look for BDT price patterns anywhere in the page body
-  // Common formats: ৳12,500 | BDT 12,500 | Tk. 12,500 | 12,500/- | &#2547;12,500
   const bdtPatterns = [
-    // ৳ symbol followed by amount
     /[৳]\s*([\d,]+(?:\.\d{1,2})?)/g,
-    // HTML entity for ৳
     /&#2547;\s*([\d,]+(?:\.\d{1,2})?)/g,
-    // "BDT" or "Tk" prefix
     /(?:BDT|Tk\.?)\s*([\d,]+(?:\.\d{1,2})?)/gi,
-    // Price-like class context
     /class="[^"]*price[^"]*"[^>]*>[\s\S]*?([\d,]{3,}(?:\.\d{1,2})?)\s*(?:<|৳|BDT|Tk)/gi,
-    // Amount followed by /-
     /([\d,]{4,})\s*\/-/g,
   ];
 
@@ -461,20 +730,17 @@ function extractGenericBdtPrice(html) {
 
   for (const pattern of bdtPatterns) {
     let match;
-    // Reset lastIndex for reusable global regexes
     pattern.lastIndex = 0;
     while ((match = pattern.exec(html)) !== null) {
       const price = parsePrice(match[1]);
-      // Filter out unreasonable prices (< 50 BDT or > 100M BDT)
       if (price !== null && price >= 50 && price <= 100000000) {
         foundPrices.push(price);
       }
-      if (foundPrices.length >= 10) break; // Don't scan entire page
+      if (foundPrices.length >= 10) break;
     }
   }
 
   if (foundPrices.length > 0) {
-    // The most commonly occurring price is likely the product price
     const freq = {};
     foundPrices.forEach((p) => (freq[p] = (freq[p] || 0) + 1));
     const sorted = Object.entries(freq).sort((a, b) => b[1] - a[1]);
@@ -482,7 +748,6 @@ function extractGenericBdtPrice(html) {
 
     result.price = mainPrice;
 
-    // Filter out extreme outliers: only keep prices within 3x of the main price
     const reasonable = [...new Set(foundPrices)]
       .filter((p) => p >= mainPrice * 0.2 && p <= mainPrice * 3)
       .sort((a, b) => a - b);
@@ -493,7 +758,7 @@ function extractGenericBdtPrice(html) {
       if (lowest !== highest) {
         result.discountPrice = lowest;
         result.originalPrice = highest;
-        result.price = lowest; // current/sale price
+        result.price = lowest;
       }
     }
 
@@ -507,13 +772,15 @@ function extractGenericBdtPrice(html) {
 
 function parsePrice(value) {
   if (value === null || value === undefined) return null;
-  const cleaned = String(value).replace(/[,\s৳]/g, "").replace(/\/-$/, "").trim();
+  const cleaned = String(value)
+    .replace(/[,\s৳]/g, "")
+    .replace(/\/-$/, "")
+    .trim();
   const num = Number(cleaned);
   return Number.isFinite(num) && num > 0 ? num : null;
 }
 
 function extractStockStatus(html) {
-  const lowerHtml = html.toLowerCase();
   if (/out\s*of\s*stock/i.test(html) || /stock\s*out/i.test(html)) return false;
   if (/in\s*stock/i.test(html) || /add\s*to\s*cart/i.test(html)) return true;
   return null;

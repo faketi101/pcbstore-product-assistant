@@ -694,11 +694,15 @@ function extractFromSitePatterns(html, siteConfig) {
     for (const pattern of siteConfig.stockPatterns) {
       const match = pattern.exec(html);
       if (match && match[1]) {
-        const status = match[1].toLowerCase();
-        result.inStock = status === "in stock";
-        break;
+        // Normalize: "in stock", "in-stock", "instock" → true
+        //            "out of stock", "out-of-stock", "outofstock" → false
+        const normalized = match[1].toLowerCase().replace(/[\s-]/g, "");
+        if (normalized === "instock") { result.inStock = true; break; }
+        if (normalized === "outofstock") { result.inStock = false; break; }
       }
     }
+    // If patterns matched but inStock still null, fall back to generic detection
+    if (result.inStock === null) result.inStock = extractStockStatus(html);
   } else {
     result.inStock = extractStockStatus(html);
   }
@@ -718,11 +722,23 @@ function extractGenericBdtPrice(html) {
     method: "generic-bdt",
   };
 
+  // Strip nav/header/footer noise before scanning — these sections often
+  // contain prices from other products (related items, cart totals, etc.)
+  // that confuse the frequency-based picker.
+  const bodyHtml = html
+    .replace(/<(?:nav|header|footer)[^>]*>[\s\S]*?<\/(?:nav|header|footer)>/gi, " ")
+    .replace(/class="[^"]*(?:menu|navigation|navbar|breadcrumb|widget)[^"]*"[^>]*>[\s\S]{0,2000}?<\/[a-z]+>/gi, " ");
+
   const bdtPatterns = [
+    // Highest confidence: price near a BDT/Taka currency marker in a price element
+    /class="[^"]*price[^"]*"[^>]*>[\s\S]*?([\d,]{4,}(?:\.\d{1,2})?)\s*(?:<|৳|BDT|Tk)/gi,
+    // ৳ symbol directly followed by amount (e.g. ৳ 15,000)
     /[৳]\s*([\d,]+(?:\.\d{1,2})?)/g,
+    // &#2547; HTML entity for ৳
     /&#2547;\s*([\d,]+(?:\.\d{1,2})?)/g,
+    // BDT/Tk prefix
     /(?:BDT|Tk\.?)\s*([\d,]+(?:\.\d{1,2})?)/gi,
-    /class="[^"]*price[^"]*"[^>]*>[\s\S]*?([\d,]{3,}(?:\.\d{1,2})?)\s*(?:<|৳|BDT|Tk)/gi,
+    // X/- patterns (common in BD pricing)
     /([\d,]{4,})\s*\/-/g,
   ];
 
@@ -731,31 +747,36 @@ function extractGenericBdtPrice(html) {
   for (const pattern of bdtPatterns) {
     let match;
     pattern.lastIndex = 0;
-    while ((match = pattern.exec(html)) !== null) {
+    while ((match = pattern.exec(bodyHtml)) !== null) {
       const price = parsePrice(match[1]);
-      if (price !== null && price >= 50 && price <= 100000000) {
+      // Floor at 500 to filter out nav numbers, IDs, quantities etc.
+      // Ceiling at 10 million (covers most BD electronics)
+      if (price !== null && price >= 500 && price <= 10000000) {
         foundPrices.push(price);
       }
-      if (foundPrices.length >= 10) break;
+      if (foundPrices.length >= 15) break;
     }
   }
 
   if (foundPrices.length > 0) {
+    // Use frequency to find the most-mentioned price (the main product price
+    // is repeated in multiple places: breadcrumb, add-to-cart, meta tags etc.)
     const freq = {};
     foundPrices.forEach((p) => (freq[p] = (freq[p] || 0) + 1));
-    const sorted = Object.entries(freq).sort((a, b) => b[1] - a[1]);
+    const sorted = Object.entries(freq).sort((a, b) => b[1] - a[1] || b[0] - a[0]);
     const mainPrice = parseFloat(sorted[0][0]);
 
     result.price = mainPrice;
 
+    // Look for a second distinct price within a reasonable range (discount scenario)
     const reasonable = [...new Set(foundPrices)]
-      .filter((p) => p >= mainPrice * 0.2 && p <= mainPrice * 3)
+      .filter((p) => p >= mainPrice * 0.5 && p <= mainPrice * 2.0)
       .sort((a, b) => a - b);
 
     if (reasonable.length >= 2) {
       const lowest = reasonable[0];
       const highest = reasonable[reasonable.length - 1];
-      if (lowest !== highest) {
+      if (lowest !== highest && highest / lowest >= 1.02) { // at least 2% difference
         result.discountPrice = lowest;
         result.originalPrice = highest;
         result.price = lowest;

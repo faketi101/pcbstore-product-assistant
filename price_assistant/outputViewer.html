@@ -513,7 +513,8 @@
 
   <script>
     const COMPETITOR_LINK_FILE_NAME = "competitorProductLink.json";
-    const LINKS_API_URL = "http://localhost:4070/api/links";
+    // Relative URL — works from any port since page is served by the same server
+    const LINKS_API_URL = "/api/links";
 
     const state = {
       raw: [],
@@ -1053,7 +1054,7 @@
       const wrote = await saveLinksViaApi(payload);
       if (!wrote && !state.fsWriteWarned) {
         state.fsWriteWarned = true;
-        alert("Node links API is unavailable. Start the server and open http://localhost:4070/outputViewer.html for direct filesystem writes. Falling back to download.");
+        alert("Node links API is unavailable. Start start-price-analyzer.bat and open http://localhost/outputViewer.html. Falling back to download.");
         downloadText(JSON.stringify(payload, null, 2), COMPETITOR_LINK_FILE_NAME, "application/json;charset=utf-8");
       }
     }

@@ -18,20 +18,23 @@ const SITE_CONFIGS = {
      *   <td class="product-price"><ins>4,300৳</ins><del>4,900৳</del></td>
      *   <td class="product-regular-price">4,840৳</td>
      *
-     * Bundle with PC is a radio option that changes price via JS after user
-     * selection — it does NOT appear in the initial HTML, so the default
-     * page price is always the Single (standalone) price.
+     * Bundle with PC: a JS radio changes the price dynamically AFTER page load.
+     * The default (initial HTML) always shows the Single standalone price.
      *
-     * We also check the "Bundle With PC , Single Price - XXXX" label text
-     * to confirm we're reading the single price.
+     * Strategy:
+     *  1. Try <ins> inside .product-price  → discounted single price
+     *  2. Try "Single Price" label proximity → explicit single price text
+     *  3. Fallback: first number in .product-price
      */
     pricePatterns: [
-      // Primary: <ins> inside .product-price = cash sale price (Single)
-      /class="[^"]*product-price[^"]*"[^>]*>[\s\S]{0,100}<ins[^>]*>([\d,]+)[\s]*৳/i,
-      // Fallback: .product-price without ins (no discount active)
-      /class="[^"]*product-price[^"]*"[^>]*>\s*([\d,]+)[\s]*৳/i,
+      // Primary: <ins> inside .product-price = cash/sale single price
+      /class="[^"]*product-price[^"]*"[^>]*>[\s\S]{0,120}<ins[^>]*>([\d,]+)[\s]*৳/i,
+      // Secondary: "Single Price" label near a price number
+      /Single\s+Price[\s\S]{0,120}([\d,]{3,})\s*৳/i,
+      // Tertiary: .product-price with plain number (no ins/del = no discount)
+      /class="[^"]*product-price[^"]*"[^>]*>[\s\S]{0,60}([\d,]{3,})\s*৳/i,
     ],
-    // <del> inside .product-price = original single price (before discount)
+    // <del> inside .product-price = original single price before discount
     originalPricePatterns: [
       /class="[^"]*product-price[^"]*"[^>]*>[\s\S]{0,200}<del[^>]*>([\d,]+)[\s]*৳/i,
     ],
@@ -150,6 +153,59 @@ const SITE_CONFIGS = {
       /class="[^"]*product-price[^"]*"[^>]*>[\s\S]*?(\d[\d,]*)/i,
     ],
     priceAnchors: ["price-new", "product-price"],
+  },
+
+  "selltech.com.bd": {
+    name: "Sell Tech BD",
+    pricePatterns: [
+      // OpenCart / WooCommerce style: price inside .price-new or .special-price
+      /class="[^"]*price-new[^"]*"[^>]*>[\s\S]*?(\d[\d,]*)/i,
+      /class="[^"]*special-price[^"]*"[^>]*>[\s\S]*?(\d[\d,]*)/i,
+      /class="[^"]*product-price[^"]*"[^>]*>[\s\S]*?(\d[\d,]*)/i,
+    ],
+    priceAnchors: ["price-new", "special-price", "product-price"],
+  },
+
+  "neton.com.bd": {
+    name: "Neton Tech",
+    /**
+     * Neton is WooCommerce. Server-side HTML structure (prices ARE server-rendered):
+     *
+     *   <del><span class="woocommerce-Price-amount">৳&nbsp;17,000</span></del>
+     *   <span class="screen-reader-text">Original price was: ৳&nbsp;17,000.</span>
+     *   <span class="woocommerce-Price-amount">৳&nbsp;15,000</span>
+     *   <span class="screen-reader-text">Current price is: ৳&nbsp;15,000.</span>
+     *
+     *   <!-- Hidden GTM input — very reliable: -->
+     *   <input name="gtm4wp_product_data" value="{...&quot;price&quot;:15000...}">
+     *
+     * The "screen-reader-text" labels are UNIQUE to the main product (not repeated
+     * in related product carousels), making them the safest anchor.
+     *
+     * Note: DO NOT set usePlaywright — prices are server-rendered just fine.
+     */
+    pricePatterns: [
+      // 1. WooCommerce screen-reader-text "Current price is: ৳ 15,000"
+      //    This text is ONLY in the main product price block — not in related products
+      /class="screen-reader-text">\s*Current price is:?\s*(?:৳|&#2547;)(?:&nbsp;|&amp;nbsp;)?\s*([\d,]+)/i,
+      // 2. GTM4WP hidden JSON input — "price":15000 — main add-to-cart form only
+      /name="gtm4wp_product_data"[^>]*?&quot;price&quot;:([\d]+)/,
+      // 3. price-single container → price AFTER </del> (= sale price, not original)
+      /class="price-single"[\s\S]{0,800}?<\/del>[\s\S]{0,400}?(?:৳|&#2547;)(?:&nbsp;)?\s*([\d,]+)/i,
+    ],
+    originalPricePatterns: [
+      // 1. WooCommerce screen-reader-text "Original price was: ৳ 17,000"
+      /class="screen-reader-text">\s*Original price was:?\s*(?:৳|&#2547;)(?:&nbsp;|&amp;nbsp;)?\s*([\d,]+)/i,
+      // 2. price-single → price inside <del>
+      /class="price-single"[\s\S]{0,400}?<del>[\s\S]{0,300}?(?:৳|&#2547;)(?:&nbsp;)?\s*([\d,]+)/i,
+    ],
+    stockPatterns: [
+      // GTM4WP JSON: "stockstatus":"instock"
+      /&quot;stockstatus&quot;:&quot;(instock|outofstock)/i,
+      // WooCommerce class: class="stock in-stock" or class="out-of-stock"
+      /class="stock\s+(in-stock|out-of-stock)"/i,
+    ],
+    priceAnchors: ["price-single", "screen-reader-text"],
   },
 };
 
