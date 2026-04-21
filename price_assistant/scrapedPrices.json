@@ -11,8 +11,8 @@
         "currency": "BDT",
         "inStock": true,
         "method": "site-pattern",
-        "fetchTimeMs": 395,
-        "scrapedAt": "2026-04-21T11:15:28.923Z",
+        "fetchTimeMs": 168,
+        "scrapedAt": "2026-04-21T11:21:38.794Z",
         "error": null
       },
       {
@@ -25,22 +25,22 @@
         "currency": "BDT",
         "inStock": true,
         "method": "json-ld",
-        "fetchTimeMs": 324,
-        "scrapedAt": "2026-04-21T11:15:28.938Z",
+        "fetchTimeMs": 287,
+        "scrapedAt": "2026-04-21T11:21:38.916Z",
         "error": null
       },
       {
-        "url": "https://www.ultratech.com.bd/1stplayer-power-supply",
+        "url": "https://www.ultratech.com.bd/1stplayer-dk-50-ps-500ax-500w-80-plus-bronze-non-modular-atx-power-supply",
         "siteName": "UltraTech",
         "domain": "ultratech.com.bd",
-        "price": 2100,
+        "price": 4200,
         "originalPrice": null,
         "discountPrice": null,
         "currency": "BDT",
-        "inStock": false,
-        "method": "site-pattern",
-        "fetchTimeMs": 554,
-        "scrapedAt": "2026-04-21T11:15:29.477Z",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 295,
+        "scrapedAt": "2026-04-21T11:21:38.925Z",
         "error": null
       },
       {
@@ -53,12 +53,12 @@
         "currency": "BDT",
         "inStock": true,
         "method": "json-ld",
-        "fetchTimeMs": 1133,
-        "scrapedAt": "2026-04-21T11:15:29.744Z",
+        "fetchTimeMs": 1911,
+        "scrapedAt": "2026-04-21T11:21:40.538Z",
         "error": null
       }
     ],
-    "scrapedAt": "2026-04-21T11:17:06.198Z"
+    "scrapedAt": "2026-04-21T11:21:40.541Z"
   },
   "15": {
     "results": [
