@@ -12,6 +12,49 @@ const ROOT = __dirname;
 const LINKS_FILE = path.join(ROOT, "competitorProductLink.json");
 const PRICE_CACHE_FILE = path.join(ROOT, "scrapedPrices.json");
 
+// ─── Logger ───────────────────────────────────────────────────
+
+const RESET  = "\x1b[0m";
+const DIM    = "\x1b[2m";
+const CYAN   = "\x1b[36m";
+const GREEN  = "\x1b[32m";
+const YELLOW = "\x1b[33m";
+const RED    = "\x1b[31m";
+const BOLD   = "\x1b[1m";
+
+function timestamp() {
+  return new Date().toISOString().replace("T", " ").slice(0, 23);
+}
+
+function clientIp(req) {
+  const forwarded = req.headers["x-forwarded-for"];
+  if (forwarded) return forwarded.split(",")[0].trim();
+  return req.socket?.remoteAddress || "unknown";
+}
+
+function statusColor(code) {
+  if (code < 300) return GREEN;
+  if (code < 400) return CYAN;
+  if (code < 500) return YELLOW;
+  return RED;
+}
+
+function logRequest(req, statusCode, durationMs, extra) {
+  const ip   = clientIp(req);
+  const col  = statusColor(statusCode);
+  const base = `${DIM}[${timestamp()}]${RESET} ${CYAN}${ip.padEnd(15)}${RESET} ${BOLD}${req.method.padEnd(6)}${RESET} ${req.url} ${col}→ ${statusCode}${RESET} ${DIM}(${durationMs}ms)${RESET}`;
+  console.log(base);
+  if (extra) console.log(`  ${DIM}↳ ${extra}${RESET}`);
+}
+
+function logInfo(msg) {
+  console.log(`${DIM}[${timestamp()}]${RESET} ${CYAN}INFO${RESET}  ${msg}`);
+}
+
+function logError(msg, err) {
+  console.error(`${DIM}[${timestamp()}]${RESET} ${RED}ERROR${RESET} ${msg}`, err || "");
+}
+
 // ─── Shared helpers ───────────────────────────────────────────
 
 function sendJson(res, status, payload) {
@@ -76,6 +119,25 @@ async function writeLinks(payload) {
   await ensureLinksFile();
   const safePayload = payload && typeof payload === "object" ? payload : {};
   await fsp.writeFile(LINKS_FILE, JSON.stringify(safePayload, null, 2) + "\n", "utf8");
+  const count = Object.keys(safePayload).length;
+  const urlTotal = Object.values(safePayload).reduce((s, a) => s + (Array.isArray(a) ? a.length : 0), 0);
+  logInfo(`competitorProductLink.json written — ${count} products, ${urlTotal} total URLs`);
+}
+
+// Mutex queue to prevent race conditions during concurrent multi-user saves
+let linksFileMutex = Promise.resolve();
+
+async function queueLinksUpdate(updateFn) {
+  return new Promise((resolve, reject) => {
+    linksFileMutex = linksFileMutex.then(async () => {
+      try {
+        const result = await updateFn();
+        resolve(result);
+      } catch (err) {
+        reject(err);
+      }
+    });
+  });
 }
 
 // ─── Price cache operations ───────────────────────────────────
@@ -233,8 +295,22 @@ async function handlePriceCache(req, res) {
 // ─── Server ───────────────────────────────────────────────────
 
 const server = http.createServer(async (req, res) => {
+  const startMs = Date.now();
+
+  // Wrap writeHead so we can capture the final status code for logging
+  const origWriteHead = res.writeHead.bind(res);
+  let _statusCode = 200;
+  res.writeHead = (code, headers) => {
+    _statusCode = code;
+    return origWriteHead(code, headers);
+  };
+
+  // Helper: finish the request and log it
+  const finish = (extra) => logRequest(req, _statusCode, Date.now() - startMs, extra);
+
   try {
     const url = new URL(req.url, `http://${req.headers.host}`);
+    const ip  = clientIp(req);
 
     // CORS preflight
     if (req.method === "OPTIONS") {
@@ -244,6 +320,7 @@ const server = http.createServer(async (req, res) => {
         "Access-Control-Allow-Headers": "Content-Type",
       });
       res.end();
+      finish();
       return;
     }
 
@@ -251,7 +328,9 @@ const server = http.createServer(async (req, res) => {
 
     if (url.pathname === "/api/links" && req.method === "GET") {
       const links = await readLinks();
+      const count = Object.keys(links).length;
       sendJson(res, 200, links);
+      finish(`read ${count} products from competitorProductLink.json`);
       return;
     }
 
@@ -262,10 +341,53 @@ const server = http.createServer(async (req, res) => {
         payload = body ? JSON.parse(body) : {};
       } catch {
         sendJson(res, 400, { error: "Invalid JSON payload" });
+        finish("rejected — invalid JSON body");
         return;
       }
-      await writeLinks(payload);
+      
+      await queueLinksUpdate(async () => {
+        await writeLinks(payload);
+      });
+      
+      const count    = Object.keys(payload).length;
+      const urlTotal = Object.values(payload).reduce((s, a) => s + (Array.isArray(a) ? a.length : 0), 0);
       sendJson(res, 200, { ok: true });
+      finish(`[${ip}] saved full payload → ${count} products, ${urlTotal} URLs`);
+      return;
+    }
+
+    if (url.pathname === "/api/links/product" && req.method === "POST") {
+      const body = await readRequestBody(req);
+      let payload = {};
+      try {
+        payload = body ? JSON.parse(body) : {};
+      } catch {
+        sendJson(res, 400, { error: "Invalid JSON payload" });
+        finish("rejected — invalid JSON body");
+        return;
+      }
+      
+      const productId = String(payload.productId || "").trim();
+      if (!productId) {
+        sendJson(res, 400, { error: "Missing productId" });
+        finish("rejected — missing productId");
+        return;
+      }
+
+      const updatedLinks = Array.isArray(payload.links) ? payload.links.filter(Boolean) : [];
+      
+      await queueLinksUpdate(async () => {
+        const allLinks = await readLinks();
+        if (updatedLinks.length > 0) {
+          allLinks[productId] = updatedLinks;
+        } else {
+          delete allLinks[productId];
+        }
+        await writeLinks(allLinks);
+      });
+      
+      sendJson(res, 200, { ok: true });
+      finish(`[${ip}] updated product ${productId} → ${updatedLinks.length} URLs`);
       return;
     }
 
@@ -273,21 +395,25 @@ const server = http.createServer(async (req, res) => {
 
     if (url.pathname === "/api/scrape" && req.method === "POST") {
       await handleScrape(req, res);
+      finish();
       return;
     }
 
     if (url.pathname === "/api/scrape-product" && req.method === "POST") {
       await handleScrapeProduct(req, res);
+      finish();
       return;
     }
 
     if (url.pathname === "/api/scrape-all" && req.method === "POST") {
       await handleScrapeAll(req, res);
+      finish();
       return;
     }
 
     if (url.pathname === "/api/price-cache" && req.method === "GET") {
       await handlePriceCache(req, res);
+      finish();
       return;
     }
 
@@ -295,11 +421,13 @@ const server = http.createServer(async (req, res) => {
 
     if (url.pathname === "/health") {
       sendJson(res, 200, { ok: true, port: PORT, host: HOST });
+      finish();
       return;
     }
 
     if (url.pathname === "/api/config" && req.method === "GET") {
       sendJson(res, 200, { PORT, HOST, API_URL: `http://${HOST}:${PORT}` });
+      finish();
       return;
     }
 
@@ -312,19 +440,24 @@ const server = http.createServer(async (req, res) => {
 
     if (!fullPath.startsWith(ROOT)) {
       sendText(res, 403, "Forbidden");
+      finish("path traversal attempt blocked");
       return;
     }
 
     const stat = await fsp.stat(fullPath).catch(() => null);
     if (!stat || !stat.isFile()) {
       sendText(res, 404, "Not Found");
+      finish();
       return;
     }
 
     const file = await fsp.readFile(fullPath);
     sendText(res, 200, file, getStaticContentType(fullPath));
+    finish(`served ${safePath} (${(file.length / 1024).toFixed(1)} KB)`);
   } catch (err) {
+    logError("Unhandled exception in request handler", err);
     sendJson(res, 500, { error: "Internal Server Error", detail: String(err && err.message || err) });
+    finish(`exception: ${err && err.message}`);
   }
 });
 
@@ -338,6 +471,10 @@ server.listen(PORT, HOST, () => {
   console.log(`  │  🔗 Links API:       GET/PUT /api/links         │`);
   console.log(`  │  🕷️  Scrape API:      POST /api/scrape-all      │`);
   console.log(`  │  ⚙️  Config:          GET /api/config           │`);
+  console.log(`  ├─────────────────────────────────────────────────┤`);
+  console.log(`  │  📝 Request log format:                         │`);
+  console.log(`  │  [time] IP      METHOD path → status (ms)      │`);
   console.log(`  └─────────────────────────────────────────────────┘\n`);
-  console.log(`  Open: http://${HOST}:${PORT}/priceAnalyzer.html\n`);
+  console.log(`  Open: http://${HOST}:${PORT}/outputViewer.html\n`);
+  logInfo(`Server ready — listening on http://${HOST}:${PORT}`);
 });
