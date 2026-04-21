@@ -19,8 +19,10 @@
     "https://www.computervillage.com.bd/amd-ryzen-9-9950x3d-gaming-and-content-creation-processor",
     "https://www.ultratech.com.bd/amd-ryzen-9-9950x3d-gaming-and-content-creation-processor"
   ],
+  "3400": [
+    "https://www.startech.com.bd/nvidia-rtx-pro-2000-blackwell-graphics-card"
+  ],
   "3463": [
-    "https://www.ultratech.com.bd/aitc-kingsman-ksd4-16gb-3200mhz-ram",
     "https://www.techlandbd.com/aitc-kingsman-innovator-ddr4-desktop-ram"
   ],
   "3574": [
@@ -57,6 +59,37 @@
   "4081": [
     "https://shop.deximpo.com.bd/product/huntkey-usb-c-to-lightning-fast-charging-cable/",
     "https://dexgen.com.bd/product/huntkey-powerlink-mfi-usb-c-to-lightning-fast-charging-cable-braided/"
+  ],
+  "4167": [
+    "https://www.ryans.com/haier-h43k800fx-43-inch-fhd-google-tv",
+    "https://www.techlandbd.com/haier-h43k800fx-tv"
+  ],
+  "4168": [
+    "https://www.bestelectronics.com.bd/home-appliances/air-conditioner/haier-antirustcool-inverter-pro-hsu-19-antirustcool-inv-pro-air-conditioner/",
+    "https://www.haier.com/bd/air-conditioners/hsu-19antirustcool-inv--pro-.shtml",
+    "https://www.startech.com.bd/haier-1-6-ton-antirustcool-inverter-pro-ac"
+  ],
+  "4169": [
+    "https://www.startech.com.bd/haier-1-ton-antirustcool-inverter-pro-ac",
+    "https://www.pickaboo.com/product-detail/haier-1-ton-antirustcool-inverter-pro-wi-fi-control-air-conditioner-hsu-12antirustcool-inv-pro",
+    "https://www.sumashtech.com/product/haier-1-ton-antirustcool-inverter-pro-ac",
+    "https://www.haier.com/bd/air-conditioners/hsu-12antirustcool-inv--pro-.shtml"
+  ],
+  "4170": [
+    "https://www.ryans.com/haier-h32k800x-32-inch-hd-bezel-less-google-tv",
+    "https://motionview.com.bd/product/haier-h32k800x-32-inch-bezel-less-google-tv",
+    "https://www.techlandbd.com/haier-h32k800x-32-inch-bezel-less-led-tv",
+    "https://www.haier.com/bd/tvs/h32k800x.shtml",
+    "https://www.startech.com.bd/haier-h32k800x-32-inch-bezel-less-hd-google-tv"
+  ],
+  "4171": [
+    "https://www.haier.com/bd/air-conditioners/hsu-24cleancool-inv--pro-.shtml",
+    "https://www.pickaboo.com/product-detail/haier-2-ton-cleancool-inverter-pro-air-conditioner-hsu-24cleancool-inv-pro"
+  ],
+  "4172": [
+    "https://www.haier.com/bd/tvs/h32d2ms.shtml",
+    "https://www.startech.com.bd/haier-h32d2m-32-hd-led-television",
+    "https://www.techlandbd.com/haier-h32d2m-32-inch-hd-led-television"
   ],
   "4173": [
     "https://www.pickaboo.com/product-detail/haier-1-6-ton-inverter-air-conditioner-hsu-19cleancool-inv-pro",

@@ -15,6 +15,8 @@
       --ok: #1fc3a2;
       --warn: #f5b84f;
       --accent: #5a82ff;
+      --sticky-topbar-offset: 0px;
+      --sticky-head-offset: 44px;
     }
 
     * { box-sizing: border-box; }
@@ -35,7 +37,7 @@
       display: grid;
       grid-template-columns: 340px 1fr;
       gap: 14px;
-      min-height: calc(100vh - 36px);
+      height: calc(100vh - 36px);
     }
 
     .panel, .main {
@@ -46,7 +48,13 @@
     }
 
     .panel {
-      overflow: auto;
+      position: sticky;
+      top: 0;
+      height: fit-content;
+      max-height: 100vh;
+      overflow-y: auto;
+      z-index: 15;
+      align-self: start;
     }
 
     .section {
@@ -155,12 +163,19 @@
     }
 
     .topbar {
+      flex-shrink: 0;
+      position: sticky;
+      top: var(--sticky-topbar-offset);
+      z-index: 12;
       border-bottom: 1px solid var(--line);
       padding: 10px;
       display: flex;
       align-items: center;
       gap: 8px;
       flex-wrap: wrap;
+      background: linear-gradient(180deg, rgba(10,16,32,.98) 0%, rgba(10,16,32,.95) 100%);
+      backdrop-filter: blur(8px);
+      border-radius: 14px 14px 0 0;
     }
 
     .chip {
@@ -176,6 +191,7 @@
       flex: 1;
       min-height: 0;
       overflow: auto;
+      position: relative;
     }
 
     table {
@@ -194,7 +210,7 @@
     th {
       position: sticky;
       top: 0;
-      z-index: 1;
+      z-index: 11;
       text-transform: uppercase;
       font-size: 11px;
       color: #bfd0ff;
@@ -350,6 +366,42 @@
       background: rgba(90,130,255,.22);
     }
 
+    /* Themed scrollbars for dark UI surfaces */
+    .panel,
+    .table-wrap {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(90,130,255,.75) rgba(255,255,255,.06);
+    }
+
+    .panel::-webkit-scrollbar,
+    .table-wrap::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+
+    .panel::-webkit-scrollbar-track,
+    .table-wrap::-webkit-scrollbar-track {
+      background: rgba(255,255,255,.05);
+      border-radius: 999px;
+    }
+
+    .panel::-webkit-scrollbar-thumb,
+    .table-wrap::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, rgba(90,130,255,.85), rgba(31,195,162,.75));
+      border-radius: 999px;
+      border: 2px solid rgba(8, 14, 30, .65);
+    }
+
+    .panel::-webkit-scrollbar-thumb:hover,
+    .table-wrap::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(180deg, rgba(122,156,255,.95), rgba(50,210,178,.9));
+    }
+
+    .panel::-webkit-scrollbar-corner,
+    .table-wrap::-webkit-scrollbar-corner {
+      background: transparent;
+    }
+
     .empty {
       padding: 26px;
       text-align: center;
@@ -389,7 +441,23 @@
     }
 
     @media (max-width: 1100px) {
-      .wrap { grid-template-columns: 1fr; }
+      .wrap {
+        grid-template-columns: 1fr;
+        height: auto;
+        min-height: calc(100vh - 36px);
+      }
+
+      .main {
+        overflow: visible;
+      }
+
+      .table-wrap {
+        overflow: visible;
+      }
+
+      th {
+        top: var(--sticky-head-offset);
+      }
     }
   </style>
 </head>
@@ -577,6 +645,7 @@
       csvBtn: document.getElementById("csvBtn"),
       tbody: document.getElementById("tbody"),
       empty: document.getElementById("empty"),
+      topbar: document.querySelector(".topbar"),
       statTotal: document.getElementById("statTotal"),
       statFiltered: document.getElementById("statFiltered"),
       statLinked: document.getElementById("statLinked"),
@@ -586,6 +655,7 @@
 
     bindEvents();
     initSearchableSelects();
+    updateStickyOffsets();
 
     function bindEvents() {
       el.fileInput.addEventListener("change", onFilePicked);
@@ -595,6 +665,7 @@
       if (el.syncLinksBtn) el.syncLinksBtn.addEventListener("click", () => syncCompetitorLinks(true));
       el.exportBtn.addEventListener("click", exportMergedJson);
       el.csvBtn.addEventListener("click", exportCsv);
+      window.addEventListener("resize", updateStickyOffsets);
 
       el.tbody.addEventListener("click", onTableClick);
       el.tbody.addEventListener("keydown", (event) => {
@@ -604,6 +675,11 @@
           if (btn) btn.click();
         }
       });
+    }
+
+    function updateStickyOffsets() {
+      const topbarHeight = el.topbar ? Math.ceil(el.topbar.getBoundingClientRect().height) : 44;
+      document.documentElement.style.setProperty("--sticky-head-offset", `${topbarHeight}px`);
     }
 
     function initSearchableSelects() {
@@ -1033,6 +1109,7 @@
       });
 
       el.tbody.appendChild(frag);
+      updateStickyOffsets();
     }
 
     async function onTableClick(event) {
