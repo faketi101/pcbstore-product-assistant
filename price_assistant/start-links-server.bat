@@ -1,6 +1,6 @@
 @echo off
 setlocal enabledelayedexpansion
-title PCB Price Assistant
+title Retail Price Assistant
 
 cd /d "%~dp0"
 
@@ -49,7 +49,7 @@ if not errorlevel 1 (
 
 :: ── Start server in a separate window ─────────────────────────────────────────
 echo.
-echo  Starting PCB Price Assistant Server...
+echo  Starting Retail Price Assistant Server...
 if "%HOST%"=="0.0.0.0" (
   echo  Binding to ALL interfaces ^(LAN + localhost^) on port %PORT%
 ) else (
@@ -57,7 +57,7 @@ if "%HOST%"=="0.0.0.0" (
 )
 echo.
 
-start "PCB Server :%PORT%" cmd /k "cd /d "%~dp0" && node linksApiServer.js"
+start "Retail Server :%PORT%" cmd /k "cd /d "%~dp0" && node linksApiServer.js"
 
 :: ── Wait until port is ready (up to 15s) ─────────────────────────────────────
 set /a TRIES=0
@@ -76,7 +76,7 @@ start "" "%BASE_URL%/priceAnalyzer.html"
 
 echo.
 echo  ╔══════════════════════════════════════════════════════════╗
-echo  ║         PCB Price Assistant is running                   ║
+echo  ║         Retail Price Assistant is running                   ║
 echo  ╠══════════════════════════════════════════════════════════╣
 echo  ║  Price Analyzer : %BASE_URL%/priceAnalyzer.html
 echo  ║  Product Viewer : %BASE_URL%/outputViewer.html
@@ -84,7 +84,7 @@ if "%HOST%"=="0.0.0.0" (
   echo  ║  LAN Access     : http://^<your-lan-ip^>:%PORT%/priceAnalyzer.html
 )
 echo  ╠══════════════════════════════════════════════════════════╣
-echo  ║  Close the "PCB Server" window to stop the server.      ║
+echo  ║  Close the "Price Server" window to stop the server.      ║
 echo  ╚══════════════════════════════════════════════════════════╝
 echo.
 echo  Press any key to exit this launcher (server keeps running)...
@@ -94,7 +94,7 @@ goto :end
 :timeout_err
 echo.
 echo  [ERROR] Server did not respond within 15 seconds.
-echo          Check the "PCB Server" window for error messages.
+echo          Check the "Price Server" window for error messages.
 echo.
 pause
 

@@ -1,8 +1,48 @@
 {
+  "14": [
+    "https://www.startech.com.bd/1stplayer-dk-5-0-ps-500ax-non-modular-power-supply",
+    "https://www.ryans.com/1st-player-ps-500ax-dk5.0-500w-non-modular-power-supply",
+    "https://www.techlandbd.com/1stplayer-dk50-500w-power-supply",
+    "https://www.ultratech.com.bd/1stplayer-power-supply"
+  ],
+  "15": [
+    "https://www.startech.com.bd/1stplayer-ngdp-atx-3-1-gold-1000w-power-supply",
+    "https://www.skyland.com.bd/1stplayer-ngdp-atx-3-1-gold-1000w-power-supply",
+    "https://www.techlandbd.com/1stplayer-ngdp-atx-31-1000w-power-supply",
+    "https://www.ultratech.com.bd/1stplayer-ngdp-atx-31-1000w-80-plus-gold-certified-full-modular-power-supply"
+  ],
+  "27": [
+    "https://www.skyland.com.bd/peerless-assassin-120-digital-white"
+  ],
+  "59": [
+    "https://www.startech.com.bd/1stplayer-ngdp-atx-3-1-platinum-1300w-power-supply",
+    "https://www.techlandbd.com/1st-player-ndgp-1300w-80-plus-power-supply",
+    "https://www.skyland.com.bd/1stplayer-ngdp-atx-3-1-platinum-1300w-power-supply",
+    "https://www.ultratech.com.bd/1stplayer-ngdp-atx-3-1-platinum-1300w-power-supply"
+  ],
   "124": [
     "https://www.startech.com.bd/amd-ryzen-5-5600gt-processor",
     "https://www.ultratech.com.bd/amd-ryzen-5-5600gt-6-core-12-thread-am4-processor",
     "https://www.ryans.com/amd-ryzen-5-5600gt-processor"
+  ],
+  "225": [
+    "https://potakait.com/thermalright-peerless-assassin-120-digital-argb-cpu-cooler-white",
+    "https://www.techlandbd.com/thermalright-peerless-assassin-120-digital-argb-cpu-cooler",
+    "https://www.ultratech.com.bd/thermalright-peerless-assassin-120-digital-argb-white-cpu-cooler"
+  ],
+  "235": [
+    "https://www.ultratech.com.bd/gigabyte-a620m-h-am5-micro-atx-motherboard",
+    "https://www.creatus.com.bd/gigabyte-a620m-h-motherboard",
+    "https://www.computervillage.com.bd/gigabyte-a620m-h-motherboard",
+    "https://www.ryans.com/gigabyte-a620m-h-ddr5-motherboard",
+    "https://www.techlandbd.com/gigabyte-a620m-h-am5-motherboard",
+    "https://www.startech.com.bd/gigabyte-a620m-h-motherboard"
+  ],
+  "258": [
+    "https://www.ryans.com/lian-li-uni-fan-al120-v2-120mm-argb-black-casing-cooling-fan",
+    "https://www.ultratech.com.bd/lian-li-uni-fan-al-v2-120-argb-case-fan-triple-pack-black",
+    "https://www.csi.com.bd/lian-li-uni-fan-al-v2-120-argb-case-fan-triple-pack-black",
+    "https://www.techlandbd.com/lian-li-uni-fan-al120-v2-120mm-case-fan"
   ],
   "264": [
     "https://www.startech.com.bd/amd-ryzen-7-7700-processor",
@@ -14,13 +54,330 @@
     "https://neton.com.bd/product/amd-ryzen-5-5600-processor/",
     "https://computerimporter.com/amd-ryzen-5-5600-processor-price-in-bd"
   ],
+  "489": [
+    "https://www.ultratech.com.bd/kingston-fury-beast-16gb-6000mhz-rgb-desktop-ram",
+    "https://www.skyland.com.bd/kingston-fury-beast-rgb-16gb-6000mhz-cl30-ddr5-expo-ram",
+    "https://www.creatus.com.bd/kingston-fury-beast-16gb-6000mhz-ddr5-rgb-ram"
+  ],
+  "491": [
+    "https://www.techlandbd.com/kingston-kc3000-1024gb-nvme-m2-pcie-40-ssd",
+    "https://potakait.com/kingston-kc3000-nvme-1024gb-ssd",
+    "https://www.ryans.com/kingston-kc3000-1tb-m.2-2280-pcie-4-nvme-ssd",
+    "https://www.startech.com.bd/kingston-kc3000-nvme-1tb-ssd"
+  ],
+  "531": [
+    "https://www.startech.com.bd/1stplayer-ngdp-atx-3-1-gold-750w-power-supply",
+    "https://www.techlandbd.com/1stplayer-ngdp-750w-power-supply",
+    "https://www.skyland.com.bd/1stplayer-ngdp-atx-3-1-gold-750w-power-supply",
+    "https://www.ultratech.com.bd/1stplayer-ngdp-atx-3-1-gold-750w-power-supply"
+  ],
+  "547": [
+    "https://www.startech.com.bd/1stplayer-ack-silver-750w-power-supply",
+    "https://www.techlandbd.com/1stplayer-ack-silver-750w-power-supply",
+    "https://www.ryans.com/1st-player-ack-silver-atx-3.1-750w-non-modular-psu",
+    "https://www.ultratech.com.bd/1stplayer-ack-silver-750w-power-supply"
+  ],
   "627": [
     "https://www.startech.com.bd/amd-ryzen-9-9950x3d-processor",
     "https://www.computervillage.com.bd/amd-ryzen-9-9950x3d-gaming-and-content-creation-processor",
     "https://www.ultratech.com.bd/amd-ryzen-9-9950x3d-gaming-and-content-creation-processor"
   ],
+  "726": [
+    "https://www.ucc.com.bd/msi-pro-b650m-p-am5-micro-atx-motherboard",
+    "https://potakait.com/msi-pro-b650m-p-am5-motherboard",
+    "https://www.techlandbd.com/msi-pro-b650m-p-am5-motherboard",
+    "https://www.ryans.com/msi-pro-b650m-p-ddr5-amd-motherboard",
+    "https://www.startech.com.bd/msi-pro-b650m-p-motherboard"
+  ],
+  "743": [
+    "https://www.startech.com.bd/team-t-force-delta-rgb-white-8gb-6000mhz-desktop-ram",
+    "https://www.skyland.com.bd/team-t-force-delta-rgb-white-8gb-6000mhz-desktop-ram",
+    "https://www.ultratech.com.bd/team-delta-rgb-8gb-ddr5-6000mhz-gaming-ram"
+  ],
+  "796": [
+    "https://potakait.com/corsair-mp600-pro-nh-1tb-ssd",
+    "https://www.techlandbd.com/corsair-mp600-pro-nh-1tb-ssd",
+    "https://www.ryans.com/corsair-mp600-pro-nh-1tb-m.2-2280-pcie-gen-4.0-x-4-nvme-ssd",
+    "https://www.startech.com.bd/corsair-mp600-pro-nh-1tb-nvme-ssd"
+  ],
+  "1082": [
+    "https://www.ryans.com/revenger-lite-power-350w-non-modular-80-plus-black-power-supply",
+    "https://www.techlandbd.com/revenger-lite-power-350w-power-supply",
+    "https://www.skyland.com.bd/revenger-lite-power-350w-power-supply"
+  ],
+  "1109": [
+    "https://www.startech.com.bd/acer-ac-1000-1000w-80-plus-gold-power-supply",
+    "https://www.techlandbd.com/acer-ac-1000-1000w-80plus-Gold-power-supply",
+    "https://www.ryans.com/acer-emachines-ac1000-1000w-full-modular-black-power-supply",
+    "https://www.skyland.com.bd/acer-ac-1000-1000w-80-plus-gold-power-supply",
+    "https://www.perennial.com.bd/acer-ac-1000-1000w-80-plus-gold-full-modular-power-supply-9332"
+  ],
+  "1116": [
+    "https://www.startech.com.bd/kingston-nv3-500gb-nvme-ssd",
+    "https://www.techlandbd.com/kingston-nv3-500gb-m2-gen4-ssd",
+    "https://www.ryans.com/kingston-nv3-500gb-internal-ssd",
+    "https://potakait.com/kingston-nv3-500gb-pcie-gen-4-0-internal-ssd"
+  ],
+  "1118": [
+    "https://www.startech.com.bd/asus-prime-a520m-r-motherboard",
+    "https://www.ryans.com/asus-prime-a520m-r-motherboard",
+    "https://www.globalbrand.com.bd/asus-prime-a520m-r-amd-am4-micro-atx-motherboard",
+    "https://www.techlandbd.com/asus-prime-a520m-r-motherboard",
+    "https://potakait.com/asus-prime-a520m-r-motherboard",
+    "https://www.ultratech.com.bd/asus-prime-a520m-r-motherboard"
+  ],
+  "1127": [
+    "https://www.startech.com.bd/corsair-icue-link-h100i-rgb-aio-liquid-cpu-cooler",
+    "https://www.skyland.com.bd/corsair-icue-link-h100i-rgb-aio-liquid-cpu-cooler",
+    "https://www.ryans.com/corsair-icue-link-h100i-rgb-aio-black-liquid-cpu-cooler",
+    "https://www.ultratech.com.bd/corsair-icue-link-h100i-rgb-240mm-all-in-one-liquid-cpu-cooler"
+  ],
+  "1224": [
+    "https://www.startech.com.bd/asus-ar120-argb-pwm-single-pack-casing-fan"
+  ],
+  "1336": [
+    "https://www.startech.com.bd/kingston-fury-beast-8gb-ddr5-5600mhz-cl36-ram",
+    "https://www.ultratech.com.bd/kingston-fury-beast-8gb-ddr5-5600mhz-desktop-ram",
+    "https://www.creatus.com.bd/kingston-fury-beast-8gb-ddr5-5600mhz-cl36-desktop-ram",
+    "https://www.techlandbd.com/kingston-fury-beast-8gb-ddr5-5600mhz-ram?srsltid=AfmBOorvPDiEMN6W9PoakUecTvopqhxQJiqwJWLeaeruQqD0Z5jXM6I-"
+  ],
+  "1347": [
+    "https://www.ryans.com/seagate-barracuda-960gb-2.5-inch-sataiii-internal-ssd",
+    "https://www.startech.com.bd/seagate-barracuda-q1-960gb-ssd",
+    "https://www.techlandbd.com/seagate-barracuda-960gb-ssd"
+  ],
+  "1372": [
+    "https://www.startech.com.bd/msi-pro-b650m-e-motherboard",
+    "https://www.ultratech.com.bd/msi-pro-b650m-e-am5-m-atx-motherboard",
+    "https://www.techlandbd.com/msi-pro-b650m-e-ddr5-motherboard",
+    "https://www.ryans.com/msi-pro-b650m-e-ddr5-amd-motherboard",
+    "https://potakait.com/msi-pro-b650m-e-am5-m-atx-motherboard"
+  ],
+  "1394": [
+    "https://orientcomputers.com.bd/trendsonic-lussa-ls29a-curved-elegance-gaming-pc-case"
+  ],
+  "1395": [
+    "https://www.startech.com.bd/asus-proart-pa602-e-atx-casing",
+    "https://www.ultratech.com.bd/asus-proart-pa602-mid-tower-black-case",
+    "https://www.techlandbd.com/asus-proart-pa602-full-tower-desktop-case-black",
+    "https://www.skyland.com.bd/asus-proart-pa602-e-atx-casing"
+  ],
+  "1404": [
+    "https://www.startech.com.bd/ars-precious-007-infinity-gaming-casing",
+    "https://www.ultratech.com.bd/ars-precious-007-infinity-gaming-casing",
+    "https://www.techlandbd.com/ars-precious-007-infinity-argb-m-atx-case-black"
+  ],
+  "1434": [
+    "https://www.startech.com.bd/1stplayer-mt-240-mothra-argb-cpu-cooler",
+    "https://www.techlandbd.com/1stplayer-mt240-mothra-argb-liquid-cooler",
+    "https://www.ultratech.com.bd/1stplayer-mt-240-mothra-argb-liquid-cooler-white",
+    "https://www.ryans.com/1st-player-mt240-mothra-argb-240mm-white-liquid-cpu-cooler"
+  ],
+  "1499": [
+    "https://www.startech.com.bd/revenger-bullet-mini-tower-rgb-gaming-case",
+    "https://www.universal.com.bd/revenger-bullet-mid-tower-micro-atx-gaming-case",
+    "https://www.ultratech.com.bd/revenger-bullet-mid-tower-micro-atx-gaming-case"
+  ],
+  "1500": [
+    "https://www.techlandbd.com/revenger-fire-rgb-gaming-case",
+    "https://www.selltech.com.bd/revenger-fire-rgb-gaming-case",
+    "https://www.universal.com.bd/revenger-fire-mid-tower-rgb-gaming-case"
+  ],
+  "1518": [
+    "https://www.skyland.com.bd/g-skill-value-8gb-ddr3-1600mhz-ram",
+    "https://www.ultratech.com.bd/gskill-nt-series-8gb-desktop-1600mhz-ddr3-ram",
+    "https://www.ryans.com/gskill-8gb-ddr3-1600mhz-desktop-ram?srsltid=AfmBOoqKxI6ckE7k6Uj0xNTN2xFPrJfakplBKWHnPEikumUuHJIgn7sr"
+  ],
+  "1524": [
+    "https://www.techlandbd.com/virtu-y03-gaming-case",
+    "https://www.perennial.com.bd/virtu-y03w-mesh-tower-white-gaming-pc-case",
+    "https://www.onixbd.com/virtu-y03-mesh-atx-tower-gaming-case-white"
+  ],
+  "1527": [
+    "https://www.perennial.com.bd/oreton-lpx-8gb-3200mhz-ddr4-desktop-ram",
+    "https://www.onixbd.com/oreton-8gb-3200mhz-ddr4-desktop-ram"
+  ],
+  "1532": [
+    "https://www.ultratech.com.bd/revenger-woodpecker-argb-gaming-casing",
+    "https://www.techlandbd.com/revenger-woodpecker-argb-gaming-casing",
+    "https://www.skyland.com.bd/revenger-woodpecker-argb-gaming-desktop-case"
+  ],
+  "1551": [
+    "https://www.startech.com.bd/g-skill-trident-z-16gb-rgb-desktop-ram",
+    "https://www.ultratech.com.bd/gskill-trident-z-16gb-ddr4-3200mhz-rgb-ram",
+    "https://www.ryans.com/g.skill-trident-z-rgb-16gb-ddr4-desktop-ram",
+    "https://www.creatus.com.bd/g-skill-trident-z-rgb-16gb-ddr4-3200mhz-desktop-ram"
+  ],
+  "1597": [
+    "https://www.techlandbd.com/couger-omnyx-atx-mid-tower-gaming-casing",
+    "https://www.startech.com.bd/cougar-omnyx-mid-tower-casing",
+    "https://www.ultratech.com.bd/cougar-omnyx-argb-mid-tower-casing",
+    "https://www.ryans.com/cougar-omnyx-argb-gaming-desktop-case"
+  ],
+  "1675": [
+    "https://www.startech.com.bd/xtreme-d777b-mid-tower-casing",
+    "https://www.rokomari.com/electronics/531043/xtreme-d777b-with-7-inch-lcd-screen-display-tempered-glass-black-case",
+    "https://www.skyland.com.bd/xtreme-d777b-mid-tower-casing",
+    "https://smartbd.com/product/xtreme-d777b-mid-tower-casing-with-7-inch-display/",
+    "https://www.ryans.com/xtreme-d777b-mid-tower-atx-gaming-desktop-casing"
+  ],
+  "1676": [
+    "https://www.startech.com.bd/xtreme-xjogos-cf30r-3-rgb-casing-fan",
+    "https://www.ryans.com/xtreme-xjogos-cf30r-3-120mm-rgb-tri-color-casing-cooling-fan",
+    "https://www.techlandbd.com/xtreme-xjogos-cf30r-3-120mm-3xfan-rgb-fan",
+    "https://www.creatus.com.bd/xtreme-xjogos-cf30r-3-rgb-casing-fan"
+  ],
+  "1678": [
+    "https://www.skyland.com.bd/value-top-aunix-81f4w-atx-argb-gaming-case",
+    "https://www.ultratech.com.bd/value-top-aunix-81f4w-gaming-case",
+    "https://www.techlandbd.com/value-top-aunix-81f4w-atx-argb-gaming-case"
+  ],
+  "1694": [
+    "https://www.techlandbd.com/thermalright-royal-pretor-130-cpu-air-cooler",
+    "https://www.pchouse.com.bd/thermalright-royal-pretor-130-ultra-white-cpu-cooler",
+    "https://computermania.com.bd/product/thermalright-royal-pretor-130-cpu-cooler/",
+    "https://www.skyland.com.bd/thermalright-royal-pretor-130-cpu-air-cooler"
+  ],
+  "1695": [
+    "https://test.skyland.com.bd/thermalright-royal-pretor-130-dual-tower-black-cpu-air-cooler",
+    "https://potakait.com/thermalright-royal-pretor-130-ultra-cpu-cooler",
+    "https://www.pchouse.com.bd/thermalright-royal-pretor-130-ultra-black-cpu-cooler",
+    "https://www.techlandbd.com/thermalright-royal-pretor-130-black-air-cooler"
+  ],
+  "1696": [
+    "https://www.pchouse.com.bd/thermalright-peerless-assassin-140-digital-cpu-cooler",
+    "https://www.skyland.com.bd/thermalright-peerless-assassin-140-digital-cpu--cooler",
+    "https://potakait.com/thermalright-peerless-assassin-140-digital-cpu--cooler",
+    "https://www.techlandbd.com/thermalright-peerless-assassin-140-cpu-cooler"
+  ],
+  "1700": [
+    "https://www.pchouse.com.bd/thermalright-frost-spirit-140-v3-white-air-cpu-cooler",
+    "https://www.ultratech.com.bd/thermalright-frost-spirit-140-v3-white-air-cpu-cooler",
+    "https://www.techlandbd.com/thermalright-frost-spirit-140-white-v3-cooler",
+    "https://www.startech.com.bd/thermalright-frost-spirit-140-white-v3-cpu-air-cooler"
+  ],
+  "1874": [
+    "https://www.startech.com.bd/g-skill-trident-z-16gb-heatsink-desktop-ram",
+    "https://www.skyland.com.bd/g-skill-trident-z-16gb-heatsink-desktop-ram",
+    "https://www.ryans.com/g.skill-trident-z-16gb-ddr4-3200mhz-desktop-ram"
+  ],
+  "1929": [
+    "https://www.ultratech.com.bd/pccooler-halo-fgrb-3-in-1-cooling-kit-120mm-fan",
+    "https://www.pchouse.com.bd/pccooler-halo-fgrb-c120mm-3-in-1-rgb-cooling-fan",
+    "https://www.techlandbd.com/pccooler-halo-3-in-1-kit",
+    "https://www.startech.com.bd/pccooler-halo-fgrb-rgb-cooling-fan"
+  ],
+  "1930": [
+    "https://www.startech.com.bd/revenger-prism-3-3-in-1-case-fan-kit",
+    "https://www.techlandbd.com/revenger-prism3-argb-case-fan",
+    "https://www.ultratech.com.bd/revenger-prism-3-argb-fan-kit",
+    "https://www.ryans.com/revenger-prism-3-120mm-argb-black-casing-cooling-fan"
+  ],
+  "1937": [
+    "https://www.universal.com.bd/revenger-eco-200-mini-tower-micro-atx-desktop-casing-white",
+    "https://www.ultratech.com.bd/revenger-eco-200-mini-tower-micro-atx-desktop-casing-white",
+    "https://www.ryans.com/revenger-eco-200-mini-tower-white-micro-atx-desktop-casing",
+    "https://www.selltech.com.bd/revenger-eco-200-mini-white-tower-micro-atx-case"
+  ],
+  "1938": [
+    "https://www.ultratech.com.bd/revenger-eco-200-mini-tower-micro-atx-desktop-casing-black",
+    "https://www.startech.com.bd/revenger-eco-200-mini-tower-casing",
+    "https://www.universal.com.bd/revenger-eco-200-mini-tower-micro-atx-desktop-casing",
+    "https://www.techlandbd.com/revenger-eco-200-mini-tower-micro-atx-case"
+  ],
+  "1947": [
+    "https://www.ryans.com/msi-b650m-project-zero-wi-fi-6e-amd-motherboard",
+    "https://www.techlandbd.com/msi-b650m-project-zero-am5-micro-atx-motherboard",
+    "https://www.ultratech.com.bd/msi-b650m-project-zero-am5-micro-atx-motherboard",
+    "https://www.ucc.com.bd/msi-b650m-project-zero-am5-m-atx-motherboard",
+    "https://www.startech.com.bd/msi-b650m-project-zero-am5-motherboard"
+  ],
+  "2110": [
+    "https://www.techlandbd.com/maxsun-challenger-b850m-k-motherboard",
+    "https://www.ultratech.com.bd/maxsun-challenger-b850m-k-motherboard",
+    "https://potakait.com/maxsun-challenger-b850m-k-m-atx-am5-motherboard",
+    "https://www.ryans.com/maxsun-challenger-b850m-k-ddr5-motherboard"
+  ],
+  "2245": [
+    "https://www.skyland.com.bd/revenger-rv05-atx-case",
+    "https://www.selltech.com.bd/revenger-rv05-atx-case",
+    "https://www.techlandbd.com/revenger-rv05-atx-case",
+    "https://www.universal.com.bd/revenger-rv05-mid-tower-desktop-casing"
+  ],
+  "2258": [
+    "https://www.ultratech.com.bd/thermalright-tl-c12c-s-x3-cpu-fan-black-argb-casing-cooler",
+    "https://www.creatus.com.bd/thermalright-tl-c12c-s-x3-cpu-fan-120mm-black-argb-casing-cooler",
+    "https://potakait.com/thermalright-tl-c12c-s-x3-argb-casing-cooler",
+    "https://www.techlandbd.com/thermalright-tl-c12c-s-x3-casing-fan",
+    "https://www.ryans.com/thermalright-tl-c12c-s-x3-120mm-3-pack-black-argb-casing-cooling-fan"
+  ],
+  "2265": [
+    "https://www.skyland.com.bd/thermalright-tl-m10-casing",
+    "https://www.pchouse.com.bd/thermalright-tl-m10-casing",
+    "https://www.techlandbd.com/thermalright-tl-m10-mid-tower-case"
+  ],
+  "2266": [
+    "https://www.pchouse.com.bd/thermalright-m10-vision-lcd-display-casing-white"
+  ],
+  "2305": [
+    "https://www.ucc.com.bd/thermaltake-toughpower-gt-1000w-80-plus-gold-power-supply"
+  ],
+  "2309": [
+    "https://www.ucc.com.bd/thermaltake-toughair-710-dual-tower-cpu-air-cooler",
+    "https://www.startech.com.bd/thermaltake-toughair-710-dual-tower-cpu-air-cooler",
+    "https://www.techlandbd.com/thermaltake-toughair-710-cpu-cooler",
+    "https://www.ultratech.com.bd/thermaltake-toughair-710-dual-tower-cpu-air-cooler"
+  ],
+  "2311": [
+    "https://www.ucc.com.bd/thermaltake-toughair-510-cpu-air-cooler",
+    "https://www.ryans.com/thermaltake-toughair510-air-cpu-cooler",
+    "https://www.ultratech.com.bd/thermaltake-toughair-510-cpu-air-cooler",
+    "https://www.startech.com.bd/thermaltake-toughair-510-cpu-cooler"
+  ],
+  "2776": [
+    "https://www.startech.com.bd/ocpc-xt-ii-ddr4-3200mhz-8gb-ram",
+    "https://www.creatus.com.bd/ocpc-xt-ii-8gb-ddr4-3200mhz-ram"
+  ],
+  "3354": [
+    "https://www.rokomari.com/product/258717/tomica-regular-76-toyota-prius-phv-gr-sport-white"
+  ],
+  "3356": [
+    "https://www.rokomari.com/product/309379/tomica-regular-diecast-no-91-6-chevrolet-corvette",
+    "https://opensesame.com.bd/product/tomica-regular-diecast-no-91-6-chevrolet-corvette/"
+  ],
+  "3362": [
+    "https://potakait.com/nvidia-rtx-pro-6000-blackwell-graphics-card"
+  ],
+  "3383": [
+    "https://www.startech.com.bd/nvidia-rtx-pro-5000-72gb-blackwell-graphics-card",
+    "https://fourstarit.com.bd/nvidia-rtx-pro-5000-72gb-blackwell-gddr7-gpu"
+  ],
+  "3385": [
+    "https://www.startech.com.bd/nvidia-rtx-pro-5000-blackwell-48gb-graphics-card",
+    "https://www.globalbrand.com.bd/nvidia-rtx-pro-5000-blackwell-48gb-gddr7-graphics-card",
+    "https://fourstarit.com.bd/nvidia-rtx-pro-5000-blackwell-48gb-gddr7-gpu-for-ai--professional-workloads"
+  ],
+  "3386": [
+    "https://www.startech.com.bd/nvidia-rtx-pro-4500-blackwell-graphics-card",
+    "https://fourstarit.com.bd/nvidia-rtx-pro-4500-blackwell-32gb-gddr7-gpu-for-ai--workstations",
+    "https://www.globalbrand.com.bd/nvidia-rtx-pro-4500-blackwell-32gb-gddr7-graphics-card"
+  ],
+  "3388": [
+    "https://fourstarit.com.bd/nvidia-rtx-pro-4000-blackwell-sff-24gb-gddr7-gpu-for-compact-workstations",
+    "https://www.startech.com.bd/nvidia-rtx-pro-4000-blackwell-sff-edition-graphics-card",
+    "https://www.globalbrand.com.bd/nvidia-rtx-pro-4000-blackwell-24gb-gddr7-graphics-card"
+  ],
+  "3395": [
+    "https://www.startech.com.bd/nvidia-rtx-pro-4000-blackwell-sff-edition-graphics-card",
+    "https://www.globalbrand.com.bd/nvidia-rtx-pro-4000-blackwell-24gb-gddr7-graphics-card"
+  ],
+  "3400": [
+    "https://www.startech.com.bd/nvidia-rtx-pro-2000-blackwell-graphics-card",
+    "https://fourstarit.com.bd/nvidia-rtx-pro-2000-blackwell-16gb-gddr7-gpu"
+  ],
   "3463": [
-    "https://www.ultratech.com.bd/aitc-kingsman-ksd4-16gb-3200mhz-ram"
+    "https://www.techlandbd.com/aitc-kingsman-innovator-ddr4-desktop-ram",
+    "https://potakait.com/aitc-kingsman-gaming-innovator-ddr4-16gb-ram"
   ],
   "3574": [
     "https://www.startech.com.bd/hikvision-hilook-ipc-t221h-dome-ip-camera",
@@ -57,6 +414,76 @@
     "https://shop.deximpo.com.bd/product/huntkey-usb-c-to-lightning-fast-charging-cable/",
     "https://dexgen.com.bd/product/huntkey-powerlink-mfi-usb-c-to-lightning-fast-charging-cable-braided/"
   ],
+  "4161": [
+    "https://transcomdigital.com/haier-inverter-pro-ac-hsu-19-uv-cool-1_6-ton",
+    "https://www.pickaboo.com/product-detail/haier-1-6-ton-uvcool-inverter-pro-dc-inverter-air-conditioner-hsu-19uvcool-inv-pro",
+    "https://othoba.com/haier-16-ton-split-type-inverter-pro-air-conditioner-hsu-19uvcoolinvpro"
+  ],
+  "4162": [
+    "https://www.haier.com/bd/air-conditioners/hsu-12uvcool-inv--pro-.shtml",
+    "https://www.techlandbd.com/haier-uv-cool-inverter-pro-hsu-12uvcool-air-conditioner",
+    "https://www.startech.com.bd/haier-1-ton-inverter-ac-hsu-12uvcool"
+  ],
+  "4163": [
+    "https://www.haier.com/bd/tvs/c32k7g.shtml",
+    "https://www.startech.com.bd/haier-candy-c32k7g-32-inch-android-tv",
+    "https://bme.com.bd/haier-candy-c32k7g-32-dled-hd-smart-android-tv"
+  ],
+  "4165": [
+    "https://www.sumashtech.com/product/haier-2-ton-antirustcool-inverter-pro-ac",
+    "https://othoba.com/haier-2-ton-antirustcool-inverter-pro-air-conditionerhsu-24antirustcool-invpro-nue-official-home-appliance-729897",
+    "https://wholesaleelectronics.com.bd/product/haier-2-ton-antirustcool-inverter-pro-ac-hsu-24antirustcool-invpro/",
+    "https://www.startech.com.bd/haier-2-ton-antirustcool-inverter-pro-ac",
+    "https://www.haier.com/bd/air-conditioners/hsu-24antirustcool-inv--pro-.shtml"
+  ],
+  "4166": [
+    "https://www.techlandbd.com/haier-h43k800ux-43-inch-4k-hdr-google-smart-tv",
+    "https://wholesaleelectronics.com.bd/product/haier-43-4k-google-tv-h43k800ux/",
+    "https://www.startech.com.bd/haier-h43k800ux-43-inch-4k-google-tv",
+    "https://www.haier.com/bd/tvs/h43k800ux.shtml"
+  ],
+  "4167": [
+    "https://www.ryans.com/haier-h43k800fx-43-inch-fhd-google-tv",
+    "https://www.techlandbd.com/haier-h43k800fx-tv",
+    "https://motionview.com.bd/product/haier-h43k800fx-43-inch-fhd-google-tv",
+    "https://www.startech.com.bd/haier-h43k800fx-43-inch-fhd-android-smart-tv",
+    "https://www.haier.com/bd/tvs/h43k800fx.shtml"
+  ],
+  "4168": [
+    "https://www.bestelectronics.com.bd/home-appliances/air-conditioner/haier-antirustcool-inverter-pro-hsu-19-antirustcool-inv-pro-air-conditioner/",
+    "https://www.haier.com/bd/air-conditioners/hsu-19antirustcool-inv--pro-.shtml",
+    "https://www.startech.com.bd/haier-1-6-ton-antirustcool-inverter-pro-ac"
+  ],
+  "4169": [
+    "https://www.startech.com.bd/haier-1-ton-antirustcool-inverter-pro-ac",
+    "https://www.pickaboo.com/product-detail/haier-1-ton-antirustcool-inverter-pro-wi-fi-control-air-conditioner-hsu-12antirustcool-inv-pro",
+    "https://www.sumashtech.com/product/haier-1-ton-antirustcool-inverter-pro-ac",
+    "https://www.haier.com/bd/air-conditioners/hsu-12antirustcool-inv--pro-.shtml"
+  ],
+  "4170": [
+    "https://www.ryans.com/haier-h32k800x-32-inch-hd-bezel-less-google-tv",
+    "https://motionview.com.bd/product/haier-h32k800x-32-inch-bezel-less-google-tv",
+    "https://www.techlandbd.com/haier-h32k800x-32-inch-bezel-less-led-tv",
+    "https://www.haier.com/bd/tvs/h32k800x.shtml",
+    "https://www.startech.com.bd/haier-h32k800x-32-inch-bezel-less-hd-google-tv"
+  ],
+  "4171": [
+    "https://www.haier.com/bd/air-conditioners/hsu-24cleancool-inv--pro-.shtml",
+    "https://www.pickaboo.com/product-detail/haier-2-ton-cleancool-inverter-pro-air-conditioner-hsu-24cleancool-inv-pro"
+  ],
+  "4172": [
+    "https://www.haier.com/bd/tvs/h32d2ms.shtml",
+    "https://www.startech.com.bd/haier-h32d2m-32-hd-led-television",
+    "https://www.techlandbd.com/haier-h32d2m-32-inch-hd-led-television"
+  ],
+  "4173": [
+    "https://www.pickaboo.com/product-detail/haier-1-6-ton-inverter-air-conditioner-hsu-19cleancool-inv-pro",
+    "https://www.bestelectronics.com.bd/home-appliances/air-conditioner/haier-hsu-19cleancoolinvpro-1-5-ton-inverter-air-conditioner/",
+    "https://www.haier.com/bd/air-conditioners/hsu-19cleancool-inv--pro-.shtml",
+    "https://www.techlandbd.com/haier-hsu-19cleancool-air-conditioner",
+    "https://www.applegadgetsbd.com/product/haier-hsu-19cleancool-inverter-pro-ac",
+    "https://www.startech.com.bd/haier-1-6-ton-cleancool-ac"
+  ],
   "4174": [
     "https://dazzle.com.bd/product/haier-hsu-12-clean-cool-inverter-pro-air-conditioner-1-ton-price-in-bangladesh",
     "https://www.pickaboo.com/product-detail/haier-1-ton-cleancool-inverter-air-conditioner-hsu-12cleancool",
@@ -81,6 +508,46 @@
     "https://www.tvhut.com.bd/haier-14-kg-all-in-one-washer-dryer-hwd140-bpd14387gnu1",
     "https://electronicsbangladesh.com/product/haier-14-plus-8-kg-all-in-one-washer-dryer-washing-machine",
     "https://www.startech.com.bd/haier-hwd140-bpd14387gnu1-washing-machine"
+  ],
+  "4191": [
+    "https://www.haier.com/bd/washing-machines/hw90-bp14959s8.shtml",
+    "https://www.esquireelectronicsltd.com/haier/washing-machine/haier-inverter-front-load-washing-machine-hw90-bp14959s8-9-kg-7"
+  ],
+  "4192": [
+    "https://www.haier.com/bd/washing-machines/hw80-bp12929s6.shtml",
+    "https://transcomdigital.com/haier-front-loading-washing-machine-hw80-bp12929s6-8kg"
+  ],
+  "4193": [
+    "https://www.haier.com/bd/washing-machines/hw80-bp12929a.shtml",
+    "https://transcomdigital.com/haier-front-loading-washing-machine-hw80-bp12929a-8kg",
+    "https://electronicsbangladesh.com/product/haier-8-kg-inverter-front-load-washing-machine-hw80-bp12929a"
+  ],
+  "4194": [
+    "https://www.haier.com/bd/washing-machines/hwm130-b1678es8.shtml",
+    "https://www.tvhut.com.bd/haier-13-kg-top-load-automatic-washing-machine",
+    "https://www.bestelectronics.com.bd/home-appliances/washing-machine/haier-hwm130-b1678es8-13-kg-top-load-without-heater-washing-machine/"
+  ],
+  "4195": [
+    "https://www.haier.com/bd/washing-machines/hwm120-316s6.shtml",
+    "https://www.esquireelectronicsltd.com/haier/washing-machine/haier-top-load-automatic-washing-machine-hwm120-316s6-12-kg-16",
+    "https://sonysmart.com.bd/product/haier-hwm120-316s6-12-kg-top-load-automatic-washing-machine"
+  ],
+  "4196": [
+    "https://www.haier.com/bd/washing-machines/hwm90-316s6.shtml",
+    "https://transcomdigital.com/haier-top-load-automatic-washing-machine-hwm90-316s6-9-kg",
+    "https://www.esquireelectronicsltd.com/haier/washing-machine/haier-top-load-automatic-washing-machine-hwm90-316s6-9-kg-65",
+    "https://www.bestelectronics.com.bd/home-appliances/washing-machine/haier-hwm90-316s6-9-kg-top-load-automatic-washing-machine/"
+  ],
+  "4197": [
+    "https://www.haier.com/bd/washing-machines/hwm80-316s6.shtml",
+    "https://sonysmart.com.bd/product/haier-8kg-top-load-fully-automatic-washing-machine-hwm80-316s6"
+  ],
+  "4198": [
+    "https://www.haier.com/bd/washing-machines/hwm80-1269s6.shtml",
+    "https://transcomdigital.com/haier-top-load-automatic-washing-machine-hwm80-1269s6-8-kg"
+  ],
+  "4199": [
+    "https://sonysmart.com.bd/product/haier-7kg-top-load-fully-automatic-washing-machine-hwm70-1269s5"
   ],
   "4202": [
     "https://www.haier.com/my/washing-machines/hw120-bp12357s8.shtml",

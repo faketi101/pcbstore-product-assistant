@@ -463,7 +463,7 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(PORT, HOST, () => {
   console.log(`\n  ┌─────────────────────────────────────────────────┐`);
-  console.log(`  │  PCB Price Assistant Server                     │`);
+  console.log(`  │  Price Assistant Server                     │`);
   console.log(`  │  Running on http://${HOST}:${PORT}              │`);
   console.log(`  ├─────────────────────────────────────────────────┤`);
   console.log(`  │  📋 Product Viewer:  /outputViewer.html         │`);
