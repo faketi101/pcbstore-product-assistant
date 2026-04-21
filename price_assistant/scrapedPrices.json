@@ -1,4 +1,206 @@
 {
+  "14": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/1stplayer-dk-5-0-ps-500ax-non-modular-power-supply",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 395,
+        "scrapedAt": "2026-04-21T11:15:28.923Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/1stplayer-dk50-500w-power-supply",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 4500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 324,
+        "scrapedAt": "2026-04-21T11:15:28.938Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ultratech.com.bd/1stplayer-power-supply",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 2100,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "site-pattern",
+        "fetchTimeMs": 554,
+        "scrapedAt": "2026-04-21T11:15:29.477Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/1st-player-ps-500ax-dk5.0-500w-non-modular-power-supply",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 4300,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 1133,
+        "scrapedAt": "2026-04-21T11:15:29.744Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "15": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/1stplayer-ngdp-atx-3-1-gold-1000w-power-supply",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 16200,
+        "originalPrice": 16500,
+        "discountPrice": 16200,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 154,
+        "scrapedAt": "2026-04-21T11:15:29.092Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/1stplayer-ngdp-atx-31-1000w-power-supply",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 16200,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 335,
+        "scrapedAt": "2026-04-21T11:15:29.812Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ultratech.com.bd/1stplayer-ngdp-atx-31-1000w-80-plus-gold-certified-full-modular-power-supply",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 16000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 233,
+        "scrapedAt": "2026-04-21T11:15:29.977Z",
+        "error": null
+      },
+      {
+        "url": "https://www.skyland.com.bd/1stplayer-ngdp-atx-3-1-gold-1000w-power-supply",
+        "siteName": "Skyland",
+        "domain": "skyland.com.bd",
+        "price": 15900,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 1585,
+        "scrapedAt": "2026-04-21T11:15:30.678Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "27": {
+    "results": [
+      {
+        "url": "https://www.skyland.com.bd/peerless-assassin-120-digital-white",
+        "siteName": "Skyland",
+        "domain": "skyland.com.bd",
+        "price": 5500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 1465,
+        "scrapedAt": "2026-04-21T11:15:31.277Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "59": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/1stplayer-ngdp-atx-3-1-platinum-1300w-power-supply",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 26500,
+        "originalPrice": 26800,
+        "discountPrice": 26500,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 156,
+        "scrapedAt": "2026-04-21T11:15:30.133Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/1st-player-ndgp-1300w-80-plus-power-supply",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 26500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 269,
+        "scrapedAt": "2026-04-21T11:15:30.402Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ultratech.com.bd/1stplayer-ngdp-atx-3-1-platinum-1300w-power-supply",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 26200,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 182,
+        "scrapedAt": "2026-04-21T11:15:30.860Z",
+        "error": null
+      },
+      {
+        "url": "https://www.skyland.com.bd/1stplayer-ngdp-atx-3-1-platinum-1300w-power-supply",
+        "siteName": "Skyland",
+        "domain": "skyland.com.bd",
+        "price": 26000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 972,
+        "scrapedAt": "2026-04-21T11:15:31.374Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
   "124": {
     "results": [
       {
@@ -11,8 +213,8 @@
         "currency": "BDT",
         "inStock": true,
         "method": "site-pattern",
-        "fetchTimeMs": 193,
-        "scrapedAt": "2026-04-21T05:33:50.885Z",
+        "fetchTimeMs": 151,
+        "scrapedAt": "2026-04-21T11:15:31.011Z",
         "error": null
       },
       {
@@ -25,8 +227,8 @@
         "currency": "BDT",
         "inStock": true,
         "method": "json-ld",
-        "fetchTimeMs": 289,
-        "scrapedAt": "2026-04-21T05:33:50.983Z",
+        "fetchTimeMs": 186,
+        "scrapedAt": "2026-04-21T11:15:31.197Z",
         "error": null
       },
       {
@@ -39,29 +241,212 @@
         "currency": "BDT",
         "inStock": true,
         "method": "json-ld",
-        "fetchTimeMs": 779,
-        "scrapedAt": "2026-04-21T05:33:51.474Z",
+        "fetchTimeMs": 2068,
+        "scrapedAt": "2026-04-21T11:15:33.265Z",
         "error": null
       }
     ],
-    "scrapedAt": "2026-04-21T05:33:57.998Z"
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
   },
-  "264": {
+  "225": {
     "results": [
       {
-        "url": "https://www.ultratech.com.bd/amd-ryzen-7-7700-gaming-processor",
-        "siteName": "UltraTech",
-        "domain": "ultratech.com.bd",
-        "price": 21500,
+        "url": "https://www.techlandbd.com/thermalright-peerless-assassin-120-digital-argb-cpu-cooler",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 5000,
         "originalPrice": null,
         "discountPrice": null,
         "currency": "BDT",
         "inStock": true,
         "method": "json-ld",
-        "fetchTimeMs": 104,
-        "scrapedAt": "2026-04-21T05:33:51.098Z",
+        "fetchTimeMs": 282,
+        "scrapedAt": "2026-04-21T11:15:31.656Z",
         "error": null
       },
+      {
+        "url": "https://www.ultratech.com.bd/thermalright-peerless-assassin-120-digital-argb-white-cpu-cooler",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 5000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 288,
+        "scrapedAt": "2026-04-21T11:15:31.944Z",
+        "error": null
+      },
+      {
+        "url": "https://potakait.com/thermalright-peerless-assassin-120-digital-argb-cpu-cooler-white",
+        "siteName": "potakait.com",
+        "domain": "potakait.com",
+        "price": 6200,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "meta-tag",
+        "fetchTimeMs": 1531,
+        "scrapedAt": "2026-04-21T11:15:32.808Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "235": {
+    "results": [
+      {
+        "url": "https://www.ultratech.com.bd/gigabyte-a620m-h-am5-micro-atx-motherboard",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 11000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 612,
+        "scrapedAt": "2026-04-21T11:15:32.574Z",
+        "error": null
+      },
+      {
+        "url": "https://www.computervillage.com.bd/gigabyte-a620m-h-motherboard",
+        "siteName": "computervillage.com.bd",
+        "domain": "computervillage.com.bd",
+        "price": 10500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 189,
+        "scrapedAt": "2026-04-21T11:15:32.997Z",
+        "error": null
+      },
+      {
+        "url": "https://www.creatus.com.bd/gigabyte-a620m-h-motherboard",
+        "siteName": "creatus.com.bd",
+        "domain": "creatus.com.bd",
+        "price": 10,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 627,
+        "scrapedAt": "2026-04-21T11:15:33.201Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/gigabyte-a620m-h-am5-motherboard",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 10500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 240,
+        "scrapedAt": "2026-04-21T11:15:33.441Z",
+        "error": null
+      },
+      {
+        "url": "https://www.startech.com.bd/gigabyte-a620m-h-motherboard",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 10500,
+        "originalPrice": 11500,
+        "discountPrice": 10500,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 191,
+        "scrapedAt": "2026-04-21T11:15:33.456Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/gigabyte-a620m-h-ddr5-motherboard",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 11500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 946,
+        "scrapedAt": "2026-04-21T11:15:33.943Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "258": {
+    "results": [
+      {
+        "url": "https://www.ultratech.com.bd/lian-li-uni-fan-al-v2-120-argb-case-fan-triple-pack-black",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 10000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 250,
+        "scrapedAt": "2026-04-21T11:15:33.706Z",
+        "error": null
+      },
+      {
+        "url": "https://www.csi.com.bd/lian-li-uni-fan-al-v2-120-argb-case-fan-triple-pack-black",
+        "siteName": "csi.com.bd",
+        "domain": "csi.com.bd",
+        "price": 10700,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 182,
+        "scrapedAt": "2026-04-21T11:15:33.888Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/lian-li-uni-fan-al120-v2-120mm-case-fan",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 10100,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 253,
+        "scrapedAt": "2026-04-21T11:15:34.141Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/lian-li-uni-fan-al120-v2-120mm-argb-black-casing-cooling-fan",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 100,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "site-pattern",
+        "fetchTimeMs": 1526,
+        "scrapedAt": "2026-04-21T11:15:34.967Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "264": {
+    "results": [
       {
         "url": "https://www.startech.com.bd/amd-ryzen-7-7700-processor",
         "siteName": "Star Tech",
@@ -72,8 +457,22 @@
         "currency": "BDT",
         "inStock": true,
         "method": "site-pattern",
-        "fetchTimeMs": 175,
-        "scrapedAt": "2026-04-21T05:33:51.169Z",
+        "fetchTimeMs": 146,
+        "scrapedAt": "2026-04-21T11:15:34.089Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ultratech.com.bd/amd-ryzen-7-7700-gaming-processor",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 21500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 256,
+        "scrapedAt": "2026-04-21T11:15:34.345Z",
         "error": null
       },
       {
@@ -86,12 +485,12 @@
         "currency": "BDT",
         "inStock": true,
         "method": "json-ld",
-        "fetchTimeMs": 494,
-        "scrapedAt": "2026-04-21T05:33:51.592Z",
+        "fetchTimeMs": 506,
+        "scrapedAt": "2026-04-21T11:15:34.647Z",
         "error": null
       }
     ],
-    "scrapedAt": "2026-04-21T05:33:57.998Z"
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
   },
   "374": {
     "results": [
@@ -105,22 +504,8 @@
         "currency": "BDT",
         "inStock": true,
         "method": "site-pattern",
-        "fetchTimeMs": 185,
-        "scrapedAt": "2026-04-21T05:57:28.404Z",
-        "error": null
-      },
-      {
-        "url": "https://neton.com.bd/product/amd-ryzen-5-5600-processor/",
-        "siteName": "Neton Tech",
-        "domain": "neton.com.bd",
-        "price": 32900,
-        "originalPrice": 35800,
-        "discountPrice": 32900,
-        "currency": "BDT",
-        "inStock": false,
-        "method": "generic-bdt",
-        "fetchTimeMs": 1237,
-        "scrapedAt": "2026-04-21T05:57:29.464Z",
+        "fetchTimeMs": 158,
+        "scrapedAt": "2026-04-21T11:15:34.503Z",
         "error": null
       },
       {
@@ -133,12 +518,256 @@
         "currency": "BDT",
         "inStock": null,
         "method": "json-ld",
-        "fetchTimeMs": 1265,
-        "scrapedAt": "2026-04-21T05:57:29.493Z",
+        "fetchTimeMs": 1349,
+        "scrapedAt": "2026-04-21T11:15:35.996Z",
+        "error": null
+      },
+      {
+        "url": "https://neton.com.bd/product/amd-ryzen-5-5600-processor/",
+        "siteName": "Neton Tech",
+        "domain": "neton.com.bd",
+        "price": 15000,
+        "originalPrice": 17000,
+        "discountPrice": 15000,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 2064,
+        "scrapedAt": "2026-04-21T11:15:36.567Z",
         "error": null
       }
     ],
-    "scrapedAt": "2026-04-21T05:57:29.493Z"
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "489": {
+    "results": [
+      {
+        "url": "https://www.ultratech.com.bd/kingston-fury-beast-16gb-6000mhz-rgb-desktop-ram",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 28500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 220,
+        "scrapedAt": "2026-04-21T11:15:35.187Z",
+        "error": null
+      },
+      {
+        "url": "https://www.creatus.com.bd/kingston-fury-beast-16gb-6000mhz-ddr5-rgb-ram",
+        "siteName": "creatus.com.bd",
+        "domain": "creatus.com.bd",
+        "price": 29,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 404,
+        "scrapedAt": "2026-04-21T11:15:36.400Z",
+        "error": null
+      },
+      {
+        "url": "https://www.skyland.com.bd/kingston-fury-beast-rgb-16gb-6000mhz-cl30-ddr5-expo-ram",
+        "siteName": "Skyland",
+        "domain": "skyland.com.bd",
+        "price": 30500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 1255,
+        "scrapedAt": "2026-04-21T11:15:36.442Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "491": {
+    "results": [
+      {
+        "url": "https://www.techlandbd.com/kingston-kc3000-1024gb-nvme-m2-pcie-40-ssd",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 25300,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 267,
+        "scrapedAt": "2026-04-21T11:15:36.667Z",
+        "error": null
+      },
+      {
+        "url": "https://www.startech.com.bd/kingston-kc3000-nvme-1tb-ssd",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 25300,
+        "originalPrice": 28500,
+        "discountPrice": 25300,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 151,
+        "scrapedAt": "2026-04-21T11:15:36.818Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/kingston-kc3000-1tb-m.2-2280-pcie-4-nvme-ssd",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 28000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 959,
+        "scrapedAt": "2026-04-21T11:15:37.526Z",
+        "error": null
+      },
+      {
+        "url": "https://potakait.com/kingston-kc3000-nvme-1024gb-ssd",
+        "siteName": "potakait.com",
+        "domain": "potakait.com",
+        "price": 24900,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 1249,
+        "scrapedAt": "2026-04-21T11:15:37.691Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "531": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/1stplayer-ngdp-atx-3-1-gold-750w-power-supply",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 900,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 147,
+        "scrapedAt": "2026-04-21T11:15:37.128Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/1stplayer-ngdp-750w-power-supply",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 11900,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 312,
+        "scrapedAt": "2026-04-21T11:15:37.440Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ultratech.com.bd/1stplayer-ngdp-atx-3-1-gold-750w-power-supply",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 11800,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 223,
+        "scrapedAt": "2026-04-21T11:15:37.749Z",
+        "error": null
+      },
+      {
+        "url": "https://www.skyland.com.bd/1stplayer-ngdp-atx-3-1-gold-750w-power-supply",
+        "siteName": "Skyland",
+        "domain": "skyland.com.bd",
+        "price": 11700,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 1247,
+        "scrapedAt": "2026-04-21T11:15:38.687Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "547": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/1stplayer-ack-silver-750w-power-supply",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 200,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 183,
+        "scrapedAt": "2026-04-21T11:15:37.874Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/1stplayer-ack-silver-750w-power-supply",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 7200,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 307,
+        "scrapedAt": "2026-04-21T11:15:38.056Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ultratech.com.bd/1stplayer-ack-silver-750w-power-supply",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 7000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 218,
+        "scrapedAt": "2026-04-21T11:15:38.274Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/1st-player-ack-silver-atx-3.1-750w-non-modular-psu",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 7100,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 839,
+        "scrapedAt": "2026-04-21T11:15:38.713Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
   },
   "627": {
     "results": [
@@ -152,8 +781,8 @@
         "currency": "BDT",
         "inStock": true,
         "method": "site-pattern",
-        "fetchTimeMs": 216,
-        "scrapedAt": "2026-04-21T05:33:51.831Z",
+        "fetchTimeMs": 155,
+        "scrapedAt": "2026-04-21T11:15:38.429Z",
         "error": null
       },
       {
@@ -166,8 +795,8 @@
         "currency": "BDT",
         "inStock": false,
         "method": "json-ld",
-        "fetchTimeMs": 113,
-        "scrapedAt": "2026-04-21T05:33:51.944Z",
+        "fetchTimeMs": 267,
+        "scrapedAt": "2026-04-21T11:15:38.696Z",
         "error": null
       },
       {
@@ -180,29 +809,5131 @@
         "currency": "BDT",
         "inStock": true,
         "method": "json-ld",
-        "fetchTimeMs": 406,
-        "scrapedAt": "2026-04-21T05:33:52.350Z",
+        "fetchTimeMs": 560,
+        "scrapedAt": "2026-04-21T11:15:39.247Z",
         "error": null
       }
     ],
-    "scrapedAt": "2026-04-21T05:33:57.998Z"
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
   },
-  "5924": {
+  "726": {
     "results": [
       {
-        "url": "https://www.startech.com.bd/western-digital-my-passport-2-tb",
+        "url": "https://www.ucc.com.bd/msi-pro-b650m-p-am5-micro-atx-motherboard",
+        "siteName": "ucc.com.bd",
+        "domain": "ucc.com.bd",
+        "price": 16200,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "json-ld",
+        "fetchTimeMs": 242,
+        "scrapedAt": "2026-04-21T11:15:38.938Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/msi-pro-b650m-p-am5-motherboard",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 15499,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 282,
+        "scrapedAt": "2026-04-21T11:15:39.220Z",
+        "error": null
+      },
+      {
+        "url": "https://www.startech.com.bd/msi-pro-b650m-p-motherboard",
         "siteName": "Star Tech",
         "domain": "startech.com.bd",
-        "price": 10800,
-        "originalPrice": 10999,
-        "discountPrice": 10800,
+        "price": 15499,
+        "originalPrice": 15900,
+        "discountPrice": 15499,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 151,
+        "scrapedAt": "2026-04-21T11:15:39.398Z",
+        "error": null
+      },
+      {
+        "url": "https://potakait.com/msi-pro-b650m-p-am5-motherboard",
+        "siteName": "potakait.com",
+        "domain": "potakait.com",
+        "price": 15500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 745,
+        "scrapedAt": "2026-04-21T11:15:39.458Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/msi-pro-b650m-p-ddr5-amd-motherboard",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 15900,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 652,
+        "scrapedAt": "2026-04-21T11:15:39.872Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "743": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/team-t-force-delta-rgb-white-8gb-6000mhz-desktop-ram",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 500,
+        "originalPrice": null,
+        "discountPrice": null,
         "currency": "BDT",
         "inStock": true,
         "method": "site-pattern",
         "fetchTimeMs": 148,
-        "scrapedAt": "2026-04-21T05:33:52.498Z",
+        "scrapedAt": "2026-04-21T11:15:39.707Z",
         "error": null
       },
+      {
+        "url": "https://www.ultratech.com.bd/team-delta-rgb-8gb-ddr5-6000mhz-gaming-ram",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 14500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 212,
+        "scrapedAt": "2026-04-21T11:15:39.919Z",
+        "error": null
+      },
+      {
+        "url": "https://www.skyland.com.bd/team-t-force-delta-rgb-white-8gb-6000mhz-desktop-ram",
+        "siteName": "Skyland",
+        "domain": "skyland.com.bd",
+        "price": 15500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 1093,
+        "scrapedAt": "2026-04-21T11:15:40.551Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "796": {
+    "results": [
+      {
+        "url": "https://www.techlandbd.com/corsair-mp600-pro-nh-1tb-ssd",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 23500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 246,
+        "scrapedAt": "2026-04-21T11:15:40.165Z",
+        "error": null
+      },
+      {
+        "url": "https://potakait.com/corsair-mp600-pro-nh-1tb-ssd",
+        "siteName": "potakait.com",
+        "domain": "potakait.com",
+        "price": 22900,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 385,
+        "scrapedAt": "2026-04-21T11:15:40.257Z",
+        "error": null
+      },
+      {
+        "url": "https://www.startech.com.bd/corsair-mp600-pro-nh-1tb-nvme-ssd",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 23500,
+        "originalPrice": 24000,
+        "discountPrice": 23500,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 162,
+        "scrapedAt": "2026-04-21T11:15:40.419Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/corsair-mp600-pro-nh-1tb-m.2-2280-pcie-gen-4.0-x-4-nvme-ssd",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": null,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "none",
+        "fetchTimeMs": 1154,
+        "scrapedAt": "2026-04-21T11:15:41.319Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1082": {
+    "results": [
+      {
+        "url": "https://www.techlandbd.com/revenger-lite-power-350w-power-supply",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 1250,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 215,
+        "scrapedAt": "2026-04-21T11:15:40.766Z",
+        "error": null
+      },
+      {
+        "url": "https://www.skyland.com.bd/revenger-lite-power-350w-power-supply",
+        "siteName": "Skyland",
+        "domain": "skyland.com.bd",
+        "price": 1700,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 822,
+        "scrapedAt": "2026-04-21T11:15:41.588Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/revenger-lite-power-350w-non-modular-80-plus-black-power-supply",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 1250,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 1310,
+        "scrapedAt": "2026-04-21T11:15:41.790Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1109": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/acer-ac-1000-1000w-80-plus-gold-power-supply",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 12500,
+        "originalPrice": 13000,
+        "discountPrice": 12500,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 158,
+        "scrapedAt": "2026-04-21T11:15:41.477Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/acer-ac-1000-1000w-80plus-Gold-power-supply",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 11000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 318,
+        "scrapedAt": "2026-04-21T11:15:41.795Z",
+        "error": null
+      },
+      {
+        "url": "https://www.perennial.com.bd/acer-ac-1000-1000w-80-plus-gold-full-modular-power-supply-9332",
+        "siteName": "Perennial",
+        "domain": "perennial.com.bd",
+        "price": 12800,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "meta-tag",
+        "fetchTimeMs": 58,
+        "scrapedAt": "2026-04-21T11:15:41.853Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/acer-emachines-ac1000-1000w-full-modular-black-power-supply",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 13000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 942,
+        "scrapedAt": "2026-04-21T11:15:42.530Z",
+        "error": null
+      },
+      {
+        "url": "https://www.skyland.com.bd/acer-ac-1000-1000w-80-plus-gold-power-supply",
+        "siteName": "Skyland",
+        "domain": "skyland.com.bd",
+        "price": 12999,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 763,
+        "scrapedAt": "2026-04-21T11:15:42.553Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1116": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/kingston-nv3-500gb-nvme-ssd",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 14500,
+        "originalPrice": 15500,
+        "discountPrice": 14500,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 141,
+        "scrapedAt": "2026-04-21T11:15:41.994Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/kingston-nv3-500gb-m2-gen4-ssd",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 14500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 261,
+        "scrapedAt": "2026-04-21T11:15:42.255Z",
+        "error": null
+      },
+      {
+        "url": "https://potakait.com/kingston-nv3-500gb-pcie-gen-4-0-internal-ssd",
+        "siteName": "potakait.com",
+        "domain": "potakait.com",
+        "price": 13999,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 898,
+        "scrapedAt": "2026-04-21T11:15:43.429Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/kingston-nv3-500gb-internal-ssd",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 12900,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 9937,
+        "scrapedAt": "2026-04-21T11:15:52.192Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1118": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/asus-prime-a520m-r-motherboard",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 8300,
+        "originalPrice": 8500,
+        "discountPrice": 8300,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 154,
+        "scrapedAt": "2026-04-21T11:15:42.707Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/asus-prime-a520m-r-motherboard",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 8500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 1216,
+        "scrapedAt": "2026-04-21T11:15:43.923Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/asus-prime-a520m-r-motherboard",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 8500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 239,
+        "scrapedAt": "2026-04-21T11:15:44.162Z",
+        "error": null
+      },
+      {
+        "url": "https://potakait.com/asus-prime-a520m-r-motherboard",
+        "siteName": "potakait.com",
+        "domain": "potakait.com",
+        "price": 8500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 556,
+        "scrapedAt": "2026-04-21T11:15:44.718Z",
+        "error": null
+      },
+      {
+        "url": "https://www.globalbrand.com.bd/asus-prime-a520m-r-amd-am4-micro-atx-motherboard",
+        "siteName": "Global Brand",
+        "domain": "globalbrand.com.bd",
+        "price": 8700,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 1742,
+        "scrapedAt": "2026-04-21T11:15:45.171Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ultratech.com.bd/asus-prime-a520m-r-motherboard",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 8400,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 575,
+        "scrapedAt": "2026-04-21T11:15:45.293Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1127": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/corsair-icue-link-h100i-rgb-aio-liquid-cpu-cooler",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 21800,
+        "originalPrice": 22000,
+        "discountPrice": 21800,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 135,
+        "scrapedAt": "2026-04-21T11:15:45.306Z",
+        "error": null
+      },
+      {
+        "url": "https://www.skyland.com.bd/corsair-icue-link-h100i-rgb-aio-liquid-cpu-cooler",
+        "siteName": "Skyland",
+        "domain": "skyland.com.bd",
+        "price": 21800,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 945,
+        "scrapedAt": "2026-04-21T11:15:46.238Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/corsair-icue-link-h100i-rgb-aio-black-liquid-cpu-cooler",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 22900,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 1049,
+        "scrapedAt": "2026-04-21T11:15:46.355Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ultratech.com.bd/corsair-icue-link-h100i-rgb-240mm-all-in-one-liquid-cpu-cooler",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 11500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 215,
+        "scrapedAt": "2026-04-21T11:15:46.453Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1224": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/asus-ar120-argb-pwm-single-pack-casing-fan",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 1000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "meta-tag",
+        "fetchTimeMs": 152,
+        "scrapedAt": "2026-04-21T11:15:46.507Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1336": {
+    "results": [
+      {
+        "url": "https://www.ultratech.com.bd/kingston-fury-beast-8gb-ddr5-5600mhz-desktop-ram",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 14800,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 163,
+        "scrapedAt": "2026-04-21T11:15:46.716Z",
+        "error": null
+      },
+      {
+        "url": "https://www.startech.com.bd/kingston-fury-beast-8gb-ddr5-5600mhz-cl36-ram",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 14500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "meta-tag",
+        "fetchTimeMs": 150,
+        "scrapedAt": "2026-04-21T11:15:46.811Z",
+        "error": null
+      },
+      {
+        "url": "https://www.creatus.com.bd/kingston-fury-beast-8gb-ddr5-5600mhz-cl36-desktop-ram",
+        "siteName": "creatus.com.bd",
+        "domain": "creatus.com.bd",
+        "price": 14,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 421,
+        "scrapedAt": "2026-04-21T11:15:47.137Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/kingston-fury-beast-8gb-ddr5-5600mhz-ram?srsltid=AfmBOorvPDiEMN6W9PoakUecTvopqhxQJiqwJWLeaeruQqD0Z5jXM6I-",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 14800,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 331,
+        "scrapedAt": "2026-04-21T11:15:47.142Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1347": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/seagate-barracuda-q1-960gb-ssd",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 9100,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "meta-tag",
+        "fetchTimeMs": 152,
+        "scrapedAt": "2026-04-21T11:15:47.294Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/seagate-barracuda-960gb-ssd",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 16600,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 284,
+        "scrapedAt": "2026-04-21T11:15:47.578Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/seagate-barracuda-960gb-2.5-inch-sataiii-internal-ssd",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 15999,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "site-pattern",
+        "fetchTimeMs": 1113,
+        "scrapedAt": "2026-04-21T11:15:48.250Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1372": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/msi-pro-b650m-e-motherboard",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 11700,
+        "originalPrice": 12500,
+        "discountPrice": 11700,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 155,
+        "scrapedAt": "2026-04-21T11:15:47.733Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ultratech.com.bd/msi-pro-b650m-e-am5-m-atx-motherboard",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 11500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 211,
+        "scrapedAt": "2026-04-21T11:15:47.944Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/msi-pro-b650m-e-ddr5-motherboard",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 11700,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 282,
+        "scrapedAt": "2026-04-21T11:15:48.226Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/msi-pro-b650m-e-ddr5-amd-motherboard",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 50,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "site-pattern",
+        "fetchTimeMs": 713,
+        "scrapedAt": "2026-04-21T11:15:48.939Z",
+        "error": null
+      },
+      {
+        "url": "https://potakait.com/msi-pro-b650m-e-am5-m-atx-motherboard",
+        "siteName": "potakait.com",
+        "domain": "potakait.com",
+        "price": 12000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 901,
+        "scrapedAt": "2026-04-21T11:15:49.151Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1394": {
+    "results": [
+      {
+        "url": "https://orientcomputers.com.bd/trendsonic-lussa-ls29a-curved-elegance-gaming-pc-case",
+        "siteName": "orientcomputers.com.bd",
+        "domain": "orientcomputers.com.bd",
+        "price": 5950,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "meta-tag",
+        "fetchTimeMs": 340,
+        "scrapedAt": "2026-04-21T11:15:49.279Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1395": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/asus-proart-pa602-e-atx-casing",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 30200,
+        "originalPrice": 30500,
+        "discountPrice": 30200,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 141,
+        "scrapedAt": "2026-04-21T11:15:49.292Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ultratech.com.bd/asus-proart-pa602-mid-tower-black-case",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 30500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 216,
+        "scrapedAt": "2026-04-21T11:15:49.495Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/asus-proart-pa602-full-tower-desktop-case-black",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 30200,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 265,
+        "scrapedAt": "2026-04-21T11:15:49.557Z",
+        "error": null
+      },
+      {
+        "url": "https://www.skyland.com.bd/asus-proart-pa602-e-atx-casing",
+        "siteName": "Skyland",
+        "domain": "skyland.com.bd",
+        "price": 32000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 940,
+        "scrapedAt": "2026-04-21T11:15:50.435Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1404": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/ars-precious-007-infinity-gaming-casing",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 800,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 145,
+        "scrapedAt": "2026-04-21T11:15:49.702Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ultratech.com.bd/ars-precious-007-infinity-gaming-casing",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 3500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "json-ld",
+        "fetchTimeMs": 173,
+        "scrapedAt": "2026-04-21T11:15:49.875Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/ars-precious-007-infinity-argb-m-atx-case-black",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 3800,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "json-ld",
+        "fetchTimeMs": 176,
+        "scrapedAt": "2026-04-21T11:15:50.051Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1434": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/1stplayer-mt-240-mothra-argb-cpu-cooler",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 8800,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "meta-tag",
+        "fetchTimeMs": 150,
+        "scrapedAt": "2026-04-21T11:15:50.201Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/1stplayer-mt240-mothra-argb-liquid-cooler",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 8200,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "json-ld",
+        "fetchTimeMs": 237,
+        "scrapedAt": "2026-04-21T11:15:50.439Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ultratech.com.bd/1stplayer-mt-240-mothra-argb-liquid-cooler-white",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 8300,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "json-ld",
+        "fetchTimeMs": 211,
+        "scrapedAt": "2026-04-21T11:15:50.646Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/1st-player-mt240-mothra-argb-240mm-white-liquid-cpu-cooler",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 8400,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 718,
+        "scrapedAt": "2026-04-21T11:15:51.157Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1499": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/revenger-bullet-mini-tower-rgb-gaming-case",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 2200,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "meta-tag",
+        "fetchTimeMs": 174,
+        "scrapedAt": "2026-04-21T11:15:50.820Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ultratech.com.bd/revenger-bullet-mid-tower-micro-atx-gaming-case",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 2350,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 185,
+        "scrapedAt": "2026-04-21T11:15:51.342Z",
+        "error": null
+      },
+      {
+        "url": "https://www.universal.com.bd/revenger-bullet-mid-tower-micro-atx-gaming-case",
+        "siteName": "universal.com.bd",
+        "domain": "universal.com.bd",
+        "price": 2350,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 574,
+        "scrapedAt": "2026-04-21T11:15:51.394Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1500": {
+    "results": [
+      {
+        "url": "https://www.techlandbd.com/revenger-fire-rgb-gaming-case",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 2350,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 260,
+        "scrapedAt": "2026-04-21T11:15:51.602Z",
+        "error": null
+      },
+      {
+        "url": "https://www.selltech.com.bd/revenger-fire-rgb-gaming-case",
+        "siteName": "Sell Tech BD",
+        "domain": "selltech.com.bd",
+        "price": 2650,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 238,
+        "scrapedAt": "2026-04-21T11:15:51.632Z",
+        "error": null
+      },
+      {
+        "url": "https://www.universal.com.bd/revenger-fire-mid-tower-rgb-gaming-case",
+        "siteName": "universal.com.bd",
+        "domain": "universal.com.bd",
+        "price": 2500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 447,
+        "scrapedAt": "2026-04-21T11:15:52.049Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1518": {
+    "results": [
+      {
+        "url": "https://www.ultratech.com.bd/gskill-nt-series-8gb-desktop-1600mhz-ddr3-ram",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 4500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 170,
+        "scrapedAt": "2026-04-21T11:15:52.219Z",
+        "error": null
+      },
+      {
+        "url": "https://www.skyland.com.bd/g-skill-value-8gb-ddr3-1600mhz-ram",
+        "siteName": "Skyland",
+        "domain": "skyland.com.bd",
+        "price": 4500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "json-ld",
+        "fetchTimeMs": 818,
+        "scrapedAt": "2026-04-21T11:15:52.450Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/gskill-8gb-ddr3-1600mhz-desktop-ram?srsltid=AfmBOoqKxI6ckE7k6Uj0xNTN2xFPrJfakplBKWHnPEikumUuHJIgn7sr",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 4900,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 585,
+        "scrapedAt": "2026-04-21T11:15:52.777Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1524": {
+    "results": [
+      {
+        "url": "https://www.techlandbd.com/virtu-y03-gaming-case",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 4200,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "json-ld",
+        "fetchTimeMs": 173,
+        "scrapedAt": "2026-04-21T11:15:52.392Z",
+        "error": null
+      },
+      {
+        "url": "https://www.perennial.com.bd/virtu-y03w-mesh-tower-white-gaming-pc-case",
+        "siteName": "Perennial",
+        "domain": "perennial.com.bd",
+        "price": 4200,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "meta-tag",
+        "fetchTimeMs": 65,
+        "scrapedAt": "2026-04-21T11:15:52.457Z",
+        "error": null
+      },
+      {
+        "url": "https://www.onixbd.com/virtu-y03-mesh-atx-tower-gaming-case-white",
+        "siteName": "onixbd.com",
+        "domain": "onixbd.com",
+        "price": 4200,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 488,
+        "scrapedAt": "2026-04-21T11:15:52.938Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1527": {
+    "results": [
+      {
+        "url": "https://www.perennial.com.bd/oreton-lpx-8gb-3200mhz-ddr4-desktop-ram",
+        "siteName": "Perennial",
+        "domain": "perennial.com.bd",
+        "price": 8500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "meta-tag",
+        "fetchTimeMs": 22,
+        "scrapedAt": "2026-04-21T11:15:52.720Z",
+        "error": null
+      },
+      {
+        "url": "https://www.onixbd.com/oreton-8gb-3200mhz-ddr4-desktop-ram",
+        "siteName": "onixbd.com",
+        "domain": "onixbd.com",
+        "price": 8500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 424,
+        "scrapedAt": "2026-04-21T11:15:53.184Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1532": {
+    "results": [
+      {
+        "url": "https://www.ultratech.com.bd/revenger-woodpecker-argb-gaming-casing",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 3700,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 190,
+        "scrapedAt": "2026-04-21T11:15:52.967Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/revenger-woodpecker-argb-gaming-casing",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 3700,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 227,
+        "scrapedAt": "2026-04-21T11:15:53.165Z",
+        "error": null
+      },
+      {
+        "url": "https://www.skyland.com.bd/revenger-woodpecker-argb-gaming-desktop-case",
+        "siteName": "Skyland",
+        "domain": "skyland.com.bd",
+        "price": 3800,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 773,
+        "scrapedAt": "2026-04-21T11:15:53.740Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1551": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/g-skill-trident-z-16gb-rgb-desktop-ram",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 19900,
+        "originalPrice": 20000,
+        "discountPrice": 19900,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 148,
+        "scrapedAt": "2026-04-21T11:15:53.313Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ultratech.com.bd/gskill-trident-z-16gb-ddr4-3200mhz-rgb-ram",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 20200,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 182,
+        "scrapedAt": "2026-04-21T11:15:53.366Z",
+        "error": null
+      },
+      {
+        "url": "https://www.creatus.com.bd/g-skill-trident-z-rgb-16gb-ddr4-3200mhz-desktop-ram",
+        "siteName": "creatus.com.bd",
+        "domain": "creatus.com.bd",
+        "price": 15,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 516,
+        "scrapedAt": "2026-04-21T11:15:53.882Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/g.skill-trident-z-rgb-16gb-ddr4-desktop-ram",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 16300,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 649,
+        "scrapedAt": "2026-04-21T11:15:53.962Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1597": {
+    "results": [
+      {
+        "url": "https://www.techlandbd.com/couger-omnyx-atx-mid-tower-gaming-casing",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 16000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 293,
+        "scrapedAt": "2026-04-21T11:15:54.033Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ultratech.com.bd/cougar-omnyx-argb-mid-tower-casing",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 16200,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 207,
+        "scrapedAt": "2026-04-21T11:15:54.170Z",
+        "error": null
+      },
+      {
+        "url": "https://www.startech.com.bd/cougar-omnyx-mid-tower-casing",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 16000,
+        "originalPrice": 17000,
+        "discountPrice": 16000,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 345,
+        "scrapedAt": "2026-04-21T11:15:54.227Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/cougar-omnyx-argb-gaming-desktop-case",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 16500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 1334,
+        "scrapedAt": "2026-04-21T11:15:55.367Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1675": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/xtreme-d777b-mid-tower-casing",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 7100,
+        "originalPrice": 8000,
+        "discountPrice": 7100,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 162,
+        "scrapedAt": "2026-04-21T11:15:54.352Z",
+        "error": null
+      },
+      {
+        "url": "https://www.rokomari.com/electronics/531043/xtreme-d777b-with-7-inch-lcd-screen-display-tempered-glass-black-case",
+        "siteName": "rokomari.com",
+        "domain": "rokomari.com",
+        "price": 10199,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 453,
+        "scrapedAt": "2026-04-21T11:15:54.680Z",
+        "error": null
+      },
+      {
+        "url": "https://www.skyland.com.bd/xtreme-d777b-mid-tower-casing",
+        "siteName": "Skyland",
+        "domain": "skyland.com.bd",
+        "price": 8000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 654,
+        "scrapedAt": "2026-04-21T11:15:55.006Z",
+        "error": null
+      },
+      {
+        "url": "https://smartbd.com/product/xtreme-d777b-mid-tower-casing-with-7-inch-display/",
+        "siteName": "Smart BD",
+        "domain": "smartbd.com",
+        "price": 144000,
+        "originalPrice": 235000,
+        "discountPrice": 144000,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "generic-bdt",
+        "fetchTimeMs": 994,
+        "scrapedAt": "2026-04-21T11:15:55.674Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/xtreme-d777b-mid-tower-atx-gaming-desktop-casing",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 7290,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 1331,
+        "scrapedAt": "2026-04-21T11:15:56.337Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1676": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/xtreme-xjogos-cf30r-3-rgb-casing-fan",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 1500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "meta-tag",
+        "fetchTimeMs": 160,
+        "scrapedAt": "2026-04-21T11:15:55.527Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/xtreme-xjogos-cf30r-3-120mm-3xfan-rgb-fan",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 1000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 201,
+        "scrapedAt": "2026-04-21T11:15:55.875Z",
+        "error": null
+      },
+      {
+        "url": "https://www.creatus.com.bd/xtreme-xjogos-cf30r-3-rgb-casing-fan",
+        "siteName": "creatus.com.bd",
+        "domain": "creatus.com.bd",
+        "price": 1,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 350,
+        "scrapedAt": "2026-04-21T11:15:56.225Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/xtreme-xjogos-cf30r-3-120mm-rgb-tri-color-casing-cooling-fan",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 50,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "site-pattern",
+        "fetchTimeMs": 852,
+        "scrapedAt": "2026-04-21T11:15:56.379Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1678": {
+    "results": [
+      {
+        "url": "https://www.ultratech.com.bd/value-top-aunix-81f4w-gaming-case",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 4150,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 195,
+        "scrapedAt": "2026-04-21T11:15:56.532Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/value-top-aunix-81f4w-atx-argb-gaming-case",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 3950,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 222,
+        "scrapedAt": "2026-04-21T11:15:56.601Z",
+        "error": null
+      },
+      {
+        "url": "https://www.skyland.com.bd/value-top-aunix-81f4w-atx-argb-gaming-case",
+        "siteName": "Skyland",
+        "domain": "skyland.com.bd",
+        "price": 3950,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 11476,
+        "scrapedAt": "2026-04-21T11:16:07.701Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1694": {
+    "results": [
+      {
+        "url": "https://www.pchouse.com.bd/thermalright-royal-pretor-130-ultra-white-cpu-cooler",
+        "siteName": "pchouse.com.bd",
+        "domain": "pchouse.com.bd",
+        "price": 7500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 121,
+        "scrapedAt": "2026-04-21T11:15:56.722Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/thermalright-royal-pretor-130-cpu-air-cooler",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 6500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 866,
+        "scrapedAt": "2026-04-21T11:15:57.548Z",
+        "error": null
+      },
+      {
+        "url": "https://www.skyland.com.bd/thermalright-royal-pretor-130-cpu-air-cooler",
+        "siteName": "Skyland",
+        "domain": "skyland.com.bd",
+        "price": 6700,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 11097,
+        "scrapedAt": "2026-04-21T11:16:08.645Z",
+        "error": null
+      },
+      {
+        "url": "https://computermania.com.bd/product/thermalright-royal-pretor-130-cpu-cooler/",
+        "siteName": "computermania.com.bd",
+        "domain": "computermania.com.bd",
+        "price": null,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "failed",
+        "fetchTimeMs": 15797,
+        "scrapedAt": "2026-04-21T11:16:12.519Z",
+        "error": "All fetch methods failed for https://computermania.com.bd/product/thermalright-royal-pretor-130-cpu-cooler/. Attempts: Node https: HTTP 403 | curl: challenge page | native fetch: HTTP 403 | playwright: challenge page"
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1695": {
+    "results": [
+      {
+        "url": "https://test.skyland.com.bd/thermalright-royal-pretor-130-dual-tower-black-cpu-air-cooler",
+        "siteName": "Skyland",
+        "domain": "skyland.com.bd",
+        "price": 9500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 724,
+        "scrapedAt": "2026-04-21T11:16:08.425Z",
+        "error": null
+      },
+      {
+        "url": "https://www.pchouse.com.bd/thermalright-royal-pretor-130-ultra-black-cpu-cooler",
+        "siteName": "pchouse.com.bd",
+        "domain": "pchouse.com.bd",
+        "price": 7500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 131,
+        "scrapedAt": "2026-04-21T11:16:08.776Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/thermalright-royal-pretor-130-black-air-cooler",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 6500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 322,
+        "scrapedAt": "2026-04-21T11:16:09.098Z",
+        "error": null
+      },
+      {
+        "url": "https://potakait.com/thermalright-royal-pretor-130-ultra-cpu-cooler",
+        "siteName": "potakait.com",
+        "domain": "potakait.com",
+        "price": 6200,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 1386,
+        "scrapedAt": "2026-04-21T11:16:09.811Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1696": {
+    "results": [
+      {
+        "url": "https://www.pchouse.com.bd/thermalright-peerless-assassin-140-digital-cpu-cooler",
+        "siteName": "pchouse.com.bd",
+        "domain": "pchouse.com.bd",
+        "price": 7100,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 149,
+        "scrapedAt": "2026-04-21T11:16:09.247Z",
+        "error": null
+      },
+      {
+        "url": "https://www.skyland.com.bd/thermalright-peerless-assassin-140-digital-cpu--cooler",
+        "siteName": "Skyland",
+        "domain": "skyland.com.bd",
+        "price": 7500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 642,
+        "scrapedAt": "2026-04-21T11:16:09.889Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/thermalright-peerless-assassin-140-cpu-cooler",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 6999,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 261,
+        "scrapedAt": "2026-04-21T11:16:10.150Z",
+        "error": null
+      },
+      {
+        "url": "https://potakait.com/thermalright-peerless-assassin-140-digital-cpu--cooler",
+        "siteName": "potakait.com",
+        "domain": "potakait.com",
+        "price": 6500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 411,
+        "scrapedAt": "2026-04-21T11:16:10.222Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1700": {
+    "results": [
+      {
+        "url": "https://www.pchouse.com.bd/thermalright-frost-spirit-140-v3-white-air-cpu-cooler",
+        "siteName": "pchouse.com.bd",
+        "domain": "pchouse.com.bd",
+        "price": 6900,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 96,
+        "scrapedAt": "2026-04-21T11:16:10.246Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ultratech.com.bd/thermalright-frost-spirit-140-v3-white-air-cpu-cooler",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 5500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 246,
+        "scrapedAt": "2026-04-21T11:16:10.468Z",
+        "error": null
+      },
+      {
+        "url": "https://www.startech.com.bd/thermalright-frost-spirit-140-white-v3-cpu-air-cooler",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 6600,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "meta-tag",
+        "fetchTimeMs": 194,
+        "scrapedAt": "2026-04-21T11:16:10.663Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/thermalright-frost-spirit-140-white-v3-cooler",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 5400,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 525,
+        "scrapedAt": "2026-04-21T11:16:10.771Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1874": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/g-skill-trident-z-16gb-heatsink-desktop-ram",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 800,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 138,
+        "scrapedAt": "2026-04-21T11:16:10.909Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/g.skill-trident-z-16gb-ddr4-3200mhz-desktop-ram",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 14800,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 589,
+        "scrapedAt": "2026-04-21T11:16:11.498Z",
+        "error": null
+      },
+      {
+        "url": "https://www.skyland.com.bd/g-skill-trident-z-16gb-heatsink-desktop-ram",
+        "siteName": "Skyland",
+        "domain": "skyland.com.bd",
+        "price": 15500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 788,
+        "scrapedAt": "2026-04-21T11:16:11.559Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1929": {
+    "results": [
+      {
+        "url": "https://www.ultratech.com.bd/pccooler-halo-fgrb-3-in-1-cooling-kit-120mm-fan",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 2500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 181,
+        "scrapedAt": "2026-04-21T11:16:11.679Z",
+        "error": null
+      },
+      {
+        "url": "https://www.pchouse.com.bd/pccooler-halo-fgrb-c120mm-3-in-1-rgb-cooling-fan",
+        "siteName": "pchouse.com.bd",
+        "domain": "pchouse.com.bd",
+        "price": 3080,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 197,
+        "scrapedAt": "2026-04-21T11:16:11.756Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/pccooler-halo-3-in-1-kit",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 2500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "json-ld",
+        "fetchTimeMs": 222,
+        "scrapedAt": "2026-04-21T11:16:11.901Z",
+        "error": null
+      },
+      {
+        "url": "https://www.startech.com.bd/pccooler-halo-fgrb-rgb-cooling-fan",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 2800,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "meta-tag",
+        "fetchTimeMs": 172,
+        "scrapedAt": "2026-04-21T11:16:11.928Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1930": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/revenger-prism-3-3-in-1-case-fan-kit",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 1650,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "meta-tag",
+        "fetchTimeMs": 144,
+        "scrapedAt": "2026-04-21T11:16:12.200Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/revenger-prism3-argb-case-fan",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 1600,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 226,
+        "scrapedAt": "2026-04-21T11:16:12.207Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ultratech.com.bd/revenger-prism-3-argb-fan-kit",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 1700,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 556,
+        "scrapedAt": "2026-04-21T11:16:12.756Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/revenger-prism-3-120mm-argb-black-casing-cooling-fan",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 1700,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 1393,
+        "scrapedAt": "2026-04-21T11:16:13.600Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1937": {
+    "results": [
+      {
+        "url": "https://www.ultratech.com.bd/revenger-eco-200-mini-tower-micro-atx-desktop-casing-white",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 2500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 195,
+        "scrapedAt": "2026-04-21T11:16:12.951Z",
+        "error": null
+      },
+      {
+        "url": "https://www.selltech.com.bd/revenger-eco-200-mini-white-tower-micro-atx-case",
+        "siteName": "Sell Tech BD",
+        "domain": "selltech.com.bd",
+        "price": 2750,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 194,
+        "scrapedAt": "2026-04-21T11:16:13.794Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/revenger-eco-200-mini-tower-white-micro-atx-desktop-casing",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 2600,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 1150,
+        "scrapedAt": "2026-04-21T11:16:14.101Z",
+        "error": null
+      },
+      {
+        "url": "https://www.universal.com.bd/revenger-eco-200-mini-tower-micro-atx-desktop-casing-white",
+        "siteName": "universal.com.bd",
+        "domain": "universal.com.bd",
+        "price": 2550,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 1689,
+        "scrapedAt": "2026-04-21T11:16:14.208Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1938": {
+    "results": [
+      {
+        "url": "https://www.ultratech.com.bd/revenger-eco-200-mini-tower-micro-atx-desktop-casing-black",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 2400,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 253,
+        "scrapedAt": "2026-04-21T11:16:14.047Z",
+        "error": null
+      },
+      {
+        "url": "https://www.startech.com.bd/revenger-eco-200-mini-tower-casing",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 2300,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "meta-tag",
+        "fetchTimeMs": 147,
+        "scrapedAt": "2026-04-21T11:16:14.194Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/revenger-eco-200-mini-tower-micro-atx-case",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 2350,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "json-ld",
+        "fetchTimeMs": 239,
+        "scrapedAt": "2026-04-21T11:16:14.433Z",
+        "error": null
+      },
+      {
+        "url": "https://www.universal.com.bd/revenger-eco-200-mini-tower-micro-atx-desktop-casing",
+        "siteName": "universal.com.bd",
+        "domain": "universal.com.bd",
+        "price": 2450,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 518,
+        "scrapedAt": "2026-04-21T11:16:14.619Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "1947": {
+    "results": [
+      {
+        "url": "https://www.techlandbd.com/msi-b650m-project-zero-am5-micro-atx-motherboard",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 24600,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 280,
+        "scrapedAt": "2026-04-21T11:16:14.786Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ultratech.com.bd/msi-b650m-project-zero-am5-micro-atx-motherboard",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 24500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 224,
+        "scrapedAt": "2026-04-21T11:16:14.843Z",
+        "error": null
+      },
+      {
+        "url": "https://www.startech.com.bd/msi-b650m-project-zero-am5-motherboard",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 24600,
+        "originalPrice": 25500,
+        "discountPrice": 24600,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 143,
+        "scrapedAt": "2026-04-21T11:16:14.986Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/msi-b650m-project-zero-wi-fi-6e-amd-motherboard",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 24900,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 827,
+        "scrapedAt": "2026-04-21T11:16:15.035Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ucc.com.bd/msi-b650m-project-zero-am5-m-atx-motherboard",
+        "siteName": "ucc.com.bd",
+        "domain": "ucc.com.bd",
+        "price": 25500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 341,
+        "scrapedAt": "2026-04-21T11:16:15.127Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "2110": {
+    "results": [
+      {
+        "url": "https://www.ultratech.com.bd/maxsun-challenger-b850m-k-motherboard",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 12200,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 281,
+        "scrapedAt": "2026-04-21T11:16:15.316Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/maxsun-challenger-b850m-k-motherboard",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 13000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 344,
+        "scrapedAt": "2026-04-21T11:16:15.330Z",
+        "error": null
+      },
+      {
+        "url": "https://potakait.com/maxsun-challenger-b850m-k-m-atx-am5-motherboard",
+        "siteName": "potakait.com",
+        "domain": "potakait.com",
+        "price": 13000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 1235,
+        "scrapedAt": "2026-04-21T11:16:16.362Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/maxsun-challenger-b850m-k-ddr5-motherboard",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 200,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "site-pattern",
+        "fetchTimeMs": 1142,
+        "scrapedAt": "2026-04-21T11:16:16.458Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "2245": {
+    "results": [
+      {
+        "url": "https://www.skyland.com.bd/revenger-rv05-atx-case",
+        "siteName": "Skyland",
+        "domain": "skyland.com.bd",
+        "price": 2550,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 799,
+        "scrapedAt": "2026-04-21T11:16:16.129Z",
+        "error": null
+      },
+      {
+        "url": "https://www.selltech.com.bd/revenger-rv05-atx-case",
+        "siteName": "Sell Tech BD",
+        "domain": "selltech.com.bd",
+        "price": 2800,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 164,
+        "scrapedAt": "2026-04-21T11:16:16.293Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/revenger-rv05-atx-case",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 2700,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 285,
+        "scrapedAt": "2026-04-21T11:16:16.578Z",
+        "error": null
+      },
+      {
+        "url": "https://www.universal.com.bd/revenger-rv05-mid-tower-desktop-casing",
+        "siteName": "universal.com.bd",
+        "domain": "universal.com.bd",
+        "price": 4200,
+        "originalPrice": 8400,
+        "discountPrice": 4200,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "generic-bdt",
+        "fetchTimeMs": 459,
+        "scrapedAt": "2026-04-21T11:16:16.821Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "2258": {
+    "results": [
+      {
+        "url": "https://www.ultratech.com.bd/thermalright-tl-c12c-s-x3-cpu-fan-black-argb-casing-cooler",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 2400,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "json-ld",
+        "fetchTimeMs": 594,
+        "scrapedAt": "2026-04-21T11:16:17.053Z",
+        "error": null
+      },
+      {
+        "url": "https://potakait.com/thermalright-tl-c12c-s-x3-argb-casing-cooler",
+        "siteName": "potakait.com",
+        "domain": "potakait.com",
+        "price": 2500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 370,
+        "scrapedAt": "2026-04-21T11:16:17.191Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/thermalright-tl-c12c-s-x3-casing-fan",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 2500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 279,
+        "scrapedAt": "2026-04-21T11:16:17.332Z",
+        "error": null
+      },
+      {
+        "url": "https://www.creatus.com.bd/thermalright-tl-c12c-s-x3-cpu-fan-120mm-black-argb-casing-cooler",
+        "siteName": "creatus.com.bd",
+        "domain": "creatus.com.bd",
+        "price": 2,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 950,
+        "scrapedAt": "2026-04-21T11:16:17.528Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/thermalright-tl-c12c-s-x3-120mm-3-pack-black-argb-casing-cooling-fan",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 50,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "site-pattern",
+        "fetchTimeMs": 795,
+        "scrapedAt": "2026-04-21T11:16:17.986Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "2265": {
+    "results": [
+      {
+        "url": "https://www.pchouse.com.bd/thermalright-tl-m10-casing",
+        "siteName": "pchouse.com.bd",
+        "domain": "pchouse.com.bd",
+        "price": 7500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 169,
+        "scrapedAt": "2026-04-21T11:16:17.697Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/thermalright-tl-m10-mid-tower-case",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 6500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 225,
+        "scrapedAt": "2026-04-21T11:16:17.922Z",
+        "error": null
+      },
+      {
+        "url": "https://www.skyland.com.bd/thermalright-tl-m10-casing",
+        "siteName": "Skyland",
+        "domain": "skyland.com.bd",
+        "price": 6500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 790,
+        "scrapedAt": "2026-04-21T11:16:18.122Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "2266": {
+    "results": [
+      {
+        "url": "https://www.pchouse.com.bd/thermalright-m10-vision-lcd-display-casing-white",
+        "siteName": "pchouse.com.bd",
+        "domain": "pchouse.com.bd",
+        "price": 10900,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 214,
+        "scrapedAt": "2026-04-21T11:16:18.136Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "2305": {
+    "results": [
+      {
+        "url": "https://www.ucc.com.bd/thermaltake-toughpower-gt-1000w-80-plus-gold-power-supply",
+        "siteName": "ucc.com.bd",
+        "domain": "ucc.com.bd",
+        "price": 15900,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 307,
+        "scrapedAt": "2026-04-21T11:16:18.293Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "2309": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/thermaltake-toughair-710-dual-tower-cpu-air-cooler",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 5650,
+        "originalPrice": 5800,
+        "discountPrice": 5650,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 215,
+        "scrapedAt": "2026-04-21T11:16:18.351Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/thermaltake-toughair-710-cpu-cooler",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 5900,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 247,
+        "scrapedAt": "2026-04-21T11:16:18.540Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ultratech.com.bd/thermaltake-toughair-710-dual-tower-cpu-air-cooler",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 8800,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 227,
+        "scrapedAt": "2026-04-21T11:16:18.578Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ucc.com.bd/thermaltake-toughair-710-dual-tower-cpu-air-cooler",
+        "siteName": "ucc.com.bd",
+        "domain": "ucc.com.bd",
+        "price": 5900,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 292,
+        "scrapedAt": "2026-04-21T11:16:18.585Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "2311": {
+    "results": [
+      {
+        "url": "https://www.ultratech.com.bd/thermaltake-toughair-510-cpu-air-cooler",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 4400,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 184,
+        "scrapedAt": "2026-04-21T11:16:18.836Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ucc.com.bd/thermaltake-toughair-510-cpu-air-cooler",
+        "siteName": "ucc.com.bd",
+        "domain": "ucc.com.bd",
+        "price": 5700,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 312,
+        "scrapedAt": "2026-04-21T11:16:18.906Z",
+        "error": null
+      },
+      {
+        "url": "https://www.startech.com.bd/thermaltake-toughair-510-cpu-cooler",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 5650,
+        "originalPrice": 5800,
+        "discountPrice": 5650,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 142,
+        "scrapedAt": "2026-04-21T11:16:18.978Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/thermaltake-toughair510-air-cpu-cooler",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 5800,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 606,
+        "scrapedAt": "2026-04-21T11:16:19.184Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "2776": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/ocpc-xt-ii-ddr4-3200mhz-8gb-ram",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 8400,
+        "originalPrice": 8600,
+        "discountPrice": 8400,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 170,
+        "scrapedAt": "2026-04-21T11:16:19.319Z",
+        "error": null
+      },
+      {
+        "url": "https://www.creatus.com.bd/ocpc-xt-ii-8gb-ddr4-3200mhz-ram",
+        "siteName": "creatus.com.bd",
+        "domain": "creatus.com.bd",
+        "price": 7,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 395,
+        "scrapedAt": "2026-04-21T11:16:19.373Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "3354": {
+    "results": [
+      {
+        "url": "https://www.rokomari.com/product/258717/tomica-regular-76-toyota-prius-phv-gr-sport-white",
+        "siteName": "rokomari.com",
+        "domain": "rokomari.com",
+        "price": 590,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 669,
+        "scrapedAt": "2026-04-21T11:16:19.853Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "3356": {
+    "results": [
+      {
+        "url": "https://opensesame.com.bd/product/tomica-regular-diecast-no-91-6-chevrolet-corvette/",
+        "siteName": "opensesame.com.bd",
+        "domain": "opensesame.com.bd",
+        "price": 188063,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "generic-bdt",
+        "fetchTimeMs": 344,
+        "scrapedAt": "2026-04-21T11:16:19.718Z",
+        "error": null
+      },
+      {
+        "url": "https://www.rokomari.com/product/309379/tomica-regular-diecast-no-91-6-chevrolet-corvette",
+        "siteName": "rokomari.com",
+        "domain": "rokomari.com",
+        "price": 590,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 440,
+        "scrapedAt": "2026-04-21T11:16:19.928Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "3362": {
+    "results": [
+      {
+        "url": "https://potakait.com/nvidia-rtx-pro-6000-blackwell-graphics-card",
+        "siteName": "potakait.com",
+        "domain": "potakait.com",
+        "price": 1300000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 847,
+        "scrapedAt": "2026-04-21T11:16:20.565Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "3383": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/nvidia-rtx-pro-5000-72gb-blackwell-graphics-card",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 753000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "meta-tag",
+        "fetchTimeMs": 147,
+        "scrapedAt": "2026-04-21T11:16:20.000Z",
+        "error": null
+      },
+      {
+        "url": "https://fourstarit.com.bd/nvidia-rtx-pro-5000-72gb-blackwell-gddr7-gpu",
+        "siteName": "fourstarit.com.bd",
+        "domain": "fourstarit.com.bd",
+        "price": 14080,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "generic-bdt",
+        "fetchTimeMs": 554,
+        "scrapedAt": "2026-04-21T11:16:20.482Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "3385": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/nvidia-rtx-pro-5000-blackwell-48gb-graphics-card",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 953000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "meta-tag",
+        "fetchTimeMs": 203,
+        "scrapedAt": "2026-04-21T11:16:20.365Z",
+        "error": null
+      },
+      {
+        "url": "https://fourstarit.com.bd/nvidia-rtx-pro-5000-blackwell-48gb-gddr7-gpu-for-ai--professional-workloads",
+        "siteName": "fourstarit.com.bd",
+        "domain": "fourstarit.com.bd",
+        "price": 14080,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "generic-bdt",
+        "fetchTimeMs": 132,
+        "scrapedAt": "2026-04-21T11:16:20.614Z",
+        "error": null
+      },
+      {
+        "url": "https://www.globalbrand.com.bd/nvidia-rtx-pro-5000-blackwell-48gb-gddr7-graphics-card",
+        "siteName": "Global Brand",
+        "domain": "globalbrand.com.bd",
+        "price": 257938,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "generic-bdt",
+        "fetchTimeMs": 1357,
+        "scrapedAt": "2026-04-21T11:16:21.722Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "3386": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/nvidia-rtx-pro-4500-blackwell-graphics-card",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 548000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "meta-tag",
+        "fetchTimeMs": 173,
+        "scrapedAt": "2026-04-21T11:16:20.738Z",
+        "error": null
+      },
+      {
+        "url": "https://fourstarit.com.bd/nvidia-rtx-pro-4500-blackwell-32gb-gddr7-gpu-for-ai--workstations",
+        "siteName": "fourstarit.com.bd",
+        "domain": "fourstarit.com.bd",
+        "price": null,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "none",
+        "fetchTimeMs": 122,
+        "scrapedAt": "2026-04-21T11:16:20.915Z",
+        "error": null
+      },
+      {
+        "url": "https://www.globalbrand.com.bd/nvidia-rtx-pro-4500-blackwell-32gb-gddr7-graphics-card",
+        "siteName": "Global Brand",
+        "domain": "globalbrand.com.bd",
+        "price": 257938,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "generic-bdt",
+        "fetchTimeMs": 1071,
+        "scrapedAt": "2026-04-21T11:16:21.809Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "3388": {
+    "results": [
+      {
+        "url": "https://fourstarit.com.bd/nvidia-rtx-pro-4000-blackwell-sff-24gb-gddr7-gpu-for-compact-workstations",
+        "siteName": "fourstarit.com.bd",
+        "domain": "fourstarit.com.bd",
+        "price": 8960,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "generic-bdt",
+        "fetchTimeMs": 138,
+        "scrapedAt": "2026-04-21T11:16:21.245Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "3395": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/nvidia-rtx-pro-4000-blackwell-sff-edition-graphics-card",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 209000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "meta-tag",
+        "fetchTimeMs": 158,
+        "scrapedAt": "2026-04-21T11:16:21.403Z",
+        "error": null
+      },
+      {
+        "url": "https://www.startech.com.bd/nvidia-rtx-pro-4000-blackwell-sff-edition-graphics-card",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 209000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "meta-tag",
+        "fetchTimeMs": 144,
+        "scrapedAt": "2026-04-21T11:16:21.866Z",
+        "error": null
+      },
+      {
+        "url": "https://www.globalbrand.com.bd/nvidia-rtx-pro-4000-blackwell-24gb-gddr7-graphics-card",
+        "siteName": "Global Brand",
+        "domain": "globalbrand.com.bd",
+        "price": 257938,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "generic-bdt",
+        "fetchTimeMs": 951,
+        "scrapedAt": "2026-04-21T11:16:22.354Z",
+        "error": null
+      },
+      {
+        "url": "https://www.globalbrand.com.bd/nvidia-rtx-pro-4000-blackwell-24gb-gddr7-graphics-card",
+        "siteName": "Global Brand",
+        "domain": "globalbrand.com.bd",
+        "price": 257938,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "generic-bdt",
+        "fetchTimeMs": 899,
+        "scrapedAt": "2026-04-21T11:16:22.708Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "3400": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/nvidia-rtx-pro-2000-blackwell-graphics-card",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 114000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "meta-tag",
+        "fetchTimeMs": 152,
+        "scrapedAt": "2026-04-21T11:16:22.189Z",
+        "error": null
+      },
+      {
+        "url": "https://fourstarit.com.bd/nvidia-rtx-pro-2000-blackwell-16gb-gddr7-gpu",
+        "siteName": "fourstarit.com.bd",
+        "domain": "fourstarit.com.bd",
+        "price": 4352,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "generic-bdt",
+        "fetchTimeMs": 137,
+        "scrapedAt": "2026-04-21T11:16:22.326Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "3463": {
+    "results": [
+      {
+        "url": "https://www.techlandbd.com/aitc-kingsman-innovator-ddr4-desktop-ram",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 14500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 242,
+        "scrapedAt": "2026-04-21T11:16:22.568Z",
+        "error": null
+      },
+      {
+        "url": "https://potakait.com/aitc-kingsman-gaming-innovator-ddr4-16gb-ram",
+        "siteName": "potakait.com",
+        "domain": "potakait.com",
+        "price": 12999,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 858,
+        "scrapedAt": "2026-04-21T11:16:23.212Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "3574": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/hikvision-hilook-ipc-t221h-dome-ip-camera",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 1900,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "meta-tag",
+        "fetchTimeMs": 163,
+        "scrapedAt": "2026-04-21T11:16:22.731Z",
+        "error": null
+      },
+      {
+        "url": "https://www.applegadgetsbd.com/product/hikvision-hilook-ipc-t221h-2mp-dome-ip-camera",
+        "siteName": "applegadgetsbd.com",
+        "domain": "applegadgetsbd.com",
+        "price": null,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "none",
+        "fetchTimeMs": 122,
+        "scrapedAt": "2026-04-21T11:16:22.853Z",
+        "error": null
+      },
+      {
+        "url": "https://www.trimatrikbd.com/product/Hikvision-HiLook-IPC-T221H-LC-2-MP-Fixed-WDR-Varifocal-IP-Dome-Camera",
+        "siteName": "trimatrikbd.com",
+        "domain": "trimatrikbd.com",
+        "price": 2250,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 468,
+        "scrapedAt": "2026-04-21T11:16:23.176Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/hikvision-ipc-t221h-c-fixed-turret-camera",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 50,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "site-pattern",
+        "fetchTimeMs": 630,
+        "scrapedAt": "2026-04-21T11:16:23.483Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4003": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/asus-rog-crosshair-x870e-dark-hero-motherboard",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 137,
+        "scrapedAt": "2026-04-21T11:16:23.313Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ultratech.com.bd/asus-rog-crosshair-x870e-hero-am5-atx-motherboard",
+        "siteName": "UltraTech",
+        "domain": "ultratech.com.bd",
+        "price": 103000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 622,
+        "scrapedAt": "2026-04-21T11:16:23.834Z",
+        "error": null
+      },
+      {
+        "url": "https://www.globalbrand.com.bd/asus-rog-crosshair-x870e-dark-hero-ryzen-am5-atx-gaming-motherboard",
+        "siteName": "Global Brand",
+        "domain": "globalbrand.com.bd",
+        "price": 113000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "json-ld",
+        "fetchTimeMs": 1035,
+        "scrapedAt": "2026-04-21T11:16:24.348Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4011": {
+    "results": [
+      {
+        "url": "https://www.applegadgetsbd.com/product/anker-soundcore-liberty-5-nc-tws-earbuds",
+        "siteName": "applegadgetsbd.com",
+        "domain": "applegadgetsbd.com",
+        "price": null,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "none",
+        "fetchTimeMs": 118,
+        "scrapedAt": "2026-04-21T11:16:23.601Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/anker-soundcore-liberty-5-nc-earbuds-black",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 7380,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 247,
+        "scrapedAt": "2026-04-21T11:16:24.081Z",
+        "error": null
+      },
+      {
+        "url": "https://anker.com.bd/product/soundcore-liberty-5%EF%BD%9Cnoise-cancelling-earbuds-with-dolby-audio/",
+        "siteName": "anker.com.bd",
+        "domain": "anker.com.bd",
+        "price": 8690,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 4026,
+        "scrapedAt": "2026-04-21T11:16:27.627Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4020": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/anker-soundcore-r50i-true-wireless-earbuds",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 1470,
+        "originalPrice": 1599,
+        "discountPrice": 1470,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 149,
+        "scrapedAt": "2026-04-21T11:16:24.230Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/anker-soundcore-r50i-white-earbuds",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 1500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 280,
+        "scrapedAt": "2026-04-21T11:16:24.510Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4021": {
+    "results": [
+      {
+        "url": "https://www.applegadgetsbd.com/product/anker-soundcore-a20i-earphone-tws-b2b",
+        "siteName": "applegadgetsbd.com",
+        "domain": "applegadgetsbd.com",
+        "price": null,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "none",
+        "fetchTimeMs": 97,
+        "scrapedAt": "2026-04-21T11:16:24.445Z",
+        "error": null
+      },
+      {
+        "url": "https://www.startech.com.bd/anker-soundcore-a20i-true-wireless-earbuds",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 2190,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "meta-tag",
+        "fetchTimeMs": 151,
+        "scrapedAt": "2026-04-21T11:16:24.661Z",
+        "error": null
+      },
+      {
+        "url": "https://anker.com.bd/product/soundcore-a20i-by-anker/",
+        "siteName": "anker.com.bd",
+        "domain": "anker.com.bd",
+        "price": 2190,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 3677,
+        "scrapedAt": "2026-04-21T11:16:28.122Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4029": {
+    "results": [
+      {
+        "url": "https://www.applegadgetsbd.com/product/anker-soundcore-p25i-tws-earbuds",
+        "siteName": "applegadgetsbd.com",
+        "domain": "applegadgetsbd.com",
+        "price": null,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "none",
+        "fetchTimeMs": 137,
+        "scrapedAt": "2026-04-21T11:16:27.764Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/anker-soundcore-life-p25i-true-wireless-earbuds",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 1850,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "json-ld",
+        "fetchTimeMs": 274,
+        "scrapedAt": "2026-04-21T11:16:28.038Z",
+        "error": null
+      },
+      {
+        "url": "https://www.rokomari.com/electronics/435472/anker-soundcore-life-p25i-true-wireless-earbuds",
+        "siteName": "rokomari.com",
+        "domain": "rokomari.com",
+        "price": 1849,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 426,
+        "scrapedAt": "2026-04-21T11:16:28.464Z",
+        "error": null
+      },
+      {
+        "url": "https://anker.com.bd/product/soundcore-anker-p25i-true-wireless-in-ear-earbuds/",
+        "siteName": "anker.com.bd",
+        "domain": "anker.com.bd",
+        "price": 2190,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 4267,
+        "scrapedAt": "2026-04-21T11:16:29.022Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4081": {
+    "results": [
+      {
+        "url": "https://dexgen.com.bd/product/huntkey-powerlink-mfi-usb-c-to-lightning-fast-charging-cable-braided/",
+        "siteName": "dexgen.com.bd",
+        "domain": "dexgen.com.bd",
+        "price": 1890,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 186,
+        "scrapedAt": "2026-04-21T11:16:28.650Z",
+        "error": null
+      },
+      {
+        "url": "https://shop.deximpo.com.bd/product/huntkey-usb-c-to-lightning-fast-charging-cable/",
+        "siteName": "shop.deximpo.com.bd",
+        "domain": "shop.deximpo.com.bd",
+        "price": 1890,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 4272,
+        "scrapedAt": "2026-04-21T11:16:32.394Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4161": {
+    "results": [
+      {
+        "url": "https://transcomdigital.com/haier-inverter-pro-ac-hsu-19-uv-cool-1_6-ton",
+        "siteName": "transcomdigital.com",
+        "domain": "transcomdigital.com",
+        "price": 60900,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "json-ld",
+        "fetchTimeMs": 456,
+        "scrapedAt": "2026-04-21T11:16:29.106Z",
+        "error": null
+      },
+      {
+        "url": "https://www.pickaboo.com/product-detail/haier-1-6-ton-uvcool-inverter-pro-dc-inverter-air-conditioner-hsu-19uvcool-inv-pro",
+        "siteName": "pickaboo.com",
+        "domain": "pickaboo.com",
+        "price": 59500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "json-ld",
+        "fetchTimeMs": 488,
+        "scrapedAt": "2026-04-21T11:16:29.510Z",
+        "error": null
+      },
+      {
+        "url": "https://othoba.com/haier-16-ton-split-type-inverter-pro-air-conditioner-hsu-19uvcoolinvpro",
+        "siteName": "othoba.com",
+        "domain": "othoba.com",
+        "price": 77990,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 705,
+        "scrapedAt": "2026-04-21T11:16:29.811Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4162": {
+    "results": [
+      {
+        "url": "https://www.haier.com/bd/air-conditioners/hsu-12uvcool-inv--pro-.shtml",
+        "siteName": "haier.com",
+        "domain": "haier.com",
+        "price": 57941,
+        "originalPrice": 60990,
+        "discountPrice": 57941,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "generic-bdt",
+        "fetchTimeMs": 259,
+        "scrapedAt": "2026-04-21T11:16:29.769Z",
+        "error": null
+      },
+      {
+        "url": "https://www.startech.com.bd/haier-1-ton-inverter-ac-hsu-12uvcool",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 46800,
+        "originalPrice": 56990,
+        "discountPrice": 46800,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 170,
+        "scrapedAt": "2026-04-21T11:16:29.981Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/haier-uv-cool-inverter-pro-hsu-12uvcool-air-conditioner",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 47000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 250,
+        "scrapedAt": "2026-04-21T11:16:30.019Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4163": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/haier-candy-c32k7g-32-inch-android-tv",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 20900,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "meta-tag",
+        "fetchTimeMs": 135,
+        "scrapedAt": "2026-04-21T11:16:30.253Z",
+        "error": null
+      },
+      {
+        "url": "https://www.haier.com/bd/tvs/c32k7g.shtml",
+        "siteName": "haier.com",
+        "domain": "haier.com",
+        "price": 19500,
+        "originalPrice": 20900,
+        "discountPrice": 19500,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "generic-bdt",
+        "fetchTimeMs": 724,
+        "scrapedAt": "2026-04-21T11:16:30.705Z",
+        "error": null
+      },
+      {
+        "url": "https://bme.com.bd/haier-candy-c32k7g-32-dled-hd-smart-android-tv",
+        "siteName": "bme.com.bd",
+        "domain": "bme.com.bd",
+        "price": 21900,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "meta-tag",
+        "fetchTimeMs": 818,
+        "scrapedAt": "2026-04-21T11:16:31.071Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4165": {
+    "results": [
+      {
+        "url": "https://www.sumashtech.com/product/haier-2-ton-antirustcool-inverter-pro-ac",
+        "siteName": "sumashtech.com",
+        "domain": "sumashtech.com",
+        "price": 73999,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 598,
+        "scrapedAt": "2026-04-21T11:16:31.303Z",
+        "error": null
+      },
+      {
+        "url": "https://othoba.com/haier-2-ton-antirustcool-inverter-pro-air-conditionerhsu-24antirustcool-invpro-nue-official-home-appliance-729897",
+        "siteName": "othoba.com",
+        "domain": "othoba.com",
+        "price": 92990,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 698,
+        "scrapedAt": "2026-04-21T11:16:31.769Z",
+        "error": null
+      },
+      {
+        "url": "https://www.startech.com.bd/haier-2-ton-antirustcool-inverter-pro-ac",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 67000,
+        "originalPrice": 80000,
+        "discountPrice": 67000,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 143,
+        "scrapedAt": "2026-04-21T11:16:31.912Z",
+        "error": null
+      },
+      {
+        "url": "https://www.haier.com/bd/air-conditioners/hsu-24antirustcool-inv--pro-.shtml",
+        "siteName": "haier.com",
+        "domain": "haier.com",
+        "price": 88341,
+        "originalPrice": 92990,
+        "discountPrice": 88341,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "generic-bdt",
+        "fetchTimeMs": 824,
+        "scrapedAt": "2026-04-21T11:16:32.736Z",
+        "error": null
+      },
+      {
+        "url": "https://wholesaleelectronics.com.bd/product/haier-2-ton-antirustcool-inverter-pro-ac-hsu-24antirustcool-invpro/",
+        "siteName": "wholesaleelectronics.com.bd",
+        "domain": "wholesaleelectronics.com.bd",
+        "price": 56990,
+        "originalPrice": 145900,
+        "discountPrice": 56990,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "generic-bdt",
+        "fetchTimeMs": 5646,
+        "scrapedAt": "2026-04-21T11:16:36.949Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4166": {
+    "results": [
+      {
+        "url": "https://www.techlandbd.com/haier-h43k800ux-43-inch-4k-hdr-google-smart-tv",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 47900,
+        "originalPrice": 92900,
+        "discountPrice": 47900,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "generic-bdt",
+        "fetchTimeMs": 271,
+        "scrapedAt": "2026-04-21T11:16:32.665Z",
+        "error": null
+      },
+      {
+        "url": "https://www.startech.com.bd/haier-h43k800ux-43-inch-4k-google-tv",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 45900,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "meta-tag",
+        "fetchTimeMs": 165,
+        "scrapedAt": "2026-04-21T11:16:32.901Z",
+        "error": null
+      },
+      {
+        "url": "https://www.haier.com/bd/tvs/h43k800ux.shtml",
+        "siteName": "haier.com",
+        "domain": "haier.com",
+        "price": 39900,
+        "originalPrice": 45900,
+        "discountPrice": 39900,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "generic-bdt",
+        "fetchTimeMs": 86,
+        "scrapedAt": "2026-04-21T11:16:32.987Z",
+        "error": null
+      },
+      {
+        "url": "https://wholesaleelectronics.com.bd/product/haier-43-4k-google-tv-h43k800ux/",
+        "siteName": "wholesaleelectronics.com.bd",
+        "domain": "wholesaleelectronics.com.bd",
+        "price": 7700,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "generic-bdt",
+        "fetchTimeMs": 4645,
+        "scrapedAt": "2026-04-21T11:16:37.310Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4167": {
+    "results": [
+      {
+        "url": "https://www.ryans.com/haier-h43k800fx-43-inch-fhd-google-tv",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 50,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "site-pattern",
+        "fetchTimeMs": 1945,
+        "scrapedAt": "2026-04-21T11:16:34.932Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/haier-h43k800fx-tv",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 29900,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "json-ld",
+        "fetchTimeMs": 283,
+        "scrapedAt": "2026-04-21T11:16:35.215Z",
+        "error": null
+      },
+      {
+        "url": "https://motionview.com.bd/product/haier-h43k800fx-43-inch-fhd-google-tv",
+        "siteName": "motionview.com.bd",
+        "domain": "motionview.com.bd",
+        "price": 29999,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "json-ld",
+        "fetchTimeMs": 1253,
+        "scrapedAt": "2026-04-21T11:16:36.468Z",
+        "error": null
+      },
+      {
+        "url": "https://www.startech.com.bd/haier-h43k800fx-43-inch-fhd-android-smart-tv",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 39900,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "meta-tag",
+        "fetchTimeMs": 155,
+        "scrapedAt": "2026-04-21T11:16:36.623Z",
+        "error": null
+      },
+      {
+        "url": "https://www.haier.com/bd/tvs/h43k800fx.shtml",
+        "siteName": "haier.com",
+        "domain": "haier.com",
+        "price": 34900,
+        "originalPrice": 39900,
+        "discountPrice": 34900,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "generic-bdt",
+        "fetchTimeMs": 98,
+        "scrapedAt": "2026-04-21T11:16:36.721Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4168": {
+    "results": [
+      {
+        "url": "https://www.haier.com/bd/air-conditioners/hsu-19antirustcool-inv--pro-.shtml",
+        "siteName": "haier.com",
+        "domain": "haier.com",
+        "price": 72191,
+        "originalPrice": 75990,
+        "discountPrice": 72191,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "generic-bdt",
+        "fetchTimeMs": 80,
+        "scrapedAt": "2026-04-21T11:16:37.029Z",
+        "error": null
+      },
+      {
+        "url": "https://www.startech.com.bd/haier-1-6-ton-antirustcool-inverter-pro-ac",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 55500,
+        "originalPrice": 68000,
+        "discountPrice": 55500,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 194,
+        "scrapedAt": "2026-04-21T11:16:37.223Z",
+        "error": null
+      },
+      {
+        "url": "https://www.bestelectronics.com.bd/home-appliances/air-conditioner/haier-antirustcool-inverter-pro-hsu-19-antirustcool-inv-pro-air-conditioner/",
+        "siteName": "bestelectronics.com.bd",
+        "domain": "bestelectronics.com.bd",
+        "price": null,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "failed",
+        "fetchTimeMs": 3413,
+        "scrapedAt": "2026-04-21T11:16:40.134Z",
+        "error": "All fetch methods failed for https://www.bestelectronics.com.bd/home-appliances/air-conditioner/haier-antirustcool-inverter-pro-hsu-19-antirustcool-inv-pro-air-conditioner/. Attempts: Node https: HTTP 403 | curl: challenge page | native fetch: HTTP 403 | playwright: challenge page"
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4169": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/haier-1-ton-antirustcool-inverter-pro-ac",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 45000,
+        "originalPrice": 55000,
+        "discountPrice": 45000,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 158,
+        "scrapedAt": "2026-04-21T11:16:37.496Z",
+        "error": null
+      },
+      {
+        "url": "https://www.sumashtech.com/product/haier-1-ton-antirustcool-inverter-pro-ac",
+        "siteName": "sumashtech.com",
+        "domain": "sumashtech.com",
+        "price": 46999,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 295,
+        "scrapedAt": "2026-04-21T11:16:37.791Z",
+        "error": null
+      },
+      {
+        "url": "https://www.haier.com/bd/air-conditioners/hsu-12antirustcool-inv--pro-.shtml",
+        "siteName": "haier.com",
+        "domain": "haier.com",
+        "price": 56041,
+        "originalPrice": 58990,
+        "discountPrice": 56041,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "generic-bdt",
+        "fetchTimeMs": 853,
+        "scrapedAt": "2026-04-21T11:16:38.644Z",
+        "error": null
+      },
+      {
+        "url": "https://www.pickaboo.com/product-detail/haier-1-ton-antirustcool-inverter-pro-wi-fi-control-air-conditioner-hsu-12antirustcool-inv-pro",
+        "siteName": "pickaboo.com",
+        "domain": "pickaboo.com",
+        "price": 46990,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "json-ld",
+        "fetchTimeMs": 1479,
+        "scrapedAt": "2026-04-21T11:16:38.789Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4170": {
+    "results": [
+      {
+        "url": "https://motionview.com.bd/product/haier-h32k800x-32-inch-bezel-less-google-tv",
+        "siteName": "motionview.com.bd",
+        "domain": "motionview.com.bd",
+        "price": 21590,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "json-ld",
+        "fetchTimeMs": 929,
+        "scrapedAt": "2026-04-21T11:16:39.718Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/haier-h32k800x-32-inch-bezel-less-led-tv",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 22000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "json-ld",
+        "fetchTimeMs": 263,
+        "scrapedAt": "2026-04-21T11:16:39.981Z",
+        "error": null
+      },
+      {
+        "url": "https://www.haier.com/bd/tvs/h32k800x.shtml",
+        "siteName": "haier.com",
+        "domain": "haier.com",
+        "price": 22900,
+        "originalPrice": 26900,
+        "discountPrice": 22900,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "generic-bdt",
+        "fetchTimeMs": 87,
+        "scrapedAt": "2026-04-21T11:16:40.068Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/haier-h32k800x-32-inch-hd-bezel-less-google-tv",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 50,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "site-pattern",
+        "fetchTimeMs": 1471,
+        "scrapedAt": "2026-04-21T11:16:40.115Z",
+        "error": null
+      },
+      {
+        "url": "https://www.startech.com.bd/haier-h32k800x-32-inch-bezel-less-hd-google-tv",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 26900,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "meta-tag",
+        "fetchTimeMs": 135,
+        "scrapedAt": "2026-04-21T11:16:40.203Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4171": {
+    "results": [
+      {
+        "url": "https://www.haier.com/bd/air-conditioners/hsu-24cleancool-inv--pro-.shtml",
+        "siteName": "haier.com",
+        "domain": "haier.com",
+        "price": 87391,
+        "originalPrice": 91990,
+        "discountPrice": 87391,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "generic-bdt",
+        "fetchTimeMs": 888,
+        "scrapedAt": "2026-04-21T11:16:41.179Z",
+        "error": null
+      },
+      {
+        "url": "https://www.pickaboo.com/product-detail/haier-2-ton-cleancool-inverter-pro-air-conditioner-hsu-24cleancool-inv-pro",
+        "siteName": "pickaboo.com",
+        "domain": "pickaboo.com",
+        "price": 69990,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "json-ld",
+        "fetchTimeMs": 1184,
+        "scrapedAt": "2026-04-21T11:16:41.318Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4172": {
+    "results": [
+      {
+        "url": "https://www.haier.com/bd/tvs/h32d2ms.shtml",
+        "siteName": "haier.com",
+        "domain": "haier.com",
+        "price": 18900,
+        "originalPrice": 19900,
+        "discountPrice": 18900,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "generic-bdt",
+        "fetchTimeMs": 79,
+        "scrapedAt": "2026-04-21T11:16:40.370Z",
+        "error": null
+      },
+      {
+        "url": "https://www.startech.com.bd/haier-h32d2m-32-hd-led-television",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 20900,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "meta-tag",
+        "fetchTimeMs": 139,
+        "scrapedAt": "2026-04-21T11:16:40.509Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/haier-h32d2m-32-inch-hd-led-television",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 15900,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "json-ld",
+        "fetchTimeMs": 273,
+        "scrapedAt": "2026-04-21T11:16:40.782Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4173": {
+    "results": [
+      {
+        "url": "https://www.pickaboo.com/product-detail/haier-1-6-ton-inverter-air-conditioner-hsu-19cleancool-inv-pro",
+        "siteName": "pickaboo.com",
+        "domain": "pickaboo.com",
+        "price": 53390,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "json-ld",
+        "fetchTimeMs": 493,
+        "scrapedAt": "2026-04-21T11:16:41.275Z",
+        "error": null
+      },
+      {
+        "url": "https://www.haier.com/bd/air-conditioners/hsu-19cleancool-inv--pro-.shtml",
+        "siteName": "haier.com",
+        "domain": "haier.com",
+        "price": 71241,
+        "originalPrice": 74990,
+        "discountPrice": 71241,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "generic-bdt",
+        "fetchTimeMs": 151,
+        "scrapedAt": "2026-04-21T11:16:41.426Z",
+        "error": null
+      },
+      {
+        "url": "https://www.applegadgetsbd.com/product/haier-hsu-19cleancool-inverter-pro-ac",
+        "siteName": "applegadgetsbd.com",
+        "domain": "applegadgetsbd.com",
+        "price": null,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "none",
+        "fetchTimeMs": 105,
+        "scrapedAt": "2026-04-21T11:16:41.531Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/haier-hsu-19cleancool-air-conditioner",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 54000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 288,
+        "scrapedAt": "2026-04-21T11:16:41.606Z",
+        "error": null
+      },
+      {
+        "url": "https://www.startech.com.bd/haier-1-6-ton-cleancool-ac",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 54500,
+        "originalPrice": 68990,
+        "discountPrice": 54500,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 133,
+        "scrapedAt": "2026-04-21T11:16:41.664Z",
+        "error": null
+      },
+      {
+        "url": "https://www.bestelectronics.com.bd/home-appliances/air-conditioner/haier-hsu-19cleancoolinvpro-1-5-ton-inverter-air-conditioner/",
+        "siteName": "bestelectronics.com.bd",
+        "domain": "bestelectronics.com.bd",
+        "price": null,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "failed",
+        "fetchTimeMs": 2280,
+        "scrapedAt": "2026-04-21T11:16:43.459Z",
+        "error": "All fetch methods failed for https://www.bestelectronics.com.bd/home-appliances/air-conditioner/haier-hsu-19cleancoolinvpro-1-5-ton-inverter-air-conditioner/. Attempts: Node https: HTTP 403 | curl: challenge page | native fetch: HTTP 403 | playwright: challenge page"
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4174": {
+    "results": [
+      {
+        "url": "https://www.pickaboo.com/product-detail/haier-1-ton-cleancool-inverter-air-conditioner-hsu-12cleancool",
+        "siteName": "pickaboo.com",
+        "domain": "pickaboo.com",
+        "price": 42990,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "json-ld",
+        "fetchTimeMs": 278,
+        "scrapedAt": "2026-04-21T11:16:41.942Z",
+        "error": null
+      },
+      {
+        "url": "https://www.haier.com/bd/air-conditioners/hsu-12cleancool-inv--pro-.shtml",
+        "siteName": "haier.com",
+        "domain": "haier.com",
+        "price": 55091,
+        "originalPrice": 57990,
+        "discountPrice": 55091,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "generic-bdt",
+        "fetchTimeMs": 881,
+        "scrapedAt": "2026-04-21T11:16:42.823Z",
+        "error": null
+      },
+      {
+        "url": "https://dazzle.com.bd/product/haier-hsu-12-clean-cool-inverter-pro-air-conditioner-1-ton-price-in-bangladesh",
+        "siteName": "dazzle.com.bd",
+        "domain": "dazzle.com.bd",
+        "price": 41990,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 1497,
+        "scrapedAt": "2026-04-21T11:16:43.103Z",
+        "error": null
+      },
+      {
+        "url": "https://www.applegadgetsbd.com/product/haier-hsu-12cleancool-inverter-pro-ac",
+        "siteName": "applegadgetsbd.com",
+        "domain": "applegadgetsbd.com",
+        "price": null,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "none",
+        "fetchTimeMs": 100,
+        "scrapedAt": "2026-04-21T11:16:43.203Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/haier-hsu-12cleancool-inv-pro-1-ton-split-ac-official",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 47990,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 3312,
+        "scrapedAt": "2026-04-21T11:16:46.135Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4175": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/haier-hsu-24energycool-inv-pro-2-ton-energycool-inverter-pro-split-ac",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": null,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "none",
+        "fetchTimeMs": 230,
+        "scrapedAt": "2026-04-21T11:16:43.433Z",
+        "error": null
+      },
+      {
+        "url": "https://www.startech.com.bd/haier-2-ton-inverter-ac",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 67500,
+        "originalPrice": 80990,
+        "discountPrice": 67500,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 143,
+        "scrapedAt": "2026-04-21T11:16:43.649Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/haier-hsu-24energycoolinvqe-2-ton-energycool-inverter-ac",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 69000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 265,
+        "scrapedAt": "2026-04-21T11:16:43.724Z",
+        "error": null
+      },
+      {
+        "url": "https://www.haier.com/bd/air-conditioners/hsu-24energycool-inv--pro-.shtml",
+        "siteName": "haier.com",
+        "domain": "haier.com",
+        "price": 87391,
+        "originalPrice": 91990,
+        "discountPrice": 87391,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "generic-bdt",
+        "fetchTimeMs": 793,
+        "scrapedAt": "2026-04-21T11:16:44.442Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/haier-hsu-24energycool-inv-pro-2-ton-energycool-inverter-pro-split-ac",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 55000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "site-pattern",
+        "fetchTimeMs": 2821,
+        "scrapedAt": "2026-04-21T11:16:46.545Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4176": {
+    "results": [
+      {
+        "url": "https://www.pickaboo.com/product-detail/haier-1-6-ton-energycool-inverter-pro-air-conditioner-hsu-19energycool-inv-pro?srsltid=AfmBOorm1GdsOxr8oietO4AEHc_eo3hQzzLL8yY7aLqAQxPzUCFdUnh9",
+        "siteName": "pickaboo.com",
+        "domain": "pickaboo.com",
+        "price": 55990,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "json-ld",
+        "fetchTimeMs": 480,
+        "scrapedAt": "2026-04-21T11:16:44.922Z",
+        "error": null
+      },
+      {
+        "url": "https://othoba.com/haier-15-ton-18000btu-energycool-inverter-pro-hsu-19energycool-invpro-best-price?srsltid=AfmBOopxJOeI0pQf7mBP634OyoN7yd1NIGjIRS4lXWz6j74uuO891qpV",
+        "siteName": "othoba.com",
+        "domain": "othoba.com",
+        "price": 74990,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 794,
+        "scrapedAt": "2026-04-21T11:16:45.716Z",
+        "error": null
+      },
+      {
+        "url": "https://www.startech.com.bd/haier-1-6-ton-energycool-ac",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 55000,
+        "originalPrice": 74990,
+        "discountPrice": 55000,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 133,
+        "scrapedAt": "2026-04-21T11:16:45.849Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4177": {
+    "results": [
+      {
+        "url": "https://www.haier.com/bd/washing-machines/hwd140-bpd14387gnu1.shtml",
+        "siteName": "haier.com",
+        "domain": "haier.com",
+        "price": 109155,
+        "originalPrice": 114900,
+        "discountPrice": 109155,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "generic-bdt",
+        "fetchTimeMs": 97,
+        "scrapedAt": "2026-04-21T11:16:45.946Z",
+        "error": null
+      },
+      {
+        "url": "https://electronicsbangladesh.com/product/haier-14-plus-8-kg-all-in-one-washer-dryer-washing-machine",
+        "siteName": "electronicsbangladesh.com",
+        "domain": "electronicsbangladesh.com",
+        "price": 21990,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "generic-bdt",
+        "fetchTimeMs": 264,
+        "scrapedAt": "2026-04-21T11:16:46.399Z",
+        "error": null
+      },
+      {
+        "url": "https://www.startech.com.bd/haier-hwd140-bpd14387gnu1-washing-machine",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 98000,
+        "originalPrice": 114900,
+        "discountPrice": 98000,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 154,
+        "scrapedAt": "2026-04-21T11:16:46.553Z",
+        "error": null
+      },
+      {
+        "url": "https://www.tvhut.com.bd/haier-14-kg-all-in-one-washer-dryer-hwd140-bpd14387gnu1",
+        "siteName": "tvhut.com.bd",
+        "domain": "tvhut.com.bd",
+        "price": 108900,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 1089,
+        "scrapedAt": "2026-04-21T11:16:47.035Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4192": {
+    "results": [
+      {
+        "url": "https://www.haier.com/bd/washing-machines/hw80-bp12929s6.shtml",
+        "siteName": "haier.com",
+        "domain": "haier.com",
+        "price": 59755,
+        "originalPrice": 62900,
+        "discountPrice": 59755,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "generic-bdt",
+        "fetchTimeMs": 95,
+        "scrapedAt": "2026-04-21T11:16:47.013Z",
+        "error": null
+      },
+      {
+        "url": "https://transcomdigital.com/haier-front-loading-washing-machine-hw80-bp12929s6-8kg",
+        "siteName": "transcomdigital.com",
+        "domain": "transcomdigital.com",
+        "price": 59755,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "json-ld",
+        "fetchTimeMs": 312,
+        "scrapedAt": "2026-04-21T11:16:47.325Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4193": {
+    "results": [
+      {
+        "url": "https://www.haier.com/bd/washing-machines/hw80-bp12929a.shtml",
+        "siteName": "haier.com",
+        "domain": "haier.com",
+        "price": 58805,
+        "originalPrice": 61900,
+        "discountPrice": 58805,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "generic-bdt",
+        "fetchTimeMs": 136,
+        "scrapedAt": "2026-04-21T11:16:47.361Z",
+        "error": null
+      },
+      {
+        "url": "https://transcomdigital.com/haier-front-loading-washing-machine-hw80-bp12929a-8kg",
+        "siteName": "transcomdigital.com",
+        "domain": "transcomdigital.com",
+        "price": 44900,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "json-ld",
+        "fetchTimeMs": 103,
+        "scrapedAt": "2026-04-21T11:16:47.429Z",
+        "error": null
+      },
+      {
+        "url": "https://electronicsbangladesh.com/product/haier-8-kg-inverter-front-load-washing-machine-hw80-bp12929a",
+        "siteName": "electronicsbangladesh.com",
+        "domain": "electronicsbangladesh.com",
+        "price": 21990,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "generic-bdt",
+        "fetchTimeMs": 138,
+        "scrapedAt": "2026-04-21T11:16:47.499Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4194": {
+    "results": [
+      {
+        "url": "https://www.tvhut.com.bd/haier-13-kg-top-load-automatic-washing-machine",
+        "siteName": "tvhut.com.bd",
+        "domain": "tvhut.com.bd",
+        "price": 47499,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 772,
+        "scrapedAt": "2026-04-21T11:16:48.201Z",
+        "error": null
+      },
+      {
+        "url": "https://www.haier.com/bd/washing-machines/hwm130-b1678es8.shtml",
+        "siteName": "haier.com",
+        "domain": "haier.com",
+        "price": 51205,
+        "originalPrice": 53900,
+        "discountPrice": 51205,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "generic-bdt",
+        "fetchTimeMs": 759,
+        "scrapedAt": "2026-04-21T11:16:48.295Z",
+        "error": null
+      },
+      {
+        "url": "https://www.bestelectronics.com.bd/home-appliances/washing-machine/haier-hwm130-b1678es8-13-kg-top-load-without-heater-washing-machine/",
+        "siteName": "bestelectronics.com.bd",
+        "domain": "bestelectronics.com.bd",
+        "price": null,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "failed",
+        "fetchTimeMs": 2496,
+        "scrapedAt": "2026-04-21T11:16:49.995Z",
+        "error": "All fetch methods failed for https://www.bestelectronics.com.bd/home-appliances/washing-machine/haier-hwm130-b1678es8-13-kg-top-load-without-heater-washing-machine/. Attempts: Node https: HTTP 403 | curl: challenge page | native fetch: HTTP 403 | playwright: challenge page"
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4195": {
+    "results": [
+      {
+        "url": "https://www.esquireelectronicsltd.com/haier/washing-machine/haier-top-load-automatic-washing-machine-hwm120-316s6-12-kg-16",
+        "siteName": "esquireelectronicsltd.com",
+        "domain": "esquireelectronicsltd.com",
+        "price": null,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "none",
+        "fetchTimeMs": 189,
+        "scrapedAt": "2026-04-21T11:16:48.484Z",
+        "error": null
+      },
+      {
+        "url": "https://www.haier.com/bd/washing-machines/hwm120-316s6.shtml",
+        "siteName": "haier.com",
+        "domain": "haier.com",
+        "price": 47405,
+        "originalPrice": 49900,
+        "discountPrice": 47405,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "generic-bdt",
+        "fetchTimeMs": 901,
+        "scrapedAt": "2026-04-21T11:16:49.102Z",
+        "error": null
+      },
+      {
+        "url": "https://sonysmart.com.bd/product/haier-hwm120-316s6-12-kg-top-load-automatic-washing-machine",
+        "siteName": "sonysmart.com.bd",
+        "domain": "sonysmart.com.bd",
+        "price": 47405,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "meta-tag",
+        "fetchTimeMs": 2457,
+        "scrapedAt": "2026-04-21T11:16:50.941Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4196": {
+    "results": [
+      {
+        "url": "https://www.haier.com/bd/washing-machines/hwm90-316s6.shtml",
+        "siteName": "haier.com",
+        "domain": "haier.com",
+        "price": 36480,
+        "originalPrice": 38400,
+        "discountPrice": 36480,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "generic-bdt",
+        "fetchTimeMs": 28,
+        "scrapedAt": "2026-04-21T11:16:49.130Z",
+        "error": null
+      },
+      {
+        "url": "https://transcomdigital.com/haier-top-load-automatic-washing-machine-hwm90-316s6-9-kg",
+        "siteName": "transcomdigital.com",
+        "domain": "transcomdigital.com",
+        "price": 36480,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "json-ld",
+        "fetchTimeMs": 59,
+        "scrapedAt": "2026-04-21T11:16:49.189Z",
+        "error": null
+      },
+      {
+        "url": "https://www.esquireelectronicsltd.com/haier/washing-machine/haier-top-load-automatic-washing-machine-hwm90-316s6-9-kg-65",
+        "siteName": "esquireelectronicsltd.com",
+        "domain": "esquireelectronicsltd.com",
+        "price": null,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "none",
+        "fetchTimeMs": 191,
+        "scrapedAt": "2026-04-21T11:16:49.380Z",
+        "error": null
+      },
+      {
+        "url": "https://www.bestelectronics.com.bd/home-appliances/washing-machine/haier-hwm90-316s6-9-kg-top-load-automatic-washing-machine/",
+        "siteName": "bestelectronics.com.bd",
+        "domain": "bestelectronics.com.bd",
+        "price": null,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "failed",
+        "fetchTimeMs": 2278,
+        "scrapedAt": "2026-04-21T11:16:51.658Z",
+        "error": "All fetch methods failed for https://www.bestelectronics.com.bd/home-appliances/washing-machine/haier-hwm90-316s6-9-kg-top-load-automatic-washing-machine/. Attempts: Node https: HTTP 403 | curl: challenge page | native fetch: HTTP 403 | playwright: challenge page"
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4197": {
+    "results": [
+      {
+        "url": "https://www.haier.com/bd/washing-machines/hwm80-316s6.shtml",
+        "siteName": "haier.com",
+        "domain": "haier.com",
+        "price": 32205,
+        "originalPrice": 33900,
+        "discountPrice": 32205,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "generic-bdt",
+        "fetchTimeMs": 77,
+        "scrapedAt": "2026-04-21T11:16:50.072Z",
+        "error": null
+      },
+      {
+        "url": "https://sonysmart.com.bd/product/haier-8kg-top-load-fully-automatic-washing-machine-hwm80-316s6",
+        "siteName": "sonysmart.com.bd",
+        "domain": "sonysmart.com.bd",
+        "price": 33155,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "meta-tag",
+        "fetchTimeMs": 2693,
+        "scrapedAt": "2026-04-21T11:16:52.765Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4198": {
+    "results": [
+      {
+        "url": "https://www.haier.com/bd/washing-machines/hwm80-1269s6.shtml",
+        "siteName": "haier.com",
+        "domain": "haier.com",
+        "price": 26910,
+        "originalPrice": 29900,
+        "discountPrice": 26910,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "generic-bdt",
+        "fetchTimeMs": 825,
+        "scrapedAt": "2026-04-21T11:16:51.766Z",
+        "error": null
+      },
+      {
+        "url": "https://transcomdigital.com/haier-top-load-automatic-washing-machine-hwm80-1269s6-8-kg",
+        "siteName": "transcomdigital.com",
+        "domain": "transcomdigital.com",
+        "price": 23900,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "json-ld",
+        "fetchTimeMs": 113,
+        "scrapedAt": "2026-04-21T11:16:51.771Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4199": {
+    "results": [
+      {
+        "url": "https://sonysmart.com.bd/product/haier-7kg-top-load-fully-automatic-washing-machine-hwm70-1269s5",
+        "siteName": "sonysmart.com.bd",
+        "domain": "sonysmart.com.bd",
+        "price": 28405,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "meta-tag",
+        "fetchTimeMs": 1003,
+        "scrapedAt": "2026-04-21T11:16:52.769Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4202": {
+    "results": [
+      {
+        "url": "https://www.haier.com/my/washing-machines/hw120-bp12357s8.shtml",
+        "siteName": "haier.com",
+        "domain": "haier.com",
+        "price": 1099,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "generic-bdt",
+        "fetchTimeMs": 751,
+        "scrapedAt": "2026-04-21T11:16:52.522Z",
+        "error": null
+      },
+      {
+        "url": "https://electronicsbangladesh.com/product/haier-12kg-front-loading-washing-machine-hw120-bp12357s8",
+        "siteName": "electronicsbangladesh.com",
+        "domain": "electronicsbangladesh.com",
+        "price": 21990,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "generic-bdt",
+        "fetchTimeMs": 196,
+        "scrapedAt": "2026-04-21T11:16:52.718Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4203": {
+    "results": [
+      {
+        "url": "https://www.haier.com/bd/washing-machines/hw120-bp14959s8.shtml",
+        "siteName": "haier.com",
+        "domain": "haier.com",
+        "price": 80655,
+        "originalPrice": 84900,
+        "discountPrice": 80655,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "generic-bdt",
+        "fetchTimeMs": 726,
+        "scrapedAt": "2026-04-21T11:16:53.444Z",
+        "error": null
+      },
+      {
+        "url": "https://wholesaleelectronics.com.bd/product/haier-12-kg-inverter-front-load-washing-machine-hw120-bp14959s8/",
+        "siteName": "wholesaleelectronics.com.bd",
+        "domain": "wholesaleelectronics.com.bd",
+        "price": 40490,
+        "originalPrice": 147900,
+        "discountPrice": 40490,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "generic-bdt",
+        "fetchTimeMs": 5657,
+        "scrapedAt": "2026-04-21T11:16:58.422Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4204": {
+    "results": [
+      {
+        "url": "https://www.esquireelectronicsltd.com/haier/washing-machine/haier-inverter-front-load-washing-machine-hw90-bp14959s8-9-kg-7",
+        "siteName": "esquireelectronicsltd.com",
+        "domain": "esquireelectronicsltd.com",
+        "price": null,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "none",
+        "fetchTimeMs": 365,
+        "scrapedAt": "2026-04-21T11:16:46.918Z",
+        "error": null
+      },
+      {
+        "url": "https://www.haier.com/bd/washing-machines/hw90-bp14959s8.shtml",
+        "siteName": "haier.com",
+        "domain": "haier.com",
+        "price": 65455,
+        "originalPrice": 68900,
+        "discountPrice": 65455,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "generic-bdt",
+        "fetchTimeMs": 825,
+        "scrapedAt": "2026-04-21T11:16:47.370Z",
+        "error": null
+      },
+      {
+        "url": "https://www.haier.com/bd/washing-machines/hw90-bp14959s8.shtml",
+        "siteName": "haier.com",
+        "domain": "haier.com",
+        "price": 65455,
+        "originalPrice": 68900,
+        "discountPrice": 65455,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "generic-bdt",
+        "fetchTimeMs": 31,
+        "scrapedAt": "2026-04-21T11:16:53.056Z",
+        "error": null
+      },
+      {
+        "url": "https://www.esquireelectronicsltd.com/haier/washing-machine/haier-inverter-front-load-washing-machine-hw90-bp14959s8-9-kg-7",
+        "siteName": "esquireelectronicsltd.com",
+        "domain": "esquireelectronicsltd.com",
+        "price": null,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "none",
+        "fetchTimeMs": 194,
+        "scrapedAt": "2026-04-21T11:16:53.250Z",
+        "error": null
+      },
+      {
+        "url": "https://www.chowdhuryelectronics.com/haier-hw90-bp14959s8-9-kg-inverter-front-loading-washing-machine",
+        "siteName": "chowdhuryelectronics.com",
+        "domain": "chowdhuryelectronics.com",
+        "price": 68900,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 1553,
+        "scrapedAt": "2026-04-21T11:16:54.997Z",
+        "error": null
+      },
+      {
+        "url": "https://www.bestelectronics.com.bd/home-appliances/washing-machine/haier-hw90-bp14959s8-9-kg-ai-direct-motion-front-load-washing-machine/",
+        "siteName": "bestelectronics.com.bd",
+        "domain": "bestelectronics.com.bd",
+        "price": null,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "failed",
+        "fetchTimeMs": 2294,
+        "scrapedAt": "2026-04-21T11:16:55.544Z",
+        "error": "All fetch methods failed for https://www.bestelectronics.com.bd/home-appliances/washing-machine/haier-hw90-bp14959s8-9-kg-ai-direct-motion-front-load-washing-machine/. Attempts: Node https: HTTP 403 | curl: challenge page | native fetch: HTTP 403 | playwright: challenge page"
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4209": {
+    "results": [
+      {
+        "url": "https://acfairbd.com/product/4-ton-fixed-speed-cassette-type-lcac-hsu-48cassettetype-fix",
+        "siteName": "acfairbd.com",
+        "domain": "acfairbd.com",
+        "price": null,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "none",
+        "fetchTimeMs": 203,
+        "scrapedAt": "2026-04-21T11:16:55.747Z",
+        "error": null
+      },
+      {
+        "url": "https://www.haier.com/bd/commercial-air-conditioners/hsu-48cassettetype-fix-.shtml",
+        "siteName": "haier.com",
+        "domain": "haier.com",
+        "price": 209990,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "generic-bdt",
+        "fetchTimeMs": 788,
+        "scrapedAt": "2026-04-21T11:16:55.785Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4210": {
+    "results": [
+      {
+        "url": "https://www.haier.com/bd/commercial-air-conditioners/hsu-36cassettetype-fix-.shtml",
+        "siteName": "haier.com",
+        "domain": "haier.com",
+        "price": 161990,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "generic-bdt",
+        "fetchTimeMs": 77,
+        "scrapedAt": "2026-04-21T11:16:55.824Z",
+        "error": null
+      },
+      {
+        "url": "https://www.rokomari.com/electronics/466236/haier-hsu-36-cassette-type-3-ton-non-inverter-ac",
+        "siteName": "rokomari.com",
+        "domain": "rokomari.com",
+        "price": 146899,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 366,
+        "scrapedAt": "2026-04-21T11:16:56.151Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4211": {
+    "results": [
+      {
+        "url": "https://www.rokomari.com/electronics/466235/haier-hsu-30-cassette-type-2-5-ton-non-inverter-ac",
+        "siteName": "rokomari.com",
+        "domain": "rokomari.com",
+        "price": 134499,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 340,
+        "scrapedAt": "2026-04-21T11:16:56.491Z",
+        "error": null
+      },
+      {
+        "url": "https://www.haier.com/bd/commercial-air-conditioners/hsu-30cassettetype-fix-.shtml",
+        "siteName": "haier.com",
+        "domain": "haier.com",
+        "price": 149990,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "generic-bdt",
+        "fetchTimeMs": 785,
+        "scrapedAt": "2026-04-21T11:16:56.843Z",
+        "error": null
+      },
+      {
+        "url": "https://acfairbd.com/product/2-5-ton-fixed-speed-cassette-type-lcac",
+        "siteName": "acfairbd.com",
+        "domain": "acfairbd.com",
+        "price": null,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "none",
+        "fetchTimeMs": 200,
+        "scrapedAt": "2026-04-21T11:16:57.044Z",
+        "error": null
+      },
+      {
+        "url": "https://www.chowdhuryelectronics.com/haier-hsu-30cassettetype-25-ton-air-conditioner",
+        "siteName": "chowdhuryelectronics.com",
+        "domain": "chowdhuryelectronics.com",
+        "price": 135000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 940,
+        "scrapedAt": "2026-04-21T11:16:57.431Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4212": {
+    "results": [
+      {
+        "url": "https://acfairbd.com/product/haier-3-ton-inverter-ceiling-type-lcac-hsu-36ceilingtype-inv",
+        "siteName": "acfairbd.com",
+        "domain": "acfairbd.com",
+        "price": null,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "none",
+        "fetchTimeMs": 344,
+        "scrapedAt": "2026-04-21T11:16:57.775Z",
+        "error": null
+      },
+      {
+        "url": "https://www.haier.com/bd/commercial-air-conditioners/hsu-36ceilingtype-inv-.shtml",
+        "siteName": "haier.com",
+        "domain": "haier.com",
+        "price": 174990,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "generic-bdt",
+        "fetchTimeMs": 855,
+        "scrapedAt": "2026-04-21T11:16:57.899Z",
+        "error": null
+      },
+      {
+        "url": "https://www.chowdhuryelectronics.com/haier-hsu-36-ceiling-type-3-ton-inverter-air-conditioner",
+        "siteName": "chowdhuryelectronics.com",
+        "domain": "chowdhuryelectronics.com",
+        "price": 155000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 685,
+        "scrapedAt": "2026-04-21T11:16:58.460Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4213": {
+    "results": [
+      {
+        "url": "https://acfairbd.com/product/haier-4-ton-inverter-ceiling-type-lcac-hsu-48ceilingtype-inv",
+        "siteName": "acfairbd.com",
+        "domain": "acfairbd.com",
+        "price": null,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "none",
+        "fetchTimeMs": 156,
+        "scrapedAt": "2026-04-21T11:16:58.616Z",
+        "error": null
+      },
+      {
+        "url": "https://www.haier.com/bd/commercial-air-conditioners/hsu-48ceilingtype-inv-.shtml",
+        "siteName": "haier.com",
+        "domain": "haier.com",
+        "price": 222990,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": null,
+        "method": "generic-bdt",
+        "fetchTimeMs": 775,
+        "scrapedAt": "2026-04-21T11:16:58.674Z",
+        "error": null
+      },
+      {
+        "url": "https://www.chowdhuryelectronics.com/haier-hsu-48-ceiling-type-4-ton-inverter-air-conditioner",
+        "siteName": "chowdhuryelectronics.com",
+        "domain": "chowdhuryelectronics.com",
+        "price": 200000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 421,
+        "scrapedAt": "2026-04-21T11:16:58.843Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4389": {
+    "results": [
+      {
+        "url": "https://vibegaming.com.bd/product/vgn-vxe-r1-gaming-mouse/",
+        "siteName": "vibegaming.com.bd",
+        "domain": "vibegaming.com.bd",
+        "price": 3499,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 70,
+        "scrapedAt": "2026-04-21T11:16:58.686Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/vgn-vxe-r1-gaming-mouse-black",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 3490,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 184,
+        "scrapedAt": "2026-04-21T11:16:58.870Z",
+        "error": null
+      },
+      {
+        "url": "https://techdiversitybd.com/atk-vxe-r1-gaming-mouse/",
+        "siteName": "techdiversitybd.com",
+        "domain": "techdiversitybd.com",
+        "price": 3500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 2761,
+        "scrapedAt": "2026-04-21T11:17:01.435Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4445": {
+    "results": [
+      {
+        "url": "https://www.perennial.com.bd/oreton-256gb-f11n-m2-nvme-internal-ssd",
+        "siteName": "Perennial",
+        "domain": "perennial.com.bd",
+        "price": 6800,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "meta-tag",
+        "fetchTimeMs": 47,
+        "scrapedAt": "2026-04-21T11:16:58.890Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4447": {
+    "results": [
+      {
+        "url": "https://www.perennial.com.bd/product/product?product_id=19739",
+        "siteName": "Perennial",
+        "domain": "perennial.com.bd",
+        "price": 3800,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "meta-tag",
+        "fetchTimeMs": 20,
+        "scrapedAt": "2026-04-21T11:16:59.168Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4450": {
+    "results": [
+      {
+        "url": "https://www.techlandbd.com/oreton-256-gb-m2-ssd",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 5200,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 330,
+        "scrapedAt": "2026-04-21T11:16:59.323Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/oreton-256-gb-m2-ssd",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 5200,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 276,
+        "scrapedAt": "2026-04-21T11:16:59.581Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "4743": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/my-passport-1tb",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 9000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "meta-tag",
+        "fetchTimeMs": 154,
+        "scrapedAt": "2026-04-21T11:16:59.477Z",
+        "error": null
+      },
+      {
+        "url": "https://www.perennial.com.bd/my-passport-1tb",
+        "siteName": "Perennial",
+        "domain": "perennial.com.bd",
+        "price": 9400,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "meta-tag",
+        "fetchTimeMs": 21,
+        "scrapedAt": "2026-04-21T11:16:59.602Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/western-digital-my-passport-1tb-usb-32-gen-1-black-portable-external-hdd-wdbyvg0010bbk-wesn",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 9999,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 711,
+        "scrapedAt": "2026-04-21T11:17:00.188Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "5026": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/orico-pw4u-c3-4-port-hub",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 750,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 257,
+        "scrapedAt": "2026-04-21T11:16:59.888Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/orico-pw4u-c3-usb-hub-black",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 750,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 256,
+        "scrapedAt": "2026-04-21T11:17:00.144Z",
+        "error": null
+      },
+      {
+        "url": "https://www.skyland.com.bd/orico-pw4u-c3-4-port-hub",
+        "siteName": "Skyland",
+        "domain": "skyland.com.bd",
+        "price": 750,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 946,
+        "scrapedAt": "2026-04-21T11:17:01.090Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "5923": {
+    "results": [
+      {
+        "url": "https://www.ucc.com.bd/transcend-2tb-storejet-25h3-portable-hard-disk-drive-hdd-purple",
+        "siteName": "ucc.com.bd",
+        "domain": "ucc.com.bd",
+        "price": 15100,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 209,
+        "scrapedAt": "2026-04-21T11:17:00.397Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/transcend-storejet-25h3-2tb-usb-31-purple-external-hdd-ts2tsj25h3p",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 11400,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "site-pattern",
+        "fetchTimeMs": 728,
+        "scrapedAt": "2026-04-21T11:17:01.125Z",
+        "error": null
+      },
+      {
+        "url": "https://www.startech.com.bd/transcend-j25h3-2tb-hdd",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 12800,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "meta-tag",
+        "fetchTimeMs": 163,
+        "scrapedAt": "2026-04-21T11:17:01.253Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "5924": {
+    "results": [
       {
         "url": "https://www.perennial.com.bd/western-digital-my-passport-2-tb",
         "siteName": "Perennial",
@@ -213,8 +5944,22 @@
         "currency": "BDT",
         "inStock": true,
         "method": "meta-tag",
-        "fetchTimeMs": 47,
-        "scrapedAt": "2026-04-21T05:33:52.755Z",
+        "fetchTimeMs": 27,
+        "scrapedAt": "2026-04-21T11:17:01.462Z",
+        "error": null
+      },
+      {
+        "url": "https://www.startech.com.bd/western-digital-my-passport-2-tb",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 10800,
+        "originalPrice": 10999,
+        "discountPrice": 10800,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 171,
+        "scrapedAt": "2026-04-21T11:17:01.562Z",
         "error": null
       },
       {
@@ -227,8 +5972,8 @@
         "currency": "BDT",
         "inStock": true,
         "method": "json-ld",
-        "fetchTimeMs": 283,
-        "scrapedAt": "2026-04-21T05:33:53.038Z",
+        "fetchTimeMs": 214,
+        "scrapedAt": "2026-04-21T11:17:01.676Z",
         "error": null
       },
       {
@@ -241,12 +5986,106 @@
         "currency": "BDT",
         "inStock": true,
         "method": "json-ld",
-        "fetchTimeMs": 838,
-        "scrapedAt": "2026-04-21T05:33:53.336Z",
+        "fetchTimeMs": 948,
+        "scrapedAt": "2026-04-21T11:17:02.201Z",
         "error": null
       }
     ],
-    "scrapedAt": "2026-04-21T05:33:57.998Z"
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "5925": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/wd-external-4Tb-my-passport-hdd",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 163,
+        "scrapedAt": "2026-04-21T11:17:01.861Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/western-digital-external-4Tb-my-passport",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 15000,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 231,
+        "scrapedAt": "2026-04-21T11:17:02.092Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/western-digital-my-passport-4tb-usb-3.2-gen-1-black-external-hdd",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 15800,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 725,
+        "scrapedAt": "2026-04-21T11:17:02.401Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "5926": {
+    "results": [
+      {
+        "url": "https://www.startech.com.bd/western-digital-5tb-my-passport-portable-hdd?srsltid=AfmBOopbEwhY_nLyWI_3n7jSi585vZUqfA9BidG6TdzKn85KLGLEcz9M",
+        "siteName": "Star Tech",
+        "domain": "startech.com.bd",
+        "price": 999,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "site-pattern",
+        "fetchTimeMs": 159,
+        "scrapedAt": "2026-04-21T11:17:02.251Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/western-digital-external-5tb-my-passport-hdd?srsltid=AfmBOopxK2N3VrWKhiNf-zYg-r0KoaQPKRJ8CNZyafmfDuSsnhm1uVNY",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 15500,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "json-ld",
+        "fetchTimeMs": 192,
+        "scrapedAt": "2026-04-21T11:17:02.443Z",
+        "error": null
+      },
+      {
+        "url": "https://www.ryans.com/category/external-hdd-western-digital?srsltid=AfmBOoqJwQyNsp3PepUXybQRla-nPRJI-svbrbb26uRWj_1_io5WpP1f",
+        "siteName": "Ryans",
+        "domain": "ryans.com",
+        "price": 199,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "site-pattern",
+        "fetchTimeMs": 405,
+        "scrapedAt": "2026-04-21T11:17:02.607Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
   },
   "5949": {
     "results": [
@@ -254,14 +6093,14 @@
         "url": "https://smartbd.com/product/pny-256gb-nvme-cs1031-solid-state-drive-m280cs1031/",
         "siteName": "Smart BD",
         "domain": "smartbd.com",
-        "price": 4200,
-        "originalPrice": 11600,
-        "discountPrice": 4200,
+        "price": 335000,
+        "originalPrice": 630000,
+        "discountPrice": 335000,
         "currency": "BDT",
         "inStock": true,
         "method": "generic-bdt",
-        "fetchTimeMs": 891,
-        "scrapedAt": "2026-04-21T05:33:53.929Z",
+        "fetchTimeMs": 922,
+        "scrapedAt": "2026-04-21T11:17:03.323Z",
         "error": null
       },
       {
@@ -274,12 +6113,45 @@
         "currency": "BDT",
         "inStock": true,
         "method": "json-ld",
-        "fetchTimeMs": 1234,
-        "scrapedAt": "2026-04-21T05:33:54.570Z",
+        "fetchTimeMs": 920,
+        "scrapedAt": "2026-04-21T11:17:03.363Z",
         "error": null
       }
     ],
-    "scrapedAt": "2026-04-21T05:33:57.998Z"
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
+  },
+  "5951": {
+    "results": [
+      {
+        "url": "https://www.rosetech.com.bd/product/oscoo-on900-256gb-gen3-m-2-nvme-pcie-ssd/",
+        "siteName": "rosetech.com.bd",
+        "domain": "rosetech.com.bd",
+        "price": 29900,
+        "originalPrice": 37352,
+        "discountPrice": 29900,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "generic-bdt",
+        "fetchTimeMs": 531,
+        "scrapedAt": "2026-04-21T11:17:03.854Z",
+        "error": null
+      },
+      {
+        "url": "https://www.sourcetechcomputer.com/product/memory-ghost-on900-256gb-nvme-ssd/",
+        "siteName": "sourcetechcomputer.com",
+        "domain": "sourcetechcomputer.com",
+        "price": 3550,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": false,
+        "method": "json-ld",
+        "fetchTimeMs": 2448,
+        "scrapedAt": "2026-04-21T11:17:05.055Z",
+        "error": null
+      }
+    ],
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
   },
   "5954": {
     "results": [
@@ -293,13 +6165,13 @@
         "currency": "BDT",
         "inStock": true,
         "method": "site-pattern",
-        "fetchTimeMs": 171,
-        "scrapedAt": "2026-04-21T05:33:54.100Z",
+        "fetchTimeMs": 152,
+        "scrapedAt": "2026-04-21T11:17:03.515Z",
         "error": null
       },
       {
         "url": "https://www.selltech.com.bd/TEAM-T-FORCE-DELTA-RGB-White-16GB-6000MHz-DDR5-RAM",
-        "siteName": "selltech.com.bd",
+        "siteName": "Sell Tech BD",
         "domain": "selltech.com.bd",
         "price": 31000,
         "originalPrice": null,
@@ -307,12 +6179,12 @@
         "currency": "BDT",
         "inStock": true,
         "method": "json-ld",
-        "fetchTimeMs": 216,
-        "scrapedAt": "2026-04-21T05:33:54.316Z",
+        "fetchTimeMs": 177,
+        "scrapedAt": "2026-04-21T11:17:03.692Z",
         "error": null
       }
     ],
-    "scrapedAt": "2026-04-21T05:33:57.998Z"
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
   },
   "5973": {
     "results": [
@@ -326,8 +6198,8 @@
         "currency": "BDT",
         "inStock": true,
         "method": "site-pattern",
-        "fetchTimeMs": 154,
-        "scrapedAt": "2026-04-21T05:33:54.724Z",
+        "fetchTimeMs": 139,
+        "scrapedAt": "2026-04-21T11:17:03.993Z",
         "error": null
       },
       {
@@ -340,8 +6212,8 @@
         "currency": "BDT",
         "inStock": true,
         "method": "json-ld",
-        "fetchTimeMs": 246,
-        "scrapedAt": "2026-04-21T05:33:54.970Z",
+        "fetchTimeMs": 240,
+        "scrapedAt": "2026-04-21T11:17:04.233Z",
         "error": null
       },
       {
@@ -354,12 +6226,12 @@
         "currency": "BDT",
         "inStock": true,
         "method": "json-ld",
-        "fetchTimeMs": 1089,
-        "scrapedAt": "2026-04-21T05:33:55.405Z",
+        "fetchTimeMs": 1233,
+        "scrapedAt": "2026-04-21T11:17:04.925Z",
         "error": null
       }
     ],
-    "scrapedAt": "2026-04-21T05:33:57.998Z"
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
   },
   "5975": {
     "results": [
@@ -373,8 +6245,8 @@
         "currency": "BDT",
         "inStock": true,
         "method": "site-pattern",
-        "fetchTimeMs": 156,
-        "scrapedAt": "2026-04-21T05:33:55.126Z",
+        "fetchTimeMs": 157,
+        "scrapedAt": "2026-04-21T11:17:04.390Z",
         "error": null
       },
       {
@@ -387,8 +6259,8 @@
         "currency": "BDT",
         "inStock": true,
         "method": "json-ld",
-        "fetchTimeMs": 1037,
-        "scrapedAt": "2026-04-21T05:33:56.163Z",
+        "fetchTimeMs": 1083,
+        "scrapedAt": "2026-04-21T11:17:05.473Z",
         "error": null
       },
       {
@@ -401,12 +6273,12 @@
         "currency": "BDT",
         "inStock": true,
         "method": "json-ld",
-        "fetchTimeMs": 2100,
-        "scrapedAt": "2026-04-21T05:33:57.505Z",
+        "fetchTimeMs": 805,
+        "scrapedAt": "2026-04-21T11:17:05.730Z",
         "error": null
       }
     ],
-    "scrapedAt": "2026-04-21T05:33:57.998Z"
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
   },
   "5995": {
     "results": [
@@ -421,7 +6293,7 @@
         "inStock": true,
         "method": "site-pattern",
         "fetchTimeMs": 145,
-        "scrapedAt": "2026-04-21T05:33:56.308Z",
+        "scrapedAt": "2026-04-21T11:17:05.618Z",
         "error": null
       },
       {
@@ -434,11 +6306,11 @@
         "currency": "BDT",
         "inStock": true,
         "method": "json-ld",
-        "fetchTimeMs": 2216,
-        "scrapedAt": "2026-04-21T05:33:57.993Z",
+        "fetchTimeMs": 962,
+        "scrapedAt": "2026-04-21T11:17:06.188Z",
         "error": null
       }
     ],
-    "scrapedAt": "2026-04-21T05:33:57.998Z"
+    "scrapedAt": "2026-04-21T11:17:06.198Z"
   }
 }
