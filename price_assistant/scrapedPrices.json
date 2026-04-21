@@ -11,22 +11,8 @@
         "currency": "BDT",
         "inStock": true,
         "method": "meta-tag",
-        "fetchTimeMs": 32,
-        "scrapedAt": "2026-04-20T17:46:16.408Z",
-        "error": null
-      },
-      {
-        "url": "https://www.techlandbd.com/wd-2tb-portable-hard-drive",
-        "siteName": "Tech Land",
-        "domain": "techlandbd.com",
-        "price": 10800,
-        "originalPrice": null,
-        "discountPrice": null,
-        "currency": "BDT",
-        "inStock": true,
-        "method": "json-ld",
-        "fetchTimeMs": 844,
-        "scrapedAt": "2026-04-20T17:46:17.252Z",
+        "fetchTimeMs": 162,
+        "scrapedAt": "2026-04-21T03:35:58.341Z",
         "error": null
       },
       {
@@ -39,8 +25,22 @@
         "currency": "BDT",
         "inStock": true,
         "method": "site-pattern",
-        "fetchTimeMs": 959,
-        "scrapedAt": "2026-04-20T17:46:17.299Z",
+        "fetchTimeMs": 327,
+        "scrapedAt": "2026-04-21T03:35:58.475Z",
+        "error": null
+      },
+      {
+        "url": "https://www.techlandbd.com/wd-2tb-portable-hard-drive",
+        "siteName": "Tech Land",
+        "domain": "techlandbd.com",
+        "price": 10800,
+        "originalPrice": null,
+        "discountPrice": null,
+        "currency": "BDT",
+        "inStock": true,
+        "method": "json-ld",
+        "fetchTimeMs": 341,
+        "scrapedAt": "2026-04-21T03:35:58.682Z",
         "error": null
       },
       {
@@ -53,12 +53,12 @@
         "currency": "BDT",
         "inStock": true,
         "method": "json-ld",
-        "fetchTimeMs": 10314,
-        "scrapedAt": "2026-04-20T17:46:26.689Z",
+        "fetchTimeMs": 818,
+        "scrapedAt": "2026-04-21T03:35:58.995Z",
         "error": null
       }
     ],
-    "scrapedAt": "2026-04-20T17:46:26.694Z"
+    "scrapedAt": "2026-04-21T03:35:59.973Z"
   },
   "5949": {
     "results": [
@@ -72,8 +72,8 @@
         "currency": "BDT",
         "inStock": true,
         "method": "generic-bdt",
-        "fetchTimeMs": 869,
-        "scrapedAt": "2026-04-20T17:46:18.121Z",
+        "fetchTimeMs": 879,
+        "scrapedAt": "2026-04-21T03:35:59.355Z",
         "error": null
       },
       {
@@ -86,12 +86,12 @@
         "currency": "BDT",
         "inStock": true,
         "method": "json-ld",
-        "fetchTimeMs": 1246,
-        "scrapedAt": "2026-04-20T17:46:18.545Z",
+        "fetchTimeMs": 1270,
+        "scrapedAt": "2026-04-21T03:35:59.952Z",
         "error": null
       }
     ],
-    "scrapedAt": "2026-04-20T17:46:26.694Z"
+    "scrapedAt": "2026-04-21T03:35:59.973Z"
   },
   "5995": {
     "results": [
@@ -105,8 +105,8 @@
         "currency": "BDT",
         "inStock": true,
         "method": "site-pattern",
-        "fetchTimeMs": 583,
-        "scrapedAt": "2026-04-20T17:46:19.128Z",
+        "fetchTimeMs": 189,
+        "scrapedAt": "2026-04-21T03:35:59.544Z",
         "error": null
       },
       {
@@ -119,11 +119,11 @@
         "currency": "BDT",
         "inStock": true,
         "method": "json-ld",
-        "fetchTimeMs": 3536,
-        "scrapedAt": "2026-04-20T17:46:21.657Z",
+        "fetchTimeMs": 975,
+        "scrapedAt": "2026-04-21T03:35:59.970Z",
         "error": null
       }
     ],
-    "scrapedAt": "2026-04-20T17:46:26.694Z"
+    "scrapedAt": "2026-04-21T03:35:59.973Z"
   }
 }

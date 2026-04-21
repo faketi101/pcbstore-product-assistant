@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PCB In-Stock Product Lister
 // @namespace    http://tampermonkey.net/
-// @version      2.4.0
+// @version      1.7.0
 // @description  Crawl all product pages, collect only in-stock products, fetch slug from edit page, and show results in a modern UI.
 // @author       faketi101
 // @match        https://admin.pcbstore.net/admin/products*
@@ -13,10 +13,6 @@
 
   const STORAGE_KEY = "pcb_instock_lister_settings_v2";
   const DEFAULT_FRONTEND_BASE = "https://pcbstore.com.bd";
-  const SCRIPT_VERSION =
-    (typeof GM_info !== "undefined" && GM_info?.script?.version)
-      ? GM_info.script.version
-      : "2.0.0";
 
   const state = {
     data: [],
@@ -136,20 +132,6 @@
       .pl-title {
         margin: 0;
         font-size: 15px;
-      }
-
-      .pl-version {
-        display: inline-block;
-        margin-left: 8px;
-        padding: 2px 8px;
-        border-radius: 999px;
-        font-size: 10px;
-        font-weight: 700;
-        letter-spacing: 0.2px;
-        color: #d8ffe8;
-        background: rgba(46, 197, 168, 0.2);
-        border: 1px solid rgba(46, 197, 168, 0.45);
-        vertical-align: middle;
       }
 
       .pl-chip {
@@ -399,7 +381,7 @@
     panel.innerHTML = `
       <div class="pl-head">
         <div>
-          <h3 class="pl-title">All In-Stock Product Collector <span class="pl-version">v${escapeHtml(SCRIPT_VERSION)}</span><span id="pl-chip" class="pl-chip">0 items</span></h3>
+          <h3 class="pl-title">All In-Stock Product Collector <span id="pl-chip" class="pl-chip">0 items</span></h3>
         </div>
         <button id="pl-close" class="pl-close">x</button>
       </div>
@@ -458,7 +440,6 @@
                   <th>Qty</th>
                   <th>Status</th>
                   <th>Brand</th>
-                  <th>Product Status</th>
                   <th>Categories</th>
                   <th>Slug</th>
                   <th>Admin</th>
@@ -502,13 +483,9 @@
       notify("Saved", "Frontend base URL saved.", "success");
     });
 
-    excludeInput.addEventListener("input", () => {
-      syncExcludeBrandsFromUI();
-      applyResultFilter();
-    });
-
     excludeInput.addEventListener("change", () => {
-      syncExcludeBrandsFromUI({ save: true });
+      state.settings.excludeBrands = parseExcludeBrands(excludeInput.value);
+      saveSettings();
       applyResultFilter();
       notify("Saved", `Exclude brands updated (${state.settings.excludeBrands.length}).`, "success");
     });
@@ -577,7 +554,6 @@
 
     state.loading = true;
     state.cancelled = false;
-    syncExcludeBrandsFromUI({ save: true });
     state.data = [];
     applyResultFilter();
     setProgress(0);
@@ -610,7 +586,7 @@
           const item = extractRow(row);
           if (!item) continue;
 
-          if (item.stockStatus === "InStock" && isActiveProduct(item.productStatus)) {
+          if (item.stockStatus === "InStock") {
             collected.push(item);
           } else if (earlyStopMode) {
             stockOutSeenOnPage = true;
@@ -643,8 +619,7 @@
       setStatus(`Fetching show-page details for ${collected.length} products...`, "info");
       await enrichProducts(collected);
 
-      state.data = collected.filter((item) => !isBrandExcluded(item.brand, state.settings.excludeBrands));
-      state.data = state.data.filter((item) => isActiveProduct(item.productStatus));
+      state.data = collected;
       applyResultFilter();
       setProgress(100);
       if (stoppedEarly) {
@@ -689,7 +664,6 @@
           item.name = detail.name || item.name || "";
           item.slug = detail.slug || "";
           item.brand = detail.brand || item.brand || "";
-          item.productStatus = detail.productStatus || item.productStatus || "";
           item.categories = Array.isArray(detail.categories) ? detail.categories : [];
           item.categoryText = item.categories.join(", ");
           if (detail.price) item.price = detail.price;
@@ -727,7 +701,6 @@
 
     const qtyNumber = parseQuantity(quantity);
     const isStockOut = /stock\s*out/i.test(quantity) || qtyNumber <= 0;
-    const productStatus = readProductStatusFromRow(row);
 
     return {
       productId: extractProductIdFromUrl(viewUrl) || extractProductIdFromUrl(editUrl),
@@ -738,7 +711,6 @@
       discountPrice,
       quantity,
       stockStatus: isStockOut ? "StockOut" : "InStock",
-      productStatus,
       brand: "",
       categories: [],
       categoryText: "",
@@ -785,7 +757,6 @@
       categories: detailFromShow.categories?.length ? detailFromShow.categories : fallback.categories,
       price: detailFromShow.price || "",
       discountPrice: detailFromShow.discountPrice || "",
-      productStatus: detailFromShow.productStatus || fallback.productStatus || "",
     };
   }
 
@@ -804,7 +775,6 @@
 
     const slugValue = findTableValueByLabel(doc, /^slug$/i);
     const brandValue = findTableValueByLabel(doc, /^brand$/i);
-    const statusValue = findTableValueByLabel(doc, /^(product\s*)?status$/i);
     const categoryValue = findTableValueByLabel(doc, /^categories?$/i);
     const priceValue = findTableValueByLabel(doc, /^price$/i);
     const discountValue = findTableValueByLabel(doc, /^discount\s*price$/i);
@@ -829,7 +799,6 @@
       name,
       slug: slug.trim(),
       brand: (brandValue || "").trim(),
-      productStatus: normalizeProductStatus(statusValue),
       categories,
       price: sanitizeMoney(priceValue),
       discountPrice: sanitizeMoney(discountValue),
@@ -858,19 +827,11 @@
       brand = selected ? selected.textContent.replace(/\s+/g, " ").trim() : "";
     }
 
-    const statusSelect = doc.querySelector('select[name="status"], select[name="product_status"], select[name="is_active"]');
-    let productStatus = "";
-    if (statusSelect) {
-      const selected = statusSelect.options[statusSelect.selectedIndex];
-      productStatus = selected ? selected.textContent.replace(/\s+/g, " ").trim() : "";
-    }
-
     const categories = extractCategoriesFromDoc(doc);
     return {
       productId: extractProductIdFromUrl(editUrl),
       slug: slug.trim(),
       brand,
-      productStatus: normalizeProductStatus(productStatus),
       categories,
     };
   }
@@ -1003,66 +964,11 @@
     return normalized;
   }
 
-  function normalizeProductStatus(text) {
-    const normalized = String(text || "")
-      .replace(/\u00a0/g, " ")
-      .replace(/\s+/g, " ")
-      .trim();
-
-    if (!normalized) return "";
-
-    const lower = normalized.toLowerCase();
-    if (lower.includes("active")) return "Active";
-    if (lower.includes("draft")) return "Draft";
-    return normalized;
-  }
-
-  function readProductStatusFromRow(row) {
-    const cells = Array.from(row.querySelectorAll("td"));
-    const statusCell = cells.find((cell) => {
-      const cellText = normalizeShowTableText(cell.textContent || "").toLowerCase();
-      return (
-        cell.querySelector('a[href*="/toggle"]') ||
-        cell.querySelector("label.switch") ||
-        cell.querySelector('input[type="checkbox"]') ||
-        cellText === "active" ||
-        cellText === "draft"
-      );
-    });
-
-    if (statusCell) {
-      const checkbox =
-        statusCell.querySelector('a[href*="/toggle"] input[type="checkbox"]') ||
-        statusCell.querySelector('label.switch input[type="checkbox"]') ||
-        statusCell.querySelector('input[type="checkbox"]');
-
-      if (checkbox) {
-        return checkbox.checked ? "Active" : "Draft";
-      }
-
-      const rawHtml = statusCell.innerHTML.toLowerCase();
-      if (rawHtml.includes('/toggle') && rawHtml.includes('checked')) return "Active";
-      if (rawHtml.includes('/toggle')) return "Draft";
-
-      const statusText = normalizeShowTableText(statusCell.textContent || "");
-      if (/^active$/i.test(statusText)) return "Active";
-      if (/^draft$/i.test(statusText)) return "Draft";
-    }
-
-    const rowHtml = row.innerHTML.toLowerCase();
-    if (rowHtml.includes('/toggle') && rowHtml.includes('checked')) return "Active";
-    if (rowHtml.includes('/toggle')) return "Draft";
-
-    return "";
-  }
-
-  function isActiveProduct(statusText) {
-    return normalizeProductStatus(statusText).toLowerCase() === "active";
-  }
-
   function applyResultFilter() {
     const keyword = (ui.search?.value || "").trim().toLowerCase();
-    const excludes = state.settings.excludeBrands;
+    const excludes = state.settings.excludeBrands
+      .map((b) => b.trim().toLowerCase())
+      .filter(Boolean);
 
     state.filteredData = state.data.filter((item) => {
       if (item.stockStatus !== "InStock") return false;
@@ -1070,7 +976,10 @@
       const haystack = `${item.productId || ""} ${item.name} ${item.brand} ${item.slug} ${item.price} ${item.discountPrice} ${item.categoryText || ""}`.toLowerCase();
       if (keyword && !haystack.includes(keyword)) return false;
 
-      return !isBrandExcluded(item.brand, excludes);
+      if (!excludes.length) return true;
+      const brandSource = (item.brand || "").trim().toLowerCase();
+      if (!brandSource) return true;
+      return !excludes.includes(brandSource);
     });
 
     renderRows();
@@ -1099,7 +1008,6 @@
         <td>${escapeHtml(item.quantity)}</td>
         <td><span class="pl-stock-in">InStock</span></td>
         <td>${escapeHtml(item.brand)}</td>
-        <td>${renderProductStatus(item.productStatus)}</td>
         <td>${escapeHtml(item.categoryText || "")}</td>
         <td>${escapeHtml(item.slug)}</td>
         <td>${item.viewUrl ? `<a href="${escapeHtml(item.viewUrl)}" target="_blank">open</a>` : "-"}</td>
@@ -1166,54 +1074,10 @@
   }
 
   function parseExcludeBrands(text) {
-    const list = (text || "")
-      .split(/[\n,;|،]+/)
+    return (text || "")
+      .split(/[\n,]+/)
       .map((x) => x.trim())
       .filter(Boolean);
-
-    return Array.from(new Set(list.map((x) => normalizeBrandToken(x)).filter(Boolean)));
-  }
-
-  function syncExcludeBrandsFromUI({ save = false } = {}) {
-    const excludeInput = ui.panel?.querySelector("#pl-exclude-brands");
-    const sourceText = excludeInput ? excludeInput.value : (state.settings.excludeBrands || []).join("\n");
-    state.settings.excludeBrands = parseExcludeBrands(sourceText);
-    if (save) saveSettings();
-    return state.settings.excludeBrands;
-  }
-
-  function normalizeBrandToken(value) {
-    return String(value || "")
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, " ")
-      .replace(/\s+/g, " ")
-      .trim();
-  }
-
-  function isBrandExcluded(brand, excludeList) {
-    if (!excludeList || !excludeList.length) return false;
-
-    const source = normalizeBrandToken(brand);
-    if (!source) return false;
-
-    return excludeList.some((token) => {
-      const t = normalizeBrandToken(token);
-      if (!t) return false;
-      return source === t || source.includes(t) || t.includes(source);
-    });
-  }
-
-  function renderProductStatus(statusText) {
-    const status = normalizeProductStatus(statusText);
-    if (!status) return '<span style="color:var(--pl-muted)">Unknown</span>';
-
-    const isActive = status.toLowerCase() === "active";
-    const isDraft = status.toLowerCase() === "draft";
-    const color = isActive ? "#a4f4e6" : isDraft ? "#ffafc0" : "#d6e0ff";
-    const background = isActive ? "rgba(46, 197, 168, 0.14)" : isDraft ? "rgba(255, 107, 136, 0.14)" : "rgba(92, 135, 255, 0.14)";
-    const border = isActive ? "rgba(46, 197, 168, 0.45)" : isDraft ? "rgba(255, 107, 136, 0.45)" : "rgba(92, 135, 255, 0.45)";
-
-    return `<span style="display:inline-block; padding:2px 8px; border-radius:999px; font-size:11px; color:${color}; background:${background}; border:1px solid ${border};">${escapeHtml(status)}</span>`;
   }
 
   function normalizeFrontendBase(url) {
