@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PCB Category Tree Organizer V2
 // @namespace    http://tampermonkey.net/
-// @version      2.0.0
+// @version      3.0.0
 // @description  Enhanced category tree extractor with hierarchy slug paths, filters, sortable table, and multi-format export (JSON/MD/CSV/XLSX)
 // @match        https://admin.pcbstore.net/*
 // @require      https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js
