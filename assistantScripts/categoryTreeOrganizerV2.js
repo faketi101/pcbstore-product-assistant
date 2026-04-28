@@ -319,28 +319,22 @@
 
     const CAP = 5000;
     const show = S.filtered.slice(0, CAP);
-    const frag = document.createDocumentFragment();
-
-    for (const c of show) {
-      const tr = document.createElement("tr");
-      tr.innerHTML =
+    const rowsHtml = show.map((c) =>
+      `<tr>` +
         `<td class="cto2-col-depth">${c.depth}</td>` +
         `<td style="padding-left:${8 + c.depth * 14}px">${esc(c.name)}</td>` +
         `<td class="cto2-col-slug" title="${esc(c.slugPath)}">${esc(c.slugPath)}</td>` +
         `<td><span class="cto2-badge cto2-badge-${c.state}">${c.state}</span></td>` +
         `<td>${esc(c.parent)}</td>` +
-        `<td><a href="${esc(c.link)}" target="_blank" rel="noopener" class="cto2-link">&#8599;</a></td>`;
-      frag.appendChild(tr);
-    }
-
-    tbody.innerHTML = "";
-    tbody.appendChild(frag);
+        `<td><a href="${esc(c.link)}" target="_blank" rel="noopener" class="cto2-link">&#8599;</a></td>` +
+      `</tr>`
+    );
 
     if (S.filtered.length > CAP) {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `<td colspan="6" class="cto2-empty">Showing ${CAP} of ${S.filtered.length}</td>`;
-      tbody.appendChild(tr);
+      rowsHtml.push(`<tr><td colspan="6" class="cto2-empty">Showing ${CAP} of ${S.filtered.length}</td></tr>`);
     }
+
+    tbody.innerHTML = rowsHtml.join("");
     updateStats();
   };
 
@@ -399,7 +393,7 @@
       .cto2-close:hover{background:rgba(239,68,68,.25);border-color:#ef4444;}
 
       /* body layout */
-      .cto2-body{display:flex;flex:1;overflow:hidden;}
+      .cto2-body{display:flex;flex:1;overflow:hidden;min-height:0;}
 
       /* sidebar */
       .cto2-sidebar{width:260px;min-width:260px;border-right:1px solid rgba(255,255,255,.08);
@@ -437,7 +431,7 @@
       .cto2-stat-full{grid-column:1/-1;}
 
       /* main */
-      .cto2-main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+      .cto2-main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0;}
       .cto2-toolbar{display:flex;gap:10px;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,.07);
         align-items:center;flex-wrap:wrap;}
       .cto2-toolbar .cto2-tbtn{padding:8px 16px;border:1px solid rgba(255,255,255,.12);
@@ -449,7 +443,7 @@
       #cto2-row-count{margin-left:auto;font-size:11.5px;color:#64748b;}
 
       /* table */
-      .cto2-table-wrap{flex:1;overflow:auto;}
+      .cto2-table-wrap{flex:1;overflow:auto;min-height:0;}
       .cto2-table{width:100%;border-collapse:collapse;font-size:12.5px;}
       .cto2-table thead{position:sticky;top:0;z-index:2;
         background:rgba(11,17,32,.95);border-bottom:2px solid rgba(96,165,250,.18);}
