@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PCB Category Tree Organizer V2
 // @namespace    http://tampermonkey.net/
-// @version      3.6.0
+// @version      4.9.2
 // @description  Enhanced category tree extractor with hierarchy slug paths, filters, sortable table, and multi-format export (JSON/MD/CSV/XLSX)
 // @match        https://admin.pcbstore.net/admin/categories
 // @require      https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js
@@ -12,6 +12,7 @@
   "use strict";
 
   /* ───────────────────────── constants ───────────────────────── */
+  const VERSION = "4.9.2";
   const FRONTEND_BASE = "https://pcbstore.com.bd";
   const MODAL_ID = "cto2-modal";
   const TREE_SELECTOR = "#categoryTree";
@@ -114,7 +115,7 @@
 
     const results = [];
 
-    const walk = (parentUl, parentName, parentSlugPath, depth) => {
+    const walk = (parentUl, parentName, depth) => {
       for (const li of parentUl.children) {
         if (li.tagName !== "LI") continue;
         const anchor = getDirectAnchor(li);
@@ -122,8 +123,6 @@
 
         const name = anchor.textContent.replace(/\s+/g, " ").trim();
         const id = li.getAttribute("data-id") || li.id || "";
-        const slug = slugify(name);
-        const slugPath = parentSlugPath ? parentSlugPath + "/" + slug : slug;
         const nodeState = li.classList.contains("jstree-open")
           ? "open"
           : li.classList.contains("jstree-closed")
@@ -136,21 +135,192 @@
           treeIndex: results.length,
           id,
           name,
-          slug,
-          slugPath,
+          slug: slugify(name),
+          slugPath: "",
           depth,
           state: nodeState,
           parent: parentName || "root",
-          link: FRONTEND_BASE + "/" + slugPath,
+          link: "",
         });
 
         const childUl = getDirectChildUl(li);
-        if (childUl) walk(childUl, name, slugPath, depth + 1);
+        if (childUl) walk(childUl, name, depth + 1);
       }
     };
 
-    walk(containerUl, null, "", 0);
+    walk(containerUl, null, 0);
     return results;
+  };
+
+  /* ───────────────── fetch real slugs from server ───────────────── */
+  const getJsTreeInstance = () => {
+    try {
+      const el = document.querySelector(TREE_SELECTOR);
+      if (el && window.jQuery && window.jQuery(el).jstree) {
+        return window.jQuery(el).jstree(true);
+      }
+    } catch {}
+    return null;
+  };
+
+  const extractSlugFromHtml = (html) => {
+    const m = html.match(/name="slug"[^>]*value="([^"]*)"/) ||
+              html.match(/value="([^"]*)"[^>]*name="slug"/);
+    return m ? m[1].trim() || null : null;
+  };
+
+  const rebuildSlugPaths = () => {
+    const pathByDepth = [];
+    for (const c of S.all) {
+      if (c.depth === 0) {
+        c.slugPath = c.slug;
+      } else {
+        c.slugPath = (pathByDepth[c.depth - 1] || "") + "/" + c.slug;
+      }
+      pathByDepth[c.depth] = c.slugPath;
+      c.link = FRONTEND_BASE + "/" + c.slugPath;
+    }
+  };
+
+  const discoverEndpointByClick = async () => {
+    const jsTree = getJsTreeInstance();
+    if (!jsTree) { console.warn("[CTO2] No jstree instance"); return null; }
+    const sampleId = S.all[0]?.id;
+    if (!sampleId) return null;
+
+    let capturedUrls = [];
+    const origOpen = XMLHttpRequest.prototype.open;
+    XMLHttpRequest.prototype.open = function (method, url) {
+      capturedUrls.push({ method, url: String(url) });
+      return origOpen.apply(this, arguments);
+    };
+    const origFetch = window.fetch;
+    window.fetch = function (input) {
+      const u = typeof input === "string" ? input : input?.url || "";
+      capturedUrls.push({ method: "FETCH", url: u });
+      return origFetch.apply(this, arguments);
+    };
+
+    const prevSelected = jsTree.get_selected();
+    jsTree.deselect_all(true);
+    jsTree.select_node(sampleId);
+    await sleep(2500);
+
+    XMLHttpRequest.prototype.open = origOpen;
+    window.fetch = origFetch;
+
+    console.log("[CTO2] Captured URLs after click:", capturedUrls);
+
+    let pattern = null;
+    for (const c of capturedUrls) {
+      if (c.url.includes(sampleId) || c.url.includes("/" + sampleId)) {
+        pattern = c.url.replace(new RegExp("(^|/)" + sampleId + "(/|$|\\?)"), "$1{id}$2");
+        console.log("[CTO2] Matched URL:", c.url, "→ pattern:", pattern);
+        break;
+      }
+    }
+
+    if (prevSelected.length) {
+      jsTree.deselect_all(true);
+      prevSelected.forEach((id) => jsTree.select_node(id, true));
+    }
+    return pattern;
+  };
+
+  const readSlugFromForm = () => {
+    const el = document.querySelector("#slug");
+    return el ? (el.value || "").trim() || null : null;
+  };
+
+  const fetchSlugByClick = async (nodeId, jsTree) => {
+    jsTree.deselect_all(true);
+    jsTree.select_node(nodeId);
+    const start = Date.now();
+    while (Date.now() - start < 3000) {
+      await sleep(150);
+      const form = document.querySelector("#addForm");
+      if (form) {
+        const action = form.getAttribute("action") || "";
+        if (action.includes("/" + nodeId)) {
+          await sleep(100);
+          return readSlugFromForm();
+        }
+      }
+    }
+    return null;
+  };
+
+  const fetchAllSlugs = async () => {
+    if (!S.all.length) return;
+    setStatus("Discovering category endpoint…", "warn");
+
+    const pattern = await discoverEndpointByClick();
+
+    if (pattern) {
+      console.log("[CTO2] Using batch fetch with pattern:", pattern);
+      const BATCH = 8;
+      let done = 0, found = 0;
+      for (let i = 0; i < S.all.length; i += BATCH) {
+        const batch = S.all.slice(i, i + BATCH);
+        const slugs = await Promise.all(
+          batch.map(async (c) => {
+            try {
+              const url = pattern.replace("{id}", c.id);
+              const res = await fetch(url, {
+                credentials: "same-origin",
+                headers: { "X-Requested-With": "XMLHttpRequest" },
+              });
+              if (!res.ok) return null;
+              const text = await res.text();
+              const ct = res.headers.get("content-type") || "";
+              if (ct.includes("json")) {
+                try {
+                  const j = JSON.parse(text);
+                  const s = j.slug || j.category?.slug || j.data?.slug;
+                  if (s) return String(s).trim();
+                } catch {}
+              }
+              return extractSlugFromHtml(text);
+            } catch { return null; }
+          })
+        );
+        batch.forEach((c, j) => { if (slugs[j]) { c.slug = slugs[j]; found++; } });
+        done += batch.length;
+        setStatus(`Fetching slugs… ${done} / ${S.all.length} (${found} found)`, "warn");
+      }
+      rebuildSlugPaths();
+      console.log(`[CTO2] Batch: fetched ${found}/${S.all.length} real slugs`);
+      if (found > 0) return;
+    }
+
+    console.log("[CTO2] Falling back to click-based slug extraction");
+    const jsTree = getJsTreeInstance();
+    if (!jsTree) {
+      setStatus("No jstree — using generated slugs", "warn");
+      rebuildSlugPaths();
+      return;
+    }
+
+    const prevSelected = jsTree.get_selected();
+    let done = 0, found = 0;
+    for (const c of S.all) {
+      done++;
+      const slug = await fetchSlugByClick(c.id, jsTree);
+      if (slug) { c.slug = slug; found++; }
+      if (done % 20 === 0 || done === S.all.length) {
+        setStatus(`Reading slugs (click)… ${done} / ${S.all.length} (${found} found)`, "warn");
+        applyFilters();
+        renderTable();
+      }
+    }
+
+    if (prevSelected.length) {
+      jsTree.deselect_all(true);
+      prevSelected.forEach((id) => jsTree.select_node(id, true));
+    }
+
+    rebuildSlugPaths();
+    console.log(`[CTO2] Click: fetched ${found}/${S.all.length} real slugs`);
   };
 
   /* ───────────────────────── filter / sort ───────────────────────── */
@@ -439,6 +609,7 @@
       .cto2-input,.cto2-select{width:100%;padding:9px 11px;border:1px solid rgba(255,255,255,.1);
         background:rgba(255,255,255,.04);color:#f1f5f9;border-radius:8px;font-size:12.5px;
         box-sizing:border-box;transition:.15s;}
+      .cto2-select option{background:#1e293b;color:#f1f5f9;}
       .cto2-input::placeholder{color:rgba(148,163,184,.55);}
       .cto2-input:focus,.cto2-select:focus{outline:none;border-color:rgba(96,165,250,.45);background:rgba(37,99,235,.07);}
       .cto2-btn{display:block;width:100%;padding:10px 14px;border:1px solid rgba(255,255,255,.12);
@@ -536,7 +707,7 @@
     modal.innerHTML = `
     <div class="cto2-box">
       <div class="cto2-header">
-        <div class="cto2-title">PCB Category Tree Organizer</div>
+        <div class="cto2-title">PCB Category Tree Organizer <span style="font-size:13px;font-weight:400;opacity:.6;background:linear-gradient(135deg,#e0e7ff,#93c5fd);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">v${VERSION}</span></div>
         <button class="cto2-close" id="cto2-close" title="Close">&times;</button>
       </div>
       <div class="cto2-body">
@@ -648,10 +819,15 @@
       await sleep(150);
 
       S.all = parseTree();
+      setStatus(`Parsed ${S.all.length} categories. Now fetching real slugs...`, "warn");
       applyFilters();
       renderTable();
 
-      const msg = `Scanned ${S.all.length} categories${expanded ? ` (${expanded} nodes expanded first)` : ""}`;
+      await fetchAllSlugs();
+      applyFilters();
+      renderTable();
+
+      const msg = `Scanned ${S.all.length} categories${expanded ? ` (${expanded} nodes expanded first)` : ""} — slugs fetched`;
       setStatus(msg, "ok");
       btn.innerHTML = "&#128202; Scan All Categories";
       btn.style.pointerEvents = "";
