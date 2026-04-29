@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PCB Category Tree Organizer V2
 // @namespace    http://tampermonkey.net/
-// @version      3.4.0
+// @version      3.6.0
 // @description  Enhanced category tree extractor with hierarchy slug paths, filters, sortable table, and multi-format export (JSON/MD/CSV/XLSX)
 // @match        https://admin.pcbstore.net/admin/categories
 // @require      https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js
@@ -305,15 +305,22 @@
   };
 
   const renderTable = () => {
-    const tbody = document.getElementById("cto2-tbody");
-    if (!tbody) return;
+    const oldTbody = document.getElementById("cto2-tbody");
+    if (!oldTbody) return;
+    const table = oldTbody.parentNode;
+
+    const newTbody = document.createElement("tbody");
+    newTbody.id = "cto2-tbody";
 
     if (!S.filtered.length) {
-      tbody.innerHTML = `<tr><td colspan="7" class="cto2-empty">${
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td colspan="7" class="cto2-empty">${
         S.all.length === 0
           ? 'Click <b>"Scan All Categories"</b> to begin'
           : "No categories match current filters"
-      }</td></tr>`;
+      }</td>`;
+      newTbody.appendChild(tr);
+      table.replaceChild(newTbody, oldTbody);
       updateStats();
       return;
     }
@@ -321,23 +328,47 @@
     const CAP = 5000;
     const show = S.filtered.slice(0, CAP);
     const indent = (d) => d > 0 ? '<span style="color:#334155">' + '┃ '.repeat(d - 1) + '┣ </span>' : '';
-    const rowsHtml = show.map((c) =>
-      `<tr>` +
-        `<td style="color:#475569;font-size:11px;width:40px;text-align:center">${c.treeIndex}</td>` +
-        `<td class="cto2-col-depth">${c.depth}</td>` +
-        `<td style="padding-left:${8 + c.depth * 16}px;white-space:nowrap">${indent(c.depth)}${esc(c.name)}</td>` +
-        `<td class="cto2-col-slug" title="${esc(c.slugPath)}">${esc(c.slugPath)}</td>` +
-        `<td><span class="cto2-badge cto2-badge-${c.state}">${c.state}</span></td>` +
-        `<td>${esc(c.parent)}</td>` +
-        `<td><a href="${esc(c.link)}" target="_blank" rel="noopener" class="cto2-link">&#8599;</a></td>` +
-      `</tr>`
-    );
 
-    if (S.filtered.length > CAP) {
-      rowsHtml.push(`<tr><td colspan="7" class="cto2-empty">Showing ${CAP} of ${S.filtered.length}</td></tr>`);
+    for (const c of show) {
+      const tr = document.createElement("tr");
+      const idx = document.createElement("td");
+      idx.style.cssText = "color:#475569;font-size:11px;width:40px;text-align:center";
+      idx.textContent = c.treeIndex;
+
+      const dep = document.createElement("td");
+      dep.className = "cto2-col-depth";
+      dep.textContent = c.depth;
+
+      const nm = document.createElement("td");
+      nm.style.cssText = "padding-left:" + (8 + c.depth * 16) + "px;white-space:nowrap";
+      nm.innerHTML = indent(c.depth) + esc(c.name);
+
+      const sp = document.createElement("td");
+      sp.className = "cto2-col-slug";
+      sp.title = c.slugPath;
+      sp.textContent = c.slugPath;
+
+      const st = document.createElement("td");
+      st.innerHTML = '<span class="cto2-badge cto2-badge-' + c.state + '">' + c.state + '</span>';
+
+      const pa = document.createElement("td");
+      pa.textContent = c.parent;
+
+      const lk = document.createElement("td");
+      lk.innerHTML = '<a href="' + esc(c.link) + '" target="_blank" rel="noopener" class="cto2-link">&#8599;</a>';
+
+      tr.append(idx, dep, nm, sp, st, pa, lk);
+      newTbody.appendChild(tr);
     }
 
-    tbody.innerHTML = rowsHtml.join("");
+    if (S.filtered.length > CAP) {
+      const tr = document.createElement("tr");
+      tr.innerHTML = '<td colspan="7" class="cto2-empty">Showing ' + CAP + ' of ' + S.filtered.length + '</td>';
+      newTbody.appendChild(tr);
+    }
+
+    console.log("[CTO2] Rendering", newTbody.children.length, "rows");
+    table.replaceChild(newTbody, oldTbody);
     updateStats();
   };
 
@@ -445,11 +476,17 @@
       .cto2-toolbar .cto2-tbtn-danger:hover{background:rgba(239,68,68,.25);}
       #cto2-row-count{margin-left:auto;font-size:11.5px;color:#64748b;}
 
-      /* table */
-      .cto2-table-wrap{flex:1;overflow:auto;min-height:0;}
-      .cto2-table{width:100%;border-collapse:collapse;font-size:12.5px;}
-      .cto2-table thead{position:sticky;top:0;z-index:2;
-        background:rgba(11,17,32,.95);border-bottom:2px solid rgba(96,165,250,.18);}
+      /* table — force reset to override admin page global CSS */
+      .cto2-table-wrap{flex:1;overflow:auto!important;min-height:0;position:relative;}
+      #${MODAL_ID} table{display:table!important;width:100%!important;border-collapse:collapse!important;
+        font-size:12.5px!important;table-layout:auto!important;}
+      #${MODAL_ID} thead{display:table-header-group!important;position:sticky;top:0;z-index:2;
+        background:rgba(11,17,32,.95);border-bottom:2px solid rgba(96,165,250,.18);
+        visibility:visible!important;height:auto!important;}
+      #${MODAL_ID} tbody{display:table-row-group!important;max-height:none!important;
+        overflow:visible!important;visibility:visible!important;height:auto!important;}
+      #${MODAL_ID} tr{display:table-row!important;visibility:visible!important;height:auto!important;}
+      #${MODAL_ID} td,#${MODAL_ID} th{display:table-cell!important;visibility:visible!important;}
       .cto2-th{padding:12px 14px;text-align:left;font-weight:700;color:#60a5fa;
         white-space:nowrap;cursor:pointer;user-select:none;font-size:12px;transition:.12s;}
       .cto2-th:hover{background:rgba(96,165,250,.08);}
