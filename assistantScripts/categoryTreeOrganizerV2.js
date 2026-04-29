@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         PCB Category Tree Organizer V2
 // @namespace    http://tampermonkey.net/
-// @version      3.0.0
+// @version      3.4.0
 // @description  Enhanced category tree extractor with hierarchy slug paths, filters, sortable table, and multi-format export (JSON/MD/CSV/XLSX)
-// @match        https://admin.pcbstore.net/*
+// @match        https://admin.pcbstore.net/admin/categories
 // @require      https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js
 // @grant        none
 // ==/UserScript==
@@ -22,7 +22,7 @@
     all: [],
     filtered: [],
     filters: { name: "", depth: "all", state: "all", parent: "" },
-    sortCol: "depth",
+    sortCol: "treeIndex",
     sortAsc: true,
     scanning: false,
   };
@@ -133,6 +133,7 @@
               : "unknown";
 
         results.push({
+          treeIndex: results.length,
           id,
           name,
           slug,
@@ -308,7 +309,7 @@
     if (!tbody) return;
 
     if (!S.filtered.length) {
-      tbody.innerHTML = `<tr><td colspan="6" class="cto2-empty">${
+      tbody.innerHTML = `<tr><td colspan="7" class="cto2-empty">${
         S.all.length === 0
           ? 'Click <b>"Scan All Categories"</b> to begin'
           : "No categories match current filters"
@@ -319,10 +320,12 @@
 
     const CAP = 5000;
     const show = S.filtered.slice(0, CAP);
+    const indent = (d) => d > 0 ? '<span style="color:#334155">' + '┃ '.repeat(d - 1) + '┣ </span>' : '';
     const rowsHtml = show.map((c) =>
       `<tr>` +
+        `<td style="color:#475569;font-size:11px;width:40px;text-align:center">${c.treeIndex}</td>` +
         `<td class="cto2-col-depth">${c.depth}</td>` +
-        `<td style="padding-left:${8 + c.depth * 14}px">${esc(c.name)}</td>` +
+        `<td style="padding-left:${8 + c.depth * 16}px;white-space:nowrap">${indent(c.depth)}${esc(c.name)}</td>` +
         `<td class="cto2-col-slug" title="${esc(c.slugPath)}">${esc(c.slugPath)}</td>` +
         `<td><span class="cto2-badge cto2-badge-${c.state}">${c.state}</span></td>` +
         `<td>${esc(c.parent)}</td>` +
@@ -331,7 +334,7 @@
     );
 
     if (S.filtered.length > CAP) {
-      rowsHtml.push(`<tr><td colspan="6" class="cto2-empty">Showing ${CAP} of ${S.filtered.length}</td></tr>`);
+      rowsHtml.push(`<tr><td colspan="7" class="cto2-empty">Showing ${CAP} of ${S.filtered.length}</td></tr>`);
     }
 
     tbody.innerHTML = rowsHtml.join("");
@@ -562,6 +565,7 @@
             <table class="cto2-table">
               <thead>
                 <tr>
+                  <th class="cto2-th" data-col="treeIndex" style="width:40px" title="Tree order">#<span class="cto2-sort-arrow"> ▲</span></th>
                   <th class="cto2-th" data-col="depth" style="width:55px">Depth<span class="cto2-sort-arrow"> ▲</span></th>
                   <th class="cto2-th" data-col="name" style="width:200px">Name<span class="cto2-sort-arrow"> ▲</span></th>
                   <th class="cto2-th" data-col="slugPath">Slug Path<span class="cto2-sort-arrow"> ▲</span></th>
@@ -571,7 +575,7 @@
                 </tr>
               </thead>
               <tbody id="cto2-tbody">
-                <tr><td colspan="6" class="cto2-empty">Click <b>"Scan All Categories"</b> to begin</td></tr>
+                <tr><td colspan="7" class="cto2-empty">Click <b>"Scan All Categories"</b> to begin</td></tr>
               </tbody>
             </table>
           </div>
