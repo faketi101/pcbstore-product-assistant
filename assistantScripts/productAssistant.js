@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PCB Product Assistant
 // @namespace    http://tampermonkey.net/
-// @version      4.3
+// @version      4.7
 // @description  All-in-one productivity assistant: Short desc formatter, description paste cleaner, keyword highlighter, meta counters, field status dashboard, FAQ/Spec/Warranty importer
 // @author       faketi101
 // @match        https://admin.pcbstore.net/admin/product/*
@@ -1498,10 +1498,12 @@
     },
     {
       name: "Warranty Claims",
-      sel: 'select[name="warranty_claims[]"]',
+      sel: '#warrantyClaims, select[name="warranty_claims[]"]',
       check: () => {
         try {
-          const s = document.querySelector('select[name="warranty_claims[]"]');
+          const s = document.querySelector(
+            '#warrantyClaims, select[name="warranty_claims[]"]',
+          );
           return s && Array.from(s.options).some((o) => o.selected);
         } catch {
           return false;
@@ -2026,31 +2028,125 @@
   }
 
   // ─── 7. WARRANTY SELECTOR (from autoFill.js) ─────────────────
-  function processWarranty() {
+  async function processWarranty() {
     const input = document.getElementById("pa-war-input");
     const keyword = input.value.trim().toLowerCase();
     if (!keyword) return showToast("Enter a warranty keyword", 2500, "warning");
 
-    const $sel = $('select[name="warranty_claims[]"]');
+    const $sel = $("#warrantyClaims, select[name=\"warranty_claims[]\"]");
     if ($sel.length === 0)
       return showToast("Warranty dropdown not found", 2500, "error");
 
     let current = $sel.val() || [];
     let count = 0;
 
-    $sel.find("option").each(function () {
-      const text = $(this).text().toLowerCase();
-      const val = $(this).val();
-      if (val && text.split(":")[0].trim() === keyword) {
-        if (!current.includes(val)) {
-          current.push(val);
-          count++;
+    const options = $sel.find("option");
+    const s2 = $sel.data("select2");
+    const isAjax = !!(
+      s2 &&
+      s2.options &&
+      s2.options.options &&
+      s2.options.options.ajax
+    );
+
+    const normalizeResults = (payload) => {
+      if (Array.isArray(payload)) return payload;
+      if (!payload || typeof payload !== "object") return [];
+      if (Array.isArray(payload.results)) return payload.results;
+      if (Array.isArray(payload.data)) return payload.data;
+      if (Array.isArray(payload.items)) return payload.items;
+      if (payload.results && Array.isArray(payload.results.data))
+        return payload.results.data;
+      return [];
+    };
+
+    const selectFromItems = (items) => {
+      let added = 0;
+      items.forEach((item) => {
+        if (item == null) return;
+        const id =
+          item.id ?? item.value ?? item.key ?? item.code ?? item.uuid ?? null;
+        const text =
+          (item.text || item.name || item.title || item.label || "").toString();
+        if (!id || !text) return;
+        const prefix = text.toLowerCase().split(":")[0].trim();
+        if (prefix !== keyword) return;
+
+        const idStr = String(id);
+        const existing = $sel
+          .find("option")
+          .filter(function () {
+            return $(this).val() === idStr;
+          });
+
+        if (existing.length > 0) {
+          if (!existing.prop("selected")) {
+            existing.prop("selected", true);
+            added++;
+          }
+        } else {
+          const opt = new Option(text, idStr, true, true);
+          $sel.append(opt);
+          added++;
         }
+      });
+      return added;
+    };
+
+    if (isAjax || (options.length === 0 && s2)) {
+      let ajaxUrl = null;
+      try {
+        const ajax = s2 && s2.options && s2.options.options && s2.options.options.ajax;
+        if (ajax && ajax.url) {
+          ajaxUrl = typeof ajax.url === "function" ? ajax.url() : ajax.url;
+        }
+      } catch {
+        ajaxUrl = null;
       }
-    });
+      if (!ajaxUrl) ajaxUrl = "/admin/ajax/warranty-claims";
+
+      let url = ajaxUrl;
+      try {
+        const u = new URL(ajaxUrl, window.location.origin);
+        u.searchParams.set("search", keyword);
+        url = u.toString();
+      } catch {
+        const joiner = ajaxUrl.includes("?") ? "&" : "?";
+        url = `${ajaxUrl}${joiner}search=${encodeURIComponent(keyword)}`;
+      }
+
+      let results = [];
+      try {
+        const res = await fetch(url, {
+          credentials: "include",
+          headers: { Accept: "application/json" },
+        });
+        const data = await res.json();
+        results = normalizeResults(data);
+      } catch (e) {
+        console.warn("[PA] warranty fetch failed", e);
+      }
+
+      if (results.length > 0) {
+        count += selectFromItems(results);
+      }
+    } else {
+      options.each(function () {
+        const text = $(this).text().toLowerCase();
+        const val = $(this).val();
+        if (val && text.split(":")[0].trim() === keyword) {
+          if (!current.includes(val)) {
+            current.push(val);
+            count++;
+          }
+        }
+      });
+    }
 
     if (count > 0) {
-      $sel.val(current).trigger("change");
+      if (current.length > 0) {
+        $sel.val(current).trigger("change");
+      }
       const stats = getStats();
       stats.warranties += count;
       saveStats(stats);
@@ -2343,7 +2439,9 @@
         .addEventListener("click", processWarranty);
       document.getElementById("pa-war-clr").addEventListener("click", () => {
         if (confirm("Clear all warranty selections?")) {
-          $('select[name="warranty_claims[]"]').val(null).trigger("change");
+          $("#warrantyClaims, select[name=\"warranty_claims[]\"]")
+            .val(null)
+            .trigger("change");
           showToast("Warranty claims cleared", 2500, "success");
           refreshFieldStatus();
         }
