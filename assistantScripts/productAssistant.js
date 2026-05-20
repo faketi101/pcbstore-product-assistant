@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PCB Product Assistant
 // @namespace    http://tampermonkey.net/
-// @version      4.7
+// @version      4.8
 // @description  All-in-one productivity assistant: Short desc formatter, description paste cleaner, keyword highlighter, meta counters, field status dashboard, FAQ/Spec/Warranty importer
 // @author       faketi101
 // @match        https://admin.pcbstore.net/admin/product/*
@@ -1412,18 +1412,6 @@
       },
     },
     {
-      name: "Buying Price",
-      sel: "input#buy_price",
-      check: () => {
-        try {
-          const v = document.querySelector("input#buy_price")?.value;
-          return v && parseFloat(v) > 0 && parseFloat(v) !== 10;
-        } catch {
-          return false;
-        }
-      },
-    },
-    {
       name: "Selling Price",
       sel: "input#price",
       check: () => {
@@ -1442,6 +1430,19 @@
         try {
           const s = document.querySelector("select#unit");
           return s && s.value && s.value !== "";
+        } catch {
+          return false;
+        }
+      },
+    },
+    {
+      name: "Wattage",
+      sel: "input#wattage",
+      check: () => {
+        try {
+          const v = document.querySelector("input#wattage")?.value?.trim();
+          if (!v) return false;
+          return /^\d+$/.test(v);
         } catch {
           return false;
         }
