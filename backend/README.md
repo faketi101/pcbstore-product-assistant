@@ -261,7 +261,6 @@ MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/dbname
 SESSION_SECRET=strong-random-secret-at-least-32-chars
 NODE_ENV=production
 FRONTEND_URL=https://yourdomain.com
-COOKIE_SECURE=true
 ```
 
 **Important Steps:**
