@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         PCB Product Assistant
+// @name         PCB Product Upload Assistant
 // @namespace    http://tampermonkey.net/
 // @version      4.9
 // @description  All-in-one productivity assistant: Short desc formatter, description paste cleaner, keyword highlighter, meta counters, field status dashboard, FAQ/Spec/Warranty importer
