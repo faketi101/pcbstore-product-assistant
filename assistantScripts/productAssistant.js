@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PCB Product Assistant
 // @namespace    http://tampermonkey.net/
-// @version      4.8
+// @version      4.9
 // @description  All-in-one productivity assistant: Short desc formatter, description paste cleaner, keyword highlighter, meta counters, field status dashboard, FAQ/Spec/Warranty importer
 // @author       faketi101
 // @match        https://admin.pcbstore.net/admin/product/*
@@ -15,6 +15,25 @@
   const SHORTCUT_KEY = "q"; // Alt+Q toggles panel
   const STORAGE_KEY = "pcb_assistant_config";
   const STATS_KEY = "pcb_stats";
+  const THEME_KEY = "theme";
+
+  const getTheme = () =>
+    localStorage.getItem(THEME_KEY) === "dark" ? "dark" : "light";
+
+  const applyTheme = (theme) => {
+    const resolvedTheme = theme === "dark" ? "dark" : "light";
+    const panel = document.getElementById("pa-panel");
+    const toggle = document.getElementById("pa-theme-toggle");
+
+    if (panel) panel.dataset.theme = resolvedTheme;
+    if (toggle) {
+      const isDark = resolvedTheme === "dark";
+      toggle.innerHTML = isDark ? I.sun : I.moon;
+      toggle.title = `Switch to ${isDark ? "light" : "dark"} theme`;
+      toggle.setAttribute("aria-label", toggle.title);
+      toggle.setAttribute("aria-pressed", String(isDark));
+    }
+  };
 
   const getConfig = () => {
     const defaults = { highlightWords: [], activeTab: "editor" };
@@ -77,6 +96,8 @@
     target: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>`,
     clipboard: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>`,
     trash: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>`,
+    sun: `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"/></svg>`,
+    moon: `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`,
   };
 
   // ─── STYLES ──────────────────────────────────────────────────
@@ -536,6 +557,106 @@
         color: #666;
         margin-top: 4px;
       }
+
+      /* ── Theme toggle and light theme ── */
+      .pa-hdr-actions { display: flex; align-items: center; gap: 8px; }
+      .pa-theme-toggle {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: #aaa;
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+      }
+      .pa-theme-toggle:hover { color: #fff; border-color: rgba(255,255,255,0.25); }
+
+      #pa-panel[data-theme="light"] {
+        background: rgba(255,255,255,0.94);
+        border-color: rgba(15,23,42,0.12);
+        box-shadow: 0 20px 60px rgba(15,23,42,0.18), 0 0 0 1px rgba(220,38,38,0.08);
+        color: #334155;
+      }
+      #pa-panel[data-theme="light"] .pa-hdr {
+        background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(248,250,252,0.96));
+      }
+      #pa-panel[data-theme="light"] .pa-hdr-title { color: #0f172a; }
+      #pa-panel[data-theme="light"] .pa-close,
+      #pa-panel[data-theme="light"] .pa-theme-toggle {
+        background: #f1f5f9;
+        border-color: #e2e8f0;
+        color: #64748b;
+      }
+      #pa-panel[data-theme="light"] .pa-theme-toggle:hover {
+        background: #e2e8f0;
+        border-color: #cbd5e1;
+        color: #0f172a;
+      }
+      #pa-panel[data-theme="light"] .pa-close:hover {
+        background: #dc2626;
+        border-color: #dc2626;
+        color: #fff;
+      }
+      #pa-panel[data-theme="light"] .pa-tabs {
+        background: rgba(248,250,252,0.95);
+        border-bottom-color: #e2e8f0;
+      }
+      #pa-panel[data-theme="light"] .pa-tab { color: #64748b; }
+      #pa-panel[data-theme="light"] .pa-tab:hover { color: #334155; }
+      #pa-panel[data-theme="light"] .pa-tab.active { color: #dc2626; }
+      #pa-panel[data-theme="light"] .pa-sec { border-bottom-color: #e2e8f0; }
+      #pa-panel[data-theme="light"] .pa-btn-dark {
+        background: #f1f5f9;
+        color: #475569;
+        border-color: #e2e8f0;
+      }
+      #pa-panel[data-theme="light"] .pa-btn-dark:hover { background: #e2e8f0; color: #0f172a; }
+      #pa-panel[data-theme="light"] .pa-textarea,
+      #pa-panel[data-theme="light"] .pa-input,
+      #pa-panel[data-theme="light"] .pa-paste-editor {
+        background: #fff;
+        border-color: #cbd5e1;
+        color: #1e293b;
+      }
+      #pa-panel[data-theme="light"] .pa-textarea::placeholder,
+      #pa-panel[data-theme="light"] .pa-input::placeholder,
+      #pa-panel[data-theme="light"] .pa-paste-editor:empty::before { color: #94a3b8; }
+      #pa-panel[data-theme="light"] .pa-textarea:focus,
+      #pa-panel[data-theme="light"] .pa-input:focus,
+      #pa-panel[data-theme="light"] .pa-paste-editor:focus { background: #fff; }
+      #pa-panel[data-theme="light"] .pa-hint,
+      #pa-panel[data-theme="light"] .pa-inline-ctr,
+      #pa-panel[data-theme="light"] .pa-inline-ctr span,
+      #pa-panel[data-theme="light"] .pa-tab-ctr { color: #64748b !important; }
+      #pa-panel[data-theme="light"] .pa-summary,
+      #pa-panel[data-theme="light"] .pa-stat-item {
+        background: #f8fafc;
+        border-color: #e2e8f0;
+      }
+      #pa-panel[data-theme="light"] .pa-ring .bg { stroke: #e2e8f0; }
+      #pa-panel[data-theme="light"] #pa-f-count { color: #0f172a !important; }
+      #pa-panel[data-theme="light"] .pa-fgo { color: #94a3b8; }
+      #pa-panel[data-theme="light"] .pa-badge-ok { color: #15803d; }
+      #pa-panel[data-theme="light"] .pa-badge-warn { color: #b45309; }
+      #pa-panel[data-theme="light"] .pa-badge-bad,
+      #pa-panel[data-theme="light"] .pa-tag { color: #dc2626; }
+      #pa-panel[data-theme="light"] .pa-stat-reset {
+        background: #fff;
+        border-color: #cbd5e1;
+        color: #64748b;
+      }
+      #pa-panel[data-theme="light"] .pa-hr { background: #e2e8f0; }
+      @keyframes pa-success-glow-light {
+        0% { border-color: #22c55e; box-shadow: 0 0 0 3px rgba(34,197,94,0.2); background: #f0fdf4; }
+        100% { border-color: #cbd5e1; box-shadow: none; background: #fff; }
+      }
+      #pa-panel[data-theme="light"] .pa-fill-success {
+        animation-name: pa-success-glow-light;
+      }
     `;
     document.head.appendChild(s);
   };
@@ -626,7 +747,10 @@
       <!-- HEADER -->
       <div class="pa-hdr">
         <div class="pa-hdr-title">${I.zap} PCB Product Assistant</div>
-        <button class="pa-close" id="pa-close" title="Close (Alt+Q)">${I.x}</button>
+        <div class="pa-hdr-actions">
+          <button class="pa-theme-toggle" id="pa-theme-toggle" type="button"></button>
+          <button class="pa-close" id="pa-close" type="button" title="Close (Alt+Q)">${I.x}</button>
+        </div>
       </div>
 
       <!-- TABS -->
@@ -2294,6 +2418,17 @@
     try {
       injectStyles();
       const panel = buildPanel();
+      applyTheme(getTheme());
+
+      document.getElementById("pa-theme-toggle").addEventListener("click", () => {
+        const nextTheme = getTheme() === "dark" ? "light" : "dark";
+        localStorage.setItem(THEME_KEY, nextTheme);
+        applyTheme(nextTheme);
+      });
+
+      window.addEventListener("storage", (event) => {
+        if (event.key === THEME_KEY) applyTheme(getTheme());
+      });
 
       // Toggle Alt+Q
       document.addEventListener("keydown", (e) => {
