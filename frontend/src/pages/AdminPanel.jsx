@@ -17,6 +17,7 @@ import TaskFilters from "../components/tasks/TaskFilters";
 import TaskList from "../components/tasks/TaskList";
 import TaskFormModal from "../components/tasks/TaskFormModal";
 import PromptTemplateManager from "../components/admin/PromptTemplateManager";
+import ReportTemplateManager from "../components/admin/ReportTemplateManager";
 import { AuthContext } from "../context/AuthContext";
 import { Navigate } from "react-router-dom";
 import taskService from "../services/taskService";
@@ -261,7 +262,7 @@ const AdminPanel = () => {
           onValueChange={setActiveTab}
           className="space-y-4 sm:space-y-6"
         >
-          <TabsList className="w-full sm:w-auto grid grid-cols-4 sm:inline-flex h-auto p-1">
+          <TabsList className="w-full sm:w-auto grid grid-cols-5 sm:inline-flex h-auto p-1">
             <TabsTrigger
               value="prompts"
               className="gap-1.5 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4 py-2"
@@ -269,6 +270,7 @@ const AdminPanel = () => {
               <FileText className="h-4 w-4" />
               <span>Prompts</span>
             </TabsTrigger>
+            <TabsTrigger value="report-setup" className="gap-1.5 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4 py-2"><Settings className="h-4 w-4" /><span>Report Setup</span></TabsTrigger>
             <TabsTrigger
               value="reports"
               className="gap-1.5 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4 py-2"
@@ -296,6 +298,7 @@ const AdminPanel = () => {
           <TabsContent value="prompts" className="space-y-6">
             <PromptTemplateManager />
           </TabsContent>
+          <TabsContent value="report-setup" className="space-y-6"><ReportTemplateManager /></TabsContent>
 
           {/* Reports Tab */}
           <TabsContent value="reports" className="space-y-6">

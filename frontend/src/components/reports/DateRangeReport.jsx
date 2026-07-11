@@ -13,6 +13,7 @@ import {
   formatReportForWhatsApp,
   copyToClipboard,
 } from "../../utils/formatReportForWhatsApp";
+import { aggregateReportEntries } from "../../utils/reportEntries";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -55,6 +56,7 @@ const DateRangeReport = () => {
 
       // Aggregate all data
       const aggregated = {
+        reportEntries: aggregateReportEntries((response.reports || []).map((report) => report.data)),
         description: { generated: 0, added: 0 },
         faq: { generated: 0, added: 0 },
         keyFeatures: { generated: 0, added: 0 },
@@ -77,7 +79,7 @@ const DateRangeReport = () => {
       response.reports.forEach((report) => {
         const data = report.data;
         Object.keys(aggregated).forEach((key) => {
-          if (key === "customFields") return;
+          if (key === "customFields" || key === "reportEntries") return;
           if (data[key]) {
             Object.keys(data[key]).forEach((subKey) => {
               aggregated[key][subKey] += data[key][subKey] || 0;

@@ -109,12 +109,12 @@ const VariableEditor = ({
           ? "opacity-60 scale-95 border-blue-400 bg-blue-50/30 dark:bg-blue-950/20 shadow-lg"
           : "border-transparent bg-muted/20 hover:bg-muted/30",
       )}
-      draggable
-      onDragStart={(e) => onDrag(e, index)}
       onDragOver={(e) => e.preventDefault()}
     >
       <div className="flex items-center gap-2">
         <GripVertical
+          draggable
+          onDragStart={(e) => onDrag(e, index)}
           className={cn(
             "h-4 w-4 shrink-0 cursor-grab active:cursor-grabbing transition-colors",
             isDragging
@@ -345,12 +345,12 @@ const PromptSectionEditor = ({
           ? "opacity-60 scale-95 border-blue-400 bg-blue-50/30 dark:bg-blue-950/20 shadow-lg"
           : "border-transparent bg-muted/20 hover:bg-muted/30",
       )}
-      draggable
-      onDragStart={(e) => onDrag(e, index)}
       onDragOver={(e) => e.preventDefault()}
     >
       <div className="flex items-center gap-2">
         <GripVertical
+          draggable
+          onDragStart={(e) => onDrag(e, index)}
           className={cn(
             "h-4 w-4 shrink-0 cursor-grab active:cursor-grabbing transition-colors",
             isDragging
@@ -488,7 +488,7 @@ const PromptTemplateManager = () => {
     fetchTemplates();
   }, []);
 
-  const fetchTemplates = async () => {
+  async function fetchTemplates() {
     setLoading(true);
     try {
       const data = await authService.getAdminTemplates();
@@ -499,7 +499,7 @@ const PromptTemplateManager = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   const handleCreate = () => {
     setEditingTemplate({ ...emptyTemplate });
@@ -562,24 +562,27 @@ const PromptTemplateManager = () => {
       }
     }
 
-    editingTemplate.prompts = editingTemplate.prompts.map((p, i) => ({
+    const templateToSave = {
+      ...editingTemplate,
+      prompts: editingTemplate.prompts.map((p, i) => ({
       ...p,
       order: i,
-    }));
-    editingTemplate.variables = editingTemplate.variables.map((v, i) => ({
+      })),
+      variables: editingTemplate.variables.map((v, i) => ({
       ...v,
       order: i,
-    }));
+      })),
+    };
 
     setSaving(true);
     try {
       if (isCreating) {
-        await authService.createAdminTemplate(editingTemplate);
+        await authService.createAdminTemplate(templateToSave);
         toast.success("Template created!");
       } else {
         await authService.updateAdminTemplate(
           editingTemplate._id,
-          editingTemplate,
+          templateToSave,
         );
         toast.success("Template updated!");
       }

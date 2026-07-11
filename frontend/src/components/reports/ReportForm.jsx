@@ -31,6 +31,29 @@ import { Spinner } from "@/components/ui/loading";
 const STORAGE_KEY = "pcb_automation_report_form";
 
 const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
+  const [reportTemplate, setReportTemplate] = useState(editingReport?.data?.reportTemplate || null);
+  const [reportTemplates, setReportTemplates] = useState([]);
+  const [templateLoading, setTemplateLoading] = useState(!editingReport);
+
+  useEffect(() => {
+    if (editingReport) {
+      setReportTemplate(editingReport.data?.reportTemplate || null);
+      setTemplateLoading(false);
+      return;
+    }
+    let active = true;
+    reportService.getActiveReportTemplates().then((templates) => {
+      if (!active) return;
+      setReportTemplates(templates);
+      const savedTemplateId = localStorage.getItem("pcb_report_template_id");
+      setReportTemplate(templates.find((template) => template._id === savedTemplateId) || templates[0] || null);
+    }).catch(() => {
+      if (active) toast.error("Could not load your report setup");
+    }).finally(() => {
+      if (active) setTemplateLoading(false);
+    });
+    return () => { active = false; };
+  }, [editingReport]);
   useEffect(() => {
     document.title = editingReport
       ? "Edit Report - PCB Automation"
@@ -67,6 +90,7 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
         price: data.price || { added: 0 },
         internalLink: data.internalLink || { added: 0 },
         customFields: data.customFields || [],
+        dynamicFields: data.dynamicFields || {},
       };
     }
 
@@ -126,6 +150,7 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
       price: { added: 0 },
       internalLink: { added: 0 },
       customFields: [],
+      dynamicFields: {},
     };
   };
 
@@ -133,6 +158,7 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
 
   const [customFieldName, setCustomFieldName] = useState("");
   const [customFieldValue, setCustomFieldValue] = useState("");
+  const [customFieldGroup, setCustomFieldGroup] = useState("");
   const [statsText, setStatsText] = useState("");
   const [statsFillerOpen, setStatsFillerOpen] = useState(false);
   const [statsFillMode, setStatsFillMode] = useState({
@@ -163,6 +189,16 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
     }));
   };
 
+  const handleDynamicFieldChange = (field, counter, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      dynamicFields: {
+        ...(prev.dynamicFields || {}),
+        [field]: { ...(prev.dynamicFields?.[field] || {}), [counter]: parseInt(value, 10) || 0 },
+      },
+    }));
+  };
+
   const addCustomField = () => {
     if (!customFieldName.trim()) {
       toast.error("Please enter a field name");
@@ -181,12 +217,16 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
         {
           name: customFieldName.trim(),
           value: parseInt(customFieldValue) || 0,
+          templateName: reportTemplate?.name || "Product Management",
+          templateRole: reportTemplate?.role || "product_manager",
+          groupName: customFieldGroup || reportTemplate?.groups?.[0]?.name || "Product Work",
         },
       ],
     }));
 
     setCustomFieldName("");
     setCustomFieldValue("");
+    setCustomFieldGroup("");
     toast.success("Custom field added");
   };
 
@@ -327,10 +367,12 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
       price: { added: 0 },
       internalLink: { added: 0 },
       customFields: [],
+      dynamicFields: {},
     };
     setFormData(emptyForm);
     setCustomFieldName("");
     setCustomFieldValue("");
+    setCustomFieldGroup("");
     localStorage.removeItem(STORAGE_KEY);
     toast.success("Form reset successfully");
   };
@@ -360,6 +402,12 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
           price: formData.price,
           internalLink: formData.internalLink,
           customFields: formData.customFields,
+          dynamicFields: formData.dynamicFields || {},
+          reportTemplate: reportTemplate ? {
+            role: reportTemplate.role,
+            name: reportTemplate.name,
+            groups: reportTemplate.groups,
+          } : undefined,
         },
       };
 
@@ -421,6 +469,26 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
       </CardHeader>
       <CardContent>
         <form id="report-form" onSubmit={handleSubmitWithLoading}>
+          {!editingReport && !templateLoading && reportTemplates.length > 0 && (
+            <div className="mb-6 p-4 border rounded-xl bg-muted/20">
+              <Label htmlFor="report-template" className="block mb-2">Report Template</Label>
+              <select
+                id="report-template"
+                value={reportTemplate?._id || ""}
+                onChange={(e) => {
+                  const template = reportTemplates.find((item) => item._id === e.target.value) || null;
+                  setReportTemplate(template);
+                  setFormData((current) => ({ ...current, dynamicFields: {}, customFields: [] }));
+                  setCustomFieldGroup(template?.groups?.[0]?.name || "");
+                  if (template?._id) localStorage.setItem("pcb_report_template_id", template._id);
+                }}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+              >
+                {reportTemplates.map((template) => <option key={template._id} value={template._id}>{template.name}</option>)}
+              </select>
+              <p className="text-xs text-muted-foreground mt-2">Choose the report layout that matches the work you are reporting.</p>
+            </div>
+          )}
           {/* Indicator Legend */}
           <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 border border-blue-200 dark:border-blue-800 rounded-xl">
             <h4 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-3">
@@ -476,7 +544,8 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
             </div>
           </div>
 
-          {/* Stats Filler */}
+          {/* Stats Filler is specific to the legacy product report. */}
+          {!reportTemplate && <>
           <div className="mb-6 border border-border rounded-xl overflow-hidden bg-card">
             <button
               type="button"
@@ -598,7 +667,18 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
               </div>
             )}
           </div>
+          </>}
 
+          {templateLoading ? <div className="py-10 flex justify-center"><Spinner /></div> : reportTemplate ? (
+            <div className="space-y-7">
+              {reportTemplate.groups.map((group, groupIndex) => (
+                <section key={group._id || `${group.name}-${groupIndex}`}>
+                  <div className="mb-4"><h3 className="text-lg font-semibold flex items-center gap-2"><ClipboardList className="h-5 w-5 text-primary" />{group.name}</h3></div>
+                  {group.fields.map((field) => <FieldGroup key={field._id || field.key} label={field.label} fields={field.counters.map((counter) => counter.key)} fieldLabels={Object.fromEntries(field.counters.map((counter) => [counter.key, counter.label]))} values={formData.dynamicFields?.[field.key]} onChange={(counter, value) => handleDynamicFieldChange(field.key, counter, value)} />)}
+                </section>
+              ))}
+            </div>
+          ) : <>
           <div className="mb-6">
             <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
               <ClipboardList className="h-5 w-5 text-primary" />
@@ -748,15 +828,21 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
             }
           />
 
-          <CustomFieldsSection
-            customFields={formData.customFields}
-            onAdd={addCustomField}
-            onRemove={removeCustomField}
-            customFieldName={customFieldName}
-            setCustomFieldName={setCustomFieldName}
-            customFieldValue={customFieldValue}
-            setCustomFieldValue={setCustomFieldValue}
-          />
+          </>}
+          {!templateLoading && (
+            <CustomFieldsSection
+              customFields={formData.customFields}
+              onAdd={addCustomField}
+              onRemove={removeCustomField}
+              customFieldName={customFieldName}
+              setCustomFieldName={setCustomFieldName}
+              customFieldValue={customFieldValue}
+              setCustomFieldValue={setCustomFieldValue}
+              groups={(reportTemplate?.groups || []).map((group) => group.name)}
+              selectedGroup={customFieldGroup}
+              setSelectedGroup={setCustomFieldGroup}
+            />
+          )}
         </form>
       </CardContent>
       <CardFooter>

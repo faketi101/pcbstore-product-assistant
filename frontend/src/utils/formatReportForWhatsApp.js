@@ -1,3 +1,5 @@
+import { getReportEntries, groupReportEntries } from "./reportEntries";
+
 /**
  * Reusable WhatsApp report formatter
  * This is the canonical template used across all report views
@@ -19,15 +21,25 @@ export const formatReportForWhatsApp = (data, options = {}) => {
   // Build header based on type
   let output = "";
   if (type === "dateRange" && startDate && endDate) {
-    output = `*Date Range Report (${startDate} to ${endDate})*\n\nProducts:\n`;
+    output = `*Date Range Report (${startDate} to ${endDate})*\n\nWork Summary\n`;
   } else if (type === "daily") {
     output = date
-      ? `Today's work done (${date}):\n\nProducts\n`
-      : "Today's work done:\n\nProducts\n";
+      ? `Today's work done (${date}):\n\nWork Summary\n`
+      : "Today's work done:\n\nWork Summary\n";
   } else {
     output = date
-      ? `Hourly Update (${date}):\n\nProducts\n`
-      : "Hourly Update:\n\nProducts\n";
+      ? `Hourly Update (${date}):\n\nWork Summary\n`
+      : "Hourly Update:\n\nWork Summary\n";
+  }
+
+  const entries = getReportEntries(data);
+  if (entries.length) {
+    const sections = groupReportEntries(entries).map((group) => {
+      const heading = group.groupName === group.templateName ? group.templateName : `${group.templateName} — ${group.groupName}`;
+      const lines = group.entries.map((entry) => `- ${entry.label}: ${entry.actions.map((action) => `${action.label.toLowerCase()} ${action.value}`).join(", ")}`);
+      return `${heading}\n${lines.join("\n")}`;
+    });
+    return output + sections.join("\n\n");
   }
 
   const lines = [];

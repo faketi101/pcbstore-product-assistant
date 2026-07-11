@@ -6,6 +6,83 @@ const verifyAdmin = require("../middleware/admin.middleware");
 
 const router = express.Router();
 
+const legacyReportFields = {
+  description: "Description",
+  faq: "FAQ",
+  keyFeatures: "Key Features",
+  specifications: "Specifications",
+  metaTitleDescription: "Meta Title & Description",
+  titleFixed: "Title",
+  imageRenamed: "Image Renamed & Fixed",
+  productReCheck: "Product Recheck",
+  category: "Category",
+  attributes: "Attributes",
+  deliveryCharge: "Delivery Charge",
+  warranty: "Warranty",
+  warrantyClaimReasons: "Warranty Claim Reasons",
+  brand: "Brand",
+  price: "Price",
+  internalLink: "Internal Link",
+};
+
+const humanize = (value = "") => value
+  .replace(/([a-z])([A-Z])/g, "$1 $2")
+  .replace(/[_-]+/g, " ")
+  .replace(/\b\w/g, (letter) => letter.toUpperCase());
+
+const actionsFromValues = (values = {}, definitions = []) => {
+  const labels = new Map(definitions.map((item) => [item.key, item.label]));
+  return Object.entries(values || {})
+    .filter(([, value]) => Number(value) > 0)
+    .map(([key, value]) => ({ key, label: labels.get(key) || humanize(key), value: Number(value) }));
+};
+
+const getReportEntries = (data = {}) => {
+  if (Array.isArray(data.reportEntries)) return data.reportEntries;
+  const entries = [];
+  const representedKeys = new Set();
+  const template = data.reportTemplate;
+
+  (template?.groups || []).forEach((group) => {
+    (group.fields || []).forEach((field) => {
+      representedKeys.add(field.key);
+      const actions = actionsFromValues(data.dynamicFields?.[field.key], field.counters || []);
+      if (actions.length) entries.push({ templateName: template.name || "Report", groupName: group.name || "Work", fieldKey: field.key, label: field.label || humanize(field.key), actions });
+    });
+  });
+
+  Object.entries(data.dynamicFields || {}).forEach(([fieldKey, values]) => {
+    if (representedKeys.has(fieldKey)) return;
+    const actions = actionsFromValues(values);
+    if (actions.length) entries.push({ templateName: template?.name || "Other Work", groupName: "Other", fieldKey, label: humanize(fieldKey), actions });
+  });
+
+  Object.entries(legacyReportFields).forEach(([fieldKey, label]) => {
+    const actions = actionsFromValues(data[fieldKey]);
+    if (actions.length) entries.push({ templateName: "Product Management", groupName: "Product Work", fieldKey, label, actions });
+  });
+
+  (data.customFields || []).forEach((field) => {
+    if (Number(field.value) > 0) entries.push({ templateName: field.templateName || template?.name || "Other Work", groupName: field.groupName || "Custom Work", fieldKey: `custom:${String(field.name).trim().toLowerCase()}`, label: field.name, actions: [{ key: "completed", label: "Completed", value: Number(field.value) }] });
+  });
+  return entries;
+};
+
+const aggregateReportEntries = (reports) => {
+  const merged = new Map();
+  reports.flatMap((report) => getReportEntries(report.data || report)).forEach((entry) => {
+    const entryKey = `${entry.templateName}\u0000${entry.groupName}\u0000${entry.fieldKey}\u0000${entry.label}`;
+    if (!merged.has(entryKey)) merged.set(entryKey, { ...entry, actions: [] });
+    const target = merged.get(entryKey);
+    (entry.actions || []).forEach((action) => {
+      let existing = target.actions.find((item) => item.key === action.key && item.label === action.label);
+      if (!existing) { existing = { ...action, value: 0 }; target.actions.push(existing); }
+      existing.value += Number(action.value) || 0;
+    });
+  });
+  return [...merged.values()];
+};
+
 /* ---------------------------------------------
    FORMAT REPORT FOR WHATSAPP
 ---------------------------------------------- */
@@ -23,7 +100,22 @@ const formatReportForWhatsApp = (reportData, type = "hourly", date = "") => {
         : `Today's work done (${date}):\n\n`;
   }
 
-  output += "Products\n";
+  output += "Work Summary\n";
+
+  const reportEntries = getReportEntries(data);
+  if (reportEntries.length) {
+    const sections = new Map();
+    reportEntries.forEach((entry) => {
+      const key = `${entry.templateName}\u0000${entry.groupName}`;
+      if (!sections.has(key)) sections.set(key, { templateName: entry.templateName, groupName: entry.groupName, entries: [] });
+      sections.get(key).entries.push(entry);
+    });
+    output += [...sections.values()].map((section) => {
+      const heading = section.templateName === section.groupName ? section.templateName : `${section.templateName} — ${section.groupName}`;
+      return `${heading}\n${section.entries.map((entry) => `- ${entry.label}: ${entry.actions.map((action) => `${action.label.toLowerCase()} ${action.value}`).join(", ")}`).join("\n")}`;
+    }).join("\n\n");
+    return output;
+  }
 
   const lines = [];
 
@@ -111,6 +203,9 @@ const formatReportForWhatsApp = (reportData, type = "hourly", date = "") => {
 
 const aggregateDailyReport = (hourlyReports) => {
   const aggregated = {
+    reportEntries: aggregateReportEntries(hourlyReports),
+    reportTemplate: null,
+    dynamicFields: {},
     description: { generated: 0, added: 0 },
     faq: { generated: 0, added: 0 },
     keyFeatures: { generated: 0, added: 0 },
@@ -136,7 +231,7 @@ const aggregateDailyReport = (hourlyReports) => {
     const { data } = report;
 
     Object.keys(aggregated).forEach((key) => {
-      if (key === "customFields") return;
+      if (key === "customFields" || key === "reportTemplate" || key === "dynamicFields" || key === "reportEntries") return;
       if (data[key]) {
         Object.keys(data[key]).forEach((subKey) => {
           aggregated[key][subKey] += data[key][subKey] || 0;
@@ -150,6 +245,16 @@ const aggregateDailyReport = (hourlyReports) => {
           field.name,
           (customFieldsMap.get(field.name) || 0) + field.value,
         );
+      });
+    }
+
+    if (data.reportTemplate && data.dynamicFields) {
+      aggregated.reportTemplate = data.reportTemplate;
+      Object.entries(data.dynamicFields).forEach(([fieldKey, counters]) => {
+        aggregated.dynamicFields[fieldKey] ||= {};
+        Object.entries(counters || {}).forEach(([counterKey, value]) => {
+          aggregated.dynamicFields[fieldKey][counterKey] = (aggregated.dynamicFields[fieldKey][counterKey] || 0) + (Number(value) || 0);
+        });
       });
     }
   });

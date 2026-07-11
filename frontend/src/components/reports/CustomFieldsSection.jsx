@@ -12,6 +12,9 @@ const CustomFieldsSection = ({
   setCustomFieldName,
   customFieldValue,
   setCustomFieldValue,
+  groups = [],
+  selectedGroup,
+  setSelectedGroup,
 }) => {
   const handleAdd = () => {
     if (!customFieldName.trim()) {
@@ -36,17 +39,28 @@ const CustomFieldsSection = ({
     <div className="mt-6">
       <h3 className="text-lg font-medium mb-4 flex items-center gap-2">
         <Sparkles className="h-5 w-5 text-primary" />
-        Custom Fields
+        Custom Work
       </h3>
-      <div className="flex flex-col sm:flex-row gap-3 mb-4">
+      <p className="text-sm text-muted-foreground -mt-2 mb-4">Add work that is not covered by the predefined fields. It will stay under the selected section.</p>
+      <div className="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_minmax(160px,0.6fr)_8rem_auto] gap-3 mb-4">
         <Input
           type="text"
           placeholder="Field name"
           value={customFieldName}
           onChange={(e) => setCustomFieldName(e.target.value)}
           onKeyPress={handleKeyPress}
-          className="flex-1"
+          className="w-full"
         />
+        {groups.length > 0 && (
+          <select
+            value={selectedGroup || groups[0]}
+            onChange={(e) => setSelectedGroup(e.target.value)}
+            className="flex h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
+            aria-label="Custom work section"
+          >
+            {groups.map((group) => <option key={group} value={group}>{group}</option>)}
+          </select>
+        )}
         <Input
           type="number"
           placeholder="Value"
@@ -54,7 +68,7 @@ const CustomFieldsSection = ({
           onChange={(e) => setCustomFieldValue(e.target.value)}
           onKeyPress={handleKeyPress}
           min="0"
-          className="w-full sm:w-32"
+          className="w-full"
         />
         <Button type="button" onClick={handleAdd}>
           <Plus className="h-4 w-4 mr-2" />
@@ -73,6 +87,7 @@ const CustomFieldsSection = ({
               <div className="flex items-center gap-2">
                 <span className="font-medium">{field.name}</span>
                 <Badge variant="secondary">{field.value}</Badge>
+                {field.groupName && <Badge variant="outline">{field.groupName}</Badge>}
               </div>
               <Button
                 type="button"

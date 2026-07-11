@@ -31,6 +31,35 @@ axios.interceptors.response.use(
 );
 
 const reportService = {
+  getCurrentTemplate: async () => {
+    const response = await axios.get(`${config.API_URL}/report-templates/current`);
+    return response.data;
+  },
+
+  getActiveReportTemplates: async () => {
+    const response = await axios.get(`${config.API_URL}/report-templates/active`);
+    return response.data;
+  },
+
+  getReportTemplates: async () => {
+    const response = await axios.get(`${config.API_URL}/report-templates`);
+    return response.data;
+  },
+
+  createReportTemplate: async (data) => {
+    const response = await axios.post(`${config.API_URL}/report-templates`, data);
+    return response.data;
+  },
+
+  updateReportTemplate: async (id, data) => {
+    const response = await axios.put(`${config.API_URL}/report-templates/${id}`, data);
+    return response.data;
+  },
+
+  deleteReportTemplate: async (id) => {
+    const response = await axios.delete(`${config.API_URL}/report-templates/${id}`);
+    return response.data;
+  },
   // Create new hourly report
   createHourlyReport: async (reportData) => {
     const response = await axios.post(`${API_URL}/hourly`, reportData);

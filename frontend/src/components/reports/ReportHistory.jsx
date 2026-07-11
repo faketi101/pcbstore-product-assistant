@@ -5,6 +5,7 @@ import {
   formatReportForWhatsApp,
   copyToClipboard,
 } from "../../utils/formatReportForWhatsApp";
+import { getReportEntries, groupReportEntries } from "../../utils/reportEntries";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -89,15 +90,6 @@ const ReportHistory = ({ onEdit, lastEditedReportId, onClearLastEdited }) => {
     });
     copyToClipboard(text, toast);
   };
-
-  const formatParts = (parts) => {
-    return Object.entries(parts)
-      .filter(([, value]) => value > 0)
-      .map(([key, value]) => `${capitalize(key)} ${value}`)
-      .join(", ");
-  };
-
-  const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
   useEffect(() => {
     fetchHourlyReports();
@@ -259,31 +251,22 @@ const ReportHistory = ({ onEdit, lastEditedReportId, onClearLastEdited }) => {
                       </Button>
                     </div>
                   </div>
-                  <div className="flex flex-wrap gap-1.5">
-                    {Object.entries(report.data).map(([key, value]) => {
-                      if (key === "customFields") {
-                        return value.length > 0 ? (
-                          <Badge key={key} variant="purple" className="text-xs">
-                            Custom:{" "}
-                            {value
-                              .map((f) => `${f.name} (${f.value})`)
-                              .join(", ")}
-                          </Badge>
-                        ) : null;
-                      }
-                      if (!value || typeof value !== "object") return null;
-                      const formatted = formatParts(value);
-                      return formatted ? (
-                        <Badge
-                          key={key}
-                          variant="secondary"
-                          className="text-xs"
-                        >
-                          {capitalize(key)}: {formatted}
-                        </Badge>
-                      ) : null;
-                    })}
-                  </div>
+                  {groupReportEntries(getReportEntries(report.data)).length ? (
+                    <div className="space-y-3">
+                      {groupReportEntries(getReportEntries(report.data)).map((group) => (
+                        <div key={group.key}>
+                          <p className="text-xs font-semibold text-muted-foreground mb-1.5">{group.templateName} · {group.groupName}</p>
+                          <div className="flex flex-wrap gap-1.5">
+                            {group.entries.map((entry) => (
+                              <Badge key={`${group.key}-${entry.fieldKey}-${entry.label}`} variant="secondary" className="text-xs">
+                                {entry.label}: {entry.actions.map((action) => `${action.label} ${action.value}`).join(", ")}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : <p className="text-sm text-muted-foreground">No completed work was recorded in this report.</p>}
                 </div>
               ))}
             </div>

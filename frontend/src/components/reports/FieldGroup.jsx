@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
-const FieldGroup = ({ label, fields, values = {}, onChange }) => {
+const FieldGroup = ({ label, fields, fieldLabels = {}, values = {}, onChange }) => {
   const getFieldStyles = (field) => {
     const styles = {
       generated: {
@@ -49,7 +49,7 @@ const FieldGroup = ({ label, fields, values = {}, onChange }) => {
             <div key={field} className="space-y-1.5">
               <Label className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <span className={cn("w-2 h-2 rounded-full", styles.dot)} />
-                {getFieldLabel(field)}
+                {fieldLabels[field] || getFieldLabel(field)}
               </Label>
               <Input
                 type="number"

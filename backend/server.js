@@ -11,6 +11,7 @@ const promptRoutes = require("./routes/prompt.routes");
 const categoryPromptRoutes = require("./routes/categoryPrompt.routes");
 const promptTemplateRoutes = require("./routes/promptTemplate.routes");
 const reportRoutes = require("./routes/report.routes");
+const reportTemplateRoutes = require("./routes/reportTemplate.routes");
 const taskRoutes = require("./routes/task.routes");
 
 const app = express();
@@ -136,6 +137,7 @@ app.use("/api/prompts", promptRoutes);
 app.use("/api/category-prompts", categoryPromptRoutes);
 app.use("/api/prompt-templates", promptTemplateRoutes);
 app.use("/api/reports", reportRoutes);
+app.use("/api/report-templates", reportTemplateRoutes);
 app.use("/api/tasks", taskRoutes);
 
 app.get("/", (req, res) => {

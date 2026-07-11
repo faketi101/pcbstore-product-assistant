@@ -8,6 +8,12 @@ const reportSchema = new mongoose.Schema({
   timestamp: Date,
   type: String,
   data: {
+    reportTemplate: {
+      role: String,
+      name: String,
+      groups: { type: mongoose.Schema.Types.Mixed, default: [] },
+    },
+    dynamicFields: { type: mongoose.Schema.Types.Mixed, default: {} },
     description: {
       generated: { type: Number, default: 0 },
       added: { type: Number, default: 0 },
@@ -67,6 +73,9 @@ const reportSchema = new mongoose.Schema({
       {
         name: { type: String, required: true },
         value: { type: Number, required: true },
+        templateName: { type: String, default: "" },
+        templateRole: { type: String, default: "" },
+        groupName: { type: String, default: "" },
       },
     ],
   },
@@ -93,7 +102,6 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
       required: true,
-      enum: ["product_manager", "admin", "user"],
       default: "user",
     },
     prompts: {
