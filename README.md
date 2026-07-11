@@ -1,339 +1,358 @@
-# PCB Product Assistant
+# PCBStore Product Assistant
 
-A full-stack web application plus a Tampermonkey userscript for streamlining PCB Store product management. The **web app** handles AI prompt management, work reports, and team task tracking, while the **Product Assistant** userscript automates product-page editing directly inside the PCBStore admin panel.
+PCBStore Product Assistant is a full-stack internal productivity application for managing reusable AI prompts, work reports, users, and team tasks. The repository also contains Tampermonkey userscripts that automate common product, category, glossary, and internal-link workflows in PCBStore.
 
-## 🚀 Features
+Production site: [https://pcb.tarikul.dev](https://pcb.tarikul.dev)
 
-### Web Application
-- **SEO Product Prompt Builder** — Compose and store reusable AI prompts (static + main template) for generating product descriptions, key features, FAQs, specs, and meta tags
-- **Category Prompt Builder** — Maintain two-step AI prompts for category-level content generation
-- **Report Management** — Create hourly/daily work reports tracking descriptions, FAQs, key features, specifications, meta titles, warranty claims, categories, attributes, and more; supports custom fields
-- **WhatsApp Export** — One-click formatting of reports for WhatsApp sharing
-- **Date Range Reports** — Aggregate reports across custom date ranges with daily summaries
-- **Task Manager** — Create, assign, filter, sort, and paginate team tasks with status flow (Not Started → Running → On Hold → Completed), due dates, progress tracking, and link attachments
-- **Public Task Board** — A read-only public view of tasks (no login required)
-- **Admin Panel** — User management with role-based access (admin / product_manager / user)
-- **JWT Authentication** — Secure token-based auth with role-based route protection
-- **Health & Session Diagnostics** — Built-in `/api/health` and `/api/session-test` endpoints
+## Features
 
-### Product Assistant (Tampermonkey Userscript)
-A floating panel injected into `https://admin.pcbstore.net/admin/product/*` that provides:
+### Web application
 
-- **Short Description Formatter** — Paste plain text; first line becomes an `<h2>` heading, remaining lines become a bullet list; auto-fills the Quill editor
-- **Description Paste Editor** — Paste rich HTML, strip background/inline colors, and inject cleaned content into the specification Quill editor (multi-strategy: `dangerouslyPasteHTML`, `setContents`, synthetic paste)
-- **Keyword Highlighter** — Add keywords and highlight them in the description using the CSS Custom Highlight API (non-destructive, visual only)
-- **Meta Title & Description Filler** — Fill meta fields with live character counters (60 / 160 char limits)
-- **FAQ Importer** — Parse question/answer pairs and auto-fill the FAQ section
-- **Specification Table Importer** — Parse grouped key→tab→value lines and fill the specification table
-- **Warranty Claims Selector** — Match and select warranty options by category prefix
-- **Field Completion Dashboard** — Real-time status grid showing 18 product fields with a progress ring
-- **Session Stats Tracker** — Counts short descriptions, descriptions, FAQs, spec groups/items, warranties, categories, and attributes filled during the session; copyable and resettable
-- **Alt+Q Toggle** — Show/hide the panel with a keyboard shortcut
+- Dynamic prompt builders generated from administrator-managed templates
+- Per-user prompt overrides with individual or full reset to template defaults
+- Role-based, configurable report templates with grouped fields and counters
+- Hourly reports, daily summaries, date-range reporting, and WhatsApp-friendly output
+- Team task management with assignments, filters, links, progress, due dates, and status tracking
+- Public read-only task board at `/tasks/public`
+- Admin tools for tasks, reports, prompt templates, report templates, and user accounts
+- JWT authentication, active-account checks, and role-based API protection
+- Health and session diagnostic endpoints
+- Localhost, LAN, and production API configuration through environment variables
 
-## 🛠 Tech Stack
+### Browser automation scripts
+
+The `assistantScripts/` directory contains standalone Tampermonkey userscripts:
+
+| Script | Purpose |
+| --- | --- |
+| `productUploadAssistant.js` | Main product upload assistant for descriptions, metadata, FAQs, specifications, warranties, field status, and session statistics |
+| `autoFill.js` | Bulk FAQ and specification-table importer |
+| `internalLinkAssistant.js` | Bulk internal-link insertion with templates, queue editing, and backup/restore |
+| `doubleClickToInternalLink.js` | Turns selected specification text into an internal link |
+| `productScreenshot.js` | Captures a timestamped product-page screenshot when a product is saved |
+| `frontendToBackendProductSearch.js` | Opens the matching admin product search and copies frontend specifications |
+| `categoryTreeOrganizerV2.js` | Extracts and exports the admin category hierarchy |
+| `glossaryUploadAssitant.js` | Assists with glossary content, SEO metadata, FAQs, validation, and progress tracking |
+| `glossaryTermExporter.js` | Exports glossary terms across paginated admin results |
+
+`productAssistant (Copy).js` is an older retained copy. Use `productUploadAssistant.js` for the current product-upload workflow.
+
+## Tech stack
 
 ### Backend
-- **Runtime**: Node.js with Express.js
-- **Database**: MongoDB Atlas with Mongoose ODM
-- **Authentication**: JWT (jsonwebtoken) with Bearer token middleware
-- **Security**: bcryptjs for password hashing, CORS with configurable origins
-- **Session Store**: connect-mongo (for legacy session support alongside JWT)
-- **Logging**: Morgan (dev / combined modes)
-- **Utilities**: uuid, dotenv
-- **Dev**: nodemon for hot-reload
+
+- Node.js and Express 4
+- MongoDB with Mongoose 8
+- JWT bearer authentication and bcrypt password hashing
+- Express sessions stored with `connect-mongo` for session diagnostics and legacy support
+- CORS, Morgan, dotenv, and UUID
 
 ### Frontend
-- **Framework**: React 19 with Vite 7
-- **Styling**: Tailwind CSS 4 with tailwind-merge & class-variance-authority
-- **UI Components**: Radix UI (Dialog, Dropdown Menu, Tabs, Slot)
-- **Icons**: Lucide React
-- **HTTP Client**: Axios with Bearer token auth
-- **Routing**: React Router 7
-- **Notifications**: react-hot-toast
-- **Date Handling**: date-fns
-- **Build Tool**: Vite with @vitejs/plugin-react
 
-### Product Assistant Userscript
-- **Platform**: Tampermonkey / Greasemonkey
-- **Target**: `https://admin.pcbstore.net/admin/product/*`
-- **Tech**: Vanilla JS, CSS Custom Highlight API, Quill editor integration
-- **Storage**: localStorage for config and session stats
+- React 19 and React Router 7
+- Vite 7
+- Tailwind CSS 4
+- Radix UI primitives and Lucide icons
+- Axios and Fetch API
+- react-hot-toast and date-fns
 
-## 📋 Prerequisites
+## Requirements
 
-- **Node.js** (v16 or higher) — [Download](https://nodejs.org/)
-- **MongoDB Atlas** account — [Sign up](https://www.mongodb.com/atlas)
-- **pnpm** (recommended) or npm
-- **Git** — [Download](https://git-scm.com/)
-- **Tampermonkey** browser extension (for the Product Assistant userscript)
+- Node.js `^20.19.0` or `>=22.12.0` (required by the installed Vite version)
+- pnpm
+- A MongoDB database, such as MongoDB Atlas
+- Git
+- Tampermonkey or another compatible userscript manager if browser automation is needed
 
-## 🚀 Quick Start
+## Getting started
 
-### 1. Clone the Repository
+### 1. Clone the repository
+
 ```bash
 git clone git@github.com:faketi101/pcbstore-product-assistant.git
 cd pcbstore-product-assistant
 ```
 
-### 2. Automated Setup
-The start scripts auto-detect your local IP and configure `.env` files for both backend and frontend.
+### 2. Configure the backend
 
-#### Linux / macOS
-```bash
-./start.sh
-```
-
-#### Windows
-```bash
-start.bat
-```
-
-The script will:
-- Detect your local network IP address
-- Ask you to choose between localhost or network access
-- Automatically configure `.env` files for both backend and frontend
-- Install dependencies if needed
-- Start both servers
-
-### 3. Install the Product Assistant
-1. Install the [Tampermonkey](https://www.tampermonkey.net/) browser extension
-2. Create a new userscript and paste the contents of `assistantScripts/productAssistant.js`
-3. Navigate to any product page on `https://admin.pcbstore.net/admin/product/*`
-4. Press **Alt+Q** to toggle the assistant panel
-
-## 📖 Manual Setup
-
-### Backend
 ```bash
 cd backend
-pnpm install
 cp .env.example .env
-# Edit .env with your MongoDB connection string and settings
-pnpm start        # production
-pnpm run dev      # development (nodemon)
-```
-
-### Frontend
-```bash
-cd frontend
 pnpm install
-cp .env.example .env
-# Edit .env with the backend API URL
-pnpm dev          # development
-pnpm build        # production build
 ```
 
-## 🌐 Access URLs
+Update `backend/.env` with at least:
 
-### Live
-- **Production**: [https://pcb.tarikul.dev/](https://pcb.tarikul.dev/)
-
-### Local
-```
-Local Access:
-  Backend:  http://localhost:5000
-  Frontend: http://localhost:5173
-
-Network Access (example):
-  Backend:  http://192.168.1.100:5000
-  Frontend: http://192.168.1.100:5173
-```
-
-## 📚 API Documentation
-
-### Authentication
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/login` | User login (returns JWT) |
-| POST | `/api/logout` | Logout (client-side token removal) |
-| GET | `/api/me` | Get current user (requires token) |
-| POST | `/api/change-password` | Change password |
-
-### Reports
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/reports/hourly` | Get hourly reports (filterable) |
-| POST | `/api/reports/hourly` | Create hourly report |
-| PUT | `/api/reports/hourly/:id` | Update hourly report |
-| DELETE | `/api/reports/hourly/:id` | Delete hourly report |
-| GET | `/api/reports/daily/:date` | Daily report for a date |
-| GET | `/api/reports/daily` | Daily reports with date range |
-
-### Product Prompts
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/prompts` | Get user's prompts |
-| POST | `/api/prompts` | Save prompts |
-| DELETE | `/api/prompts` | Reset all prompts to default |
-| DELETE | `/api/prompts/main` | Reset main prompt only |
-| DELETE | `/api/prompts/static` | Reset static prompt only |
-
-### Category Prompts
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/category-prompts` | Get category prompts |
-| POST | `/api/category-prompts` | Save category prompts |
-| DELETE | `/api/category-prompts` | Reset both to default |
-| DELETE | `/api/category-prompts/1` | Reset prompt 1 only |
-| DELETE | `/api/category-prompts/2` | Reset prompt 2 only |
-
-### Tasks
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| GET | `/api/tasks/public` | None | Public task list |
-| GET | `/api/tasks/users` | Token | Users list (for filters) |
-| GET | `/api/tasks/my-tasks` | Token | Current user's tasks |
-| GET | `/api/tasks/all-tasks` | Token | All tasks |
-| GET | `/api/tasks/:id` | Token | Single task |
-| PUT | `/api/tasks/:id` | Token | Update task (role-scoped) |
-| GET | `/api/tasks/admin/tasks` | Admin | Admin task list |
-| POST | `/api/tasks` | Admin | Create task |
-| PUT | `/api/tasks/admin/:id` | Admin | Admin update task |
-| DELETE | `/api/tasks/:id` | Admin | Delete task |
-| GET | `/api/tasks/admin/users` | Admin | Users with roles |
-
-### System
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/health` | Health check (DB, env, IPs) |
-| GET | `/api/session-test` | Session diagnostics |
-
-## ⚙️ Configuration
-
-### Environment Variables
-
-#### Backend (.env)
 ```env
-MONGODB_URI=mongodb+srv://...
-JWT_SECRET=your_jwt_secret
-SESSION_SECRET=your_session_secret
-FRONTEND_URL=http://localhost:5173
 PORT=5000
+MONGODB_URI=mongodb+srv://username:password@cluster/database
+JWT_SECRET=replace_with_a_long_random_secret
+SESSION_SECRET=replace_with_another_long_random_secret
 NODE_ENV=development
+FRONTEND_URL=http://localhost:5173
 COOKIE_SECURE=false
 COOKIE_DOMAIN=
 ```
 
-#### Frontend (.env)
+`FRONTEND_URL` may contain comma-separated origins in production. Development mode accepts all origins; production mode only accepts configured origins plus the built-in localhost origins.
+
+### 3. Configure the frontend
+
+```bash
+cd ../frontend
+cp .env.example .env
+pnpm install
+```
+
+Set the backend origin in `frontend/.env`:
+
 ```env
 VITE_API_URL=http://localhost:5000
 ```
 
-### Network Configuration
-1. **Local Development** — Use `localhost` for single-machine development
-2. **Network Access** — Use your LAN IP (e.g. `192.168.1.100`) for multi-device access
-3. **Production** — Configure with your domain, enable HTTPS, set `COOKIE_SECURE=true`
+The frontend builds API requests as:
 
-## 🧪 Development
+```text
+${VITE_API_URL}/api
+```
 
-### Available Scripts
+If `VITE_API_URL` is not defined, `frontend/src/config/api.config.js` falls back to `http://localhost:5000`.
 
-#### Backend
+### 4. Start the application
+
+Run each service in a separate terminal:
+
+```bash
+# Terminal 1
+cd backend
+pnpm run dev
+```
+
+```bash
+# Terminal 2
+cd frontend
+pnpm dev
+```
+
+Open [http://localhost:5173](http://localhost:5173). The API runs at [http://localhost:5000](http://localhost:5000), and its health endpoint is [http://localhost:5000/api/health](http://localhost:5000/api/health).
+
+## One-command launchers
+
+After adding the MongoDB URI and secrets to the backend environment, the repository launchers can configure local/LAN URLs, install missing dependencies, and start both services.
+
+Linux or macOS:
+
+```bash
+chmod +x start.sh
+./start.sh
+```
+
+Windows:
+
+```bat
+start.bat
+```
+
+Both launchers detect a LAN IP and offer localhost or network access. They update `FRONTEND_URL` in `backend/.env` and `VITE_API_URL` in `frontend/.env`; they do not generate database credentials or application secrets.
+
+## Initial data and migrations
+
+The dynamic prompt system needs prompt-template documents. For an existing installation that still stores product/category prompts on users, run:
+
 ```bash
 cd backend
-pnpm run dev       # Start with nodemon (hot-reload)
-pnpm start         # Production server
-pnpm run test:db   # Test MongoDB connection
+node scripts/migratePrompts.js
 ```
 
-#### Frontend
+Useful maintenance commands include:
+
+```bash
+pnpm run test:db
+pnpm run migrate:user-status
+node scripts/migrateCustomWorkSections.js          # dry run
+node scripts/migrateCustomWorkSections.js --apply  # apply after reviewing output
+```
+
+`backend/scripts/addAdminUser.js` creates a fixed demo administrator account. If it is used for initial local setup, change its password immediately and do not use the demo credentials in production.
+
+## Available commands
+
+### Backend
+
+```bash
+cd backend
+pnpm start                 # run with Node
+pnpm run dev               # run with nodemon
+pnpm run test:db           # test the MongoDB connection
+pnpm run migrate:user-status
+```
+
+### Frontend
+
 ```bash
 cd frontend
-pnpm dev           # Development server
-pnpm build         # Production build
-pnpm preview       # Preview production build
-pnpm lint          # ESLint
+pnpm dev                   # start Vite on port 5173
+pnpm build                 # create the production build
+pnpm preview               # preview the production build
+pnpm lint                  # run ESLint
 ```
 
-#### Utility Scripts
-```bash
-node backend/scripts/addAdminUser.js       # Create an admin user
-node backend/scripts/testMongoConnection.js # Test DB connection
-node backend/scripts/testFilter.js          # Test task filters
+The Vite development server binds to `0.0.0.0`, so it can be reached from other devices on the same network when the firewall and environment URLs allow it.
+
+## Authentication and roles
+
+Login returns a JWT that the frontend stores in `localStorage` and sends as a bearer token:
+
+```http
+Authorization: Bearer <token>
 ```
 
-### Project Structure
-```
+Tokens expire after 24 hours. Protected requests also verify that the user still exists and is active.
+
+Roles are stored as normalized strings. `admin` grants access to the admin APIs and interface. Other role names can be created through report templates and assigned to users; report templates determine the report fields available for those workflows.
+
+## Main frontend routes
+
+| Route | Access | Description |
+| --- | --- | --- |
+| `/login` | Public | Sign in |
+| `/` | Authenticated | Application home |
+| `/prompts/:slug` | Authenticated | Dynamic prompt builder |
+| `/reports` | Authenticated | Work reports and history |
+| `/tasks` | Authenticated | User task board |
+| `/tasks/public` | Public | Read-only public task board |
+| `/admin` | Admin | Tasks, reports, templates, and users |
+
+The legacy `/product-prompt` and `/category-prompt` frontend paths redirect to their dynamic prompt routes.
+
+## API overview
+
+All endpoints are under `/api`. Except for login and the public task board, application endpoints require a bearer token. Admin routes require the `admin` role.
+
+### Authentication
+
+| Method | Endpoint | Access | Description |
+| --- | --- | --- | --- |
+| `POST` | `/api/login` | Public | Sign in and receive a JWT |
+| `POST` | `/api/logout` | Public | Acknowledge client-side logout |
+| `GET` | `/api/me` | Authenticated | Get the current user |
+| `POST` | `/api/change-password` | Authenticated | Change the current password |
+
+### Dynamic prompt templates
+
+| Method | Endpoint | Access | Description |
+| --- | --- | --- | --- |
+| `GET` | `/api/prompt-templates/active` | Authenticated | List active prompt templates |
+| `GET` | `/api/prompt-templates/by-slug/:slug` | Authenticated | Get a template merged with the current user's overrides |
+| `POST` | `/api/prompt-templates/:id/overrides` | Authenticated | Save user prompt overrides |
+| `DELETE` | `/api/prompt-templates/:id/overrides` | Authenticated | Reset all overrides for a template |
+| `DELETE` | `/api/prompt-templates/:id/overrides/:promptKey` | Authenticated | Reset one prompt override |
+| `GET/POST` | `/api/prompt-templates` | Admin | List or create templates |
+| `GET/PUT/DELETE` | `/api/prompt-templates/:id` | Admin | Read, update, or delete a template |
+
+The legacy `/api/prompts` and `/api/category-prompts` endpoints remain available for the older product/category prompt storage format.
+
+### Reports and report templates
+
+| Method | Endpoint | Access | Description |
+| --- | --- | --- | --- |
+| `GET/POST` | `/api/reports/hourly` | Authenticated | List or create hourly reports |
+| `PUT/DELETE` | `/api/reports/hourly/:id` | Authenticated | Update or delete an hourly report |
+| `GET` | `/api/reports/daily/:date` | Authenticated | Get a daily report |
+| `GET` | `/api/reports/daily` | Authenticated | Get reports for a date range |
+| `GET` | `/api/reports/admin/reports` | Admin | Filter user reports |
+| `GET` | `/api/reports/admin/daily` | Admin | View admin daily summaries |
+| `GET` | `/api/reports/admin/range` | Admin | View admin range summaries |
+| `GET` | `/api/report-templates/current` | Authenticated | Get the current user's role template |
+| `GET` | `/api/report-templates/active` | Authenticated | List selectable active templates |
+| `GET/POST` | `/api/report-templates` | Admin | List or create report templates |
+| `PUT/DELETE` | `/api/report-templates/:id` | Admin | Update or delete a report template |
+
+### Tasks
+
+| Method | Endpoint | Access | Description |
+| --- | --- | --- | --- |
+| `GET` | `/api/tasks/public` | Public | Get the public task list |
+| `GET` | `/api/tasks/users` | Authenticated | Get users available for filtering |
+| `GET` | `/api/tasks/my-tasks` | Authenticated | Get tasks assigned to the current user |
+| `GET` | `/api/tasks/all-tasks` | Authenticated | Get the authenticated task list |
+| `GET/PUT` | `/api/tasks/:id` | Authenticated | Read or update a task within role rules |
+| `GET` | `/api/tasks/admin/tasks` | Admin | Get the admin task list |
+| `POST` | `/api/tasks` | Admin | Create a task |
+| `PUT` | `/api/tasks/admin/:id` | Admin | Update a task as admin |
+| `DELETE` | `/api/tasks/:id` | Admin | Delete a task |
+| `GET` | `/api/tasks/admin/users` | Admin | Get assignable users and roles |
+
+### User administration and diagnostics
+
+| Method | Endpoint | Access | Description |
+| --- | --- | --- | --- |
+| `GET/POST` | `/api/admin/users` | Admin | List or create users |
+| `PATCH/DELETE` | `/api/admin/users/:id` | Admin | Update or delete a user subject to admin safety rules |
+| `GET` | `/api/health` | Public | Check server, environment, and MongoDB status |
+| `GET` | `/api/session-test` | Public | Inspect or test session persistence |
+
+## Installing a Tampermonkey script
+
+1. Install Tampermonkey in the browser.
+2. Create a new userscript.
+3. Copy the complete contents of the required file from `assistantScripts/` into the editor.
+4. Save the userscript and open one of the URLs in its `@match` metadata.
+5. For `productUploadAssistant.js`, press `Alt+Q` to show or hide the assistant.
+
+These scripts depend on the current PCBStore page markup. Review and test selectors after major admin/frontend updates.
+
+## Project structure
+
+```text
 pcbstore-product-assistant/
-├── backend/                     # Express.js API server
-│   ├── config/                  # DB connection, default prompts
-│   │   ├── database.js
-│   │   ├── defaultPrompts.js
-│   │   └── defaultCategoryPrompts.js
-│   ├── middleware/              # Auth & admin middleware
-│   │   ├── auth.middleware.js   # JWT token verification
-│   │   └── admin.middleware.js  # Admin role check
-│   ├── models/                  # Mongoose schemas
-│   │   ├── User.model.js       # User, prompts, reports
-│   │   └── Task.model.js       # Task management
-│   ├── routes/                  # API route handlers
-│   │   ├── auth.routes.js
-│   │   ├── prompt.routes.js
-│   │   ├── categoryPrompt.routes.js
-│   │   ├── report.routes.js
-│   │   └── task.routes.js
-│   ├── scripts/                 # CLI utilities
-│   └── server.js                # App entry point
-├── frontend/                    # React SPA
+├── assistantScripts/             # Tampermonkey browser automation
+├── backend/
+│   ├── config/                    # Database and default templates
+│   ├── middleware/                # JWT and admin authorization
+│   ├── migrations/                # Package-exposed data migrations
+│   ├── models/                    # User, task, prompt, and report schemas
+│   ├── routes/                    # Express API route handlers
+│   ├── scripts/                   # Setup, test, and migration utilities
+│   ├── .env.example
+│   ├── package.json
+│   └── server.js
+├── frontend/
+│   ├── public/
 │   ├── src/
-│   │   ├── components/          # Reusable UI components
-│   │   │   ├── ui/              # Primitives (Button, Card, Badge, etc.)
-│   │   │   ├── tasks/           # Task CRUD components
-│   │   │   └── reports/         # Report form & views
-│   │   ├── pages/               # Route pages
-│   │   │   ├── Home.jsx         # Dashboard menu
-│   │   │   ├── ProductPrompt.jsx
-│   │   │   ├── CategoryPrompt.jsx
-│   │   │   ├── Reports.jsx
-│   │   │   ├── UserTasks.jsx
-│   │   │   ├── PublicTasks.jsx
-│   │   │   └── AdminPanel.jsx
-│   │   ├── services/            # API service layer
-│   │   ├── context/             # AuthContext (JWT)
-│   │   ├── config/              # API base URL config
-│   │   ├── lib/                 # Utilities (cn helper)
-│   │   └── utils/               # Report formatting
+│   │   ├── components/            # Shared, task, report, and admin UI
+│   │   ├── config/                # API base URL configuration
+│   │   ├── context/               # Authentication context
+│   │   ├── pages/                 # Route-level screens
+│   │   ├── services/              # Backend API clients
+│   │   └── utils/                 # Report formatting helpers
+│   ├── .env.example
+│   ├── package.json
 │   └── vite.config.js
-├── assistantScripts/            # Tampermonkey userscripts
-│   ├── productAssistant.js      # Main product assistant (v4.2)
-│   ├── autoFill.js              # Auto-fill helper
-│   └── doubleClickToInternalLink.js
-├── start.sh                     # Linux/macOS launcher
-├── start.bat                    # Windows launcher
+├── start.sh                       # Linux/macOS launcher
+├── start.bat                      # Windows launcher
 └── README.md
 ```
 
-## 🚀 Deployment
+## Production notes
 
-### Production Checklist
-- [ ] Set `NODE_ENV=production`
-- [ ] Configure production MongoDB URI
-- [ ] Set strong `JWT_SECRET` and `SESSION_SECRET`
-- [ ] Set `FRONTEND_URL` to the production domain
-- [ ] Enable HTTPS and set `COOKIE_SECURE=true`
-- [ ] Configure CORS allowed origins
-- [ ] Set `COOKIE_DOMAIN` for subdomain support if needed
-- [ ] Build frontend: `cd frontend && pnpm build`
-- [ ] Configure firewall rules and reverse proxy
+- Set `NODE_ENV=production`.
+- Use strong, independent values for `JWT_SECRET` and `SESSION_SECRET`.
+- Set `FRONTEND_URL` to every allowed production frontend origin.
+- Serve both applications over HTTPS and set `COOKIE_SECURE=true`.
+- Set `COOKIE_DOMAIN` only when cross-subdomain cookies require it.
+- Run `pnpm build` in `frontend/` and serve `frontend/dist` through the deployment web server or reverse proxy.
+- Proxy API traffic to the backend port and keep MongoDB credentials outside source control.
+- Confirm `/api/health` reports a connected database after deployment.
 
-## 🤝 Contributing
+## Contributing
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+Before opening a pull request:
 
-### Code Style
-- Follow ESLint configuration
-- Use meaningful commit messages
-- Test your changes thoroughly
-- Update documentation as needed
+```bash
+cd frontend
+pnpm lint
+pnpm build
+```
 
-## 📄 License
-
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
-
----
-
-**Built with ❤️ for efficient PCB Store product automation management by TARIKUL ISLAM**
+There is currently no automated backend test suite, so backend changes should also be exercised against a development database.
