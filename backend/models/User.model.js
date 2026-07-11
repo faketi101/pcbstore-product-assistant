@@ -104,6 +104,15 @@ const userSchema = new mongoose.Schema(
       required: true,
       default: "user",
     },
+    isActive: {
+      type: Boolean,
+      default: true,
+      index: true,
+    },
+    joinedAt: {
+      type: Date,
+      default: Date.now,
+    },
     prompts: {
       staticPrompt: {
         type: String,

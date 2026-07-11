@@ -10,6 +10,7 @@ import {
   CalendarDays,
   CalendarRange,
   FileText,
+  Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -18,10 +19,12 @@ import TaskList from "../components/tasks/TaskList";
 import TaskFormModal from "../components/tasks/TaskFormModal";
 import PromptTemplateManager from "../components/admin/PromptTemplateManager";
 import ReportTemplateManager from "../components/admin/ReportTemplateManager";
+import UserManager from "../components/admin/UserManager";
 import { AuthContext } from "../context/AuthContext";
 import { Navigate } from "react-router-dom";
 import taskService from "../services/taskService";
 import reportService from "../services/reportService";
+import userService from "../services/userService";
 import toast from "react-hot-toast";
 
 const AdminPanel = () => {
@@ -31,6 +34,8 @@ const AdminPanel = () => {
   const [pagination, setPagination] = useState({});
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
+  const [reportUsers, setReportUsers] = useState([]);
+  const [reportTemplates, setReportTemplates] = useState([]);
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
   const [reports, setReports] = useState([]);
@@ -39,8 +44,8 @@ const AdminPanel = () => {
     startDate: "",
     endDate: "",
     userId: "",
+    templateRole: "",
   });
-  const [debugInfo, setDebugInfo] = useState("");
   const usersLoaded = useRef(false);
 
   const [filters, setFilters] = useState({
@@ -71,14 +76,10 @@ const AdminPanel = () => {
       try {
         setLoading(true);
         const params = buildParams(filters);
-        setDebugInfo(`[ADMIN] Fetching: ${JSON.stringify(params)}`);
         const data = await taskService.getAdminTasks(params);
         if (!cancelled) {
           setTasks(data.tasks);
           setPagination(data.pagination);
-          setDebugInfo(
-            `[ADMIN] Sent: ${JSON.stringify(params)} → Got ${data.pagination.total} results`,
-          );
         }
       } catch (error) {
         console.error("Error fetching tasks:", error);
@@ -100,8 +101,14 @@ const AdminPanel = () => {
     document.title = "Admin Panel - PCB Automation";
     const loadUsers = async () => {
       try {
-        const data = await taskService.getAdminUsers();
-        setUsers(data);
+        const [activeUsers, managedUsers, templates] = await Promise.all([
+          taskService.getAdminUsers(),
+          userService.getUsers(),
+          reportService.getReportFilterTemplates(true),
+        ]);
+        setUsers(activeUsers);
+        setReportUsers(managedUsers.users || []);
+        setReportTemplates(templates);
       } catch (error) {
         console.error("Error fetching users:", error);
       }
@@ -116,6 +123,8 @@ const AdminPanel = () => {
       if (reportFilters.startDate) params.startDate = reportFilters.startDate;
       if (reportFilters.endDate) params.endDate = reportFilters.endDate;
       if (reportFilters.userId) params.userId = reportFilters.userId;
+      if (reportFilters.templateRole)
+        params.templateRole = reportFilters.templateRole;
 
       let data;
       if (reportView === "daily") {
@@ -159,6 +168,11 @@ const AdminPanel = () => {
     setReportPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+
+  const handleManagedUsersChange = useCallback((managedUsers) => {
+    setReportUsers(managedUsers);
+    setUsers(managedUsers.filter((managedUser) => managedUser.isActive !== false));
+  }, []);
 
   // Check user role before rendering
   if (!user || user.role !== "admin") {
@@ -243,18 +257,11 @@ const AdminPanel = () => {
                 Admin Panel
               </h1>
               <p className="text-sm text-muted-foreground hidden sm:block">
-                Manage tasks, view reports, and oversee team activities
+                Manage users, tasks, reports, and team access
               </p>
             </div>
           </div>
         </div>
-
-        {/* Debug Info - remove after testing */}
-        {/* {debugInfo && (
-          <div className="mb-4 p-2 bg-yellow-100 dark:bg-yellow-900 text-xs font-mono rounded border border-yellow-300 dark:border-yellow-700 break-all">
-            {debugInfo}
-          </div>
-        )} */}
 
         {/* Tabs */}
         <Tabs
@@ -262,13 +269,20 @@ const AdminPanel = () => {
           onValueChange={setActiveTab}
           className="space-y-4 sm:space-y-6"
         >
-          <TabsList className="w-full sm:w-auto grid grid-cols-5 sm:inline-flex h-auto p-1">
+          <TabsList className="w-full sm:w-auto grid grid-cols-3 sm:inline-flex h-auto p-1">
             <TabsTrigger
               value="prompts"
               className="gap-1.5 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4 py-2"
             >
               <FileText className="h-4 w-4" />
               <span>Prompts</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="users"
+              className="gap-1.5 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4 py-2"
+            >
+              <Users className="h-4 w-4" />
+              <span>Users</span>
             </TabsTrigger>
             <TabsTrigger value="report-setup" className="gap-1.5 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4 py-2"><Settings className="h-4 w-4" /><span>Report Setup</span></TabsTrigger>
             <TabsTrigger
@@ -298,6 +312,9 @@ const AdminPanel = () => {
           <TabsContent value="prompts" className="space-y-6">
             <PromptTemplateManager />
           </TabsContent>
+          <TabsContent value="users" className="space-y-6">
+            <UserManager onUsersChange={handleManagedUsersChange} />
+          </TabsContent>
           <TabsContent value="report-setup" className="space-y-6"><ReportTemplateManager /></TabsContent>
 
           {/* Reports Tab */}
@@ -308,25 +325,28 @@ const AdminPanel = () => {
                 { key: "hourly", label: "Hourly", icon: Clock },
                 { key: "daily", label: "Daily", icon: CalendarDays },
                 { key: "range", label: "Range Summary", icon: CalendarRange },
-              ].map(({ key, label, icon: Icon }) => (
-                <Button
-                  key={key}
-                  variant={reportView === key ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => {
-                    setReportView(key);
-                    setReports([]);
-                  }}
-                >
-                  <Icon className="h-4 w-4 mr-1.5" />
-                  {label}
-                </Button>
-              ))}
+              ].map((view) => {
+                const ViewIcon = view.icon;
+                return (
+                  <Button
+                    key={view.key}
+                    variant={reportView === view.key ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => {
+                      setReportView(view.key);
+                      setReports([]);
+                    }}
+                  >
+                    <ViewIcon className="h-4 w-4 mr-1.5" />
+                    {view.label}
+                  </Button>
+                );
+              })}
             </div>
 
             {/* Filters */}
             <div className="bg-muted/50 rounded-lg p-4 border">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Start Date</label>
                   <input
@@ -368,9 +388,29 @@ const AdminPanel = () => {
                     className="w-full h-9 px-3 rounded-md border border-input bg-background text-sm"
                   >
                     <option value="">All Users</option>
-                    {users.map((u) => (
+                    {reportUsers.map((u) => (
                       <option key={u._id} value={u._id}>
-                        {u.name}
+                        {u.name}{u.isActive === false ? " (Inactive)" : ""}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Report Template</label>
+                  <select
+                    value={reportFilters.templateRole}
+                    onChange={(e) =>
+                      setReportFilters({
+                        ...reportFilters,
+                        templateRole: e.target.value,
+                      })
+                    }
+                    className="w-full h-9 px-3 rounded-md border border-input bg-background text-sm"
+                  >
+                    <option value="">All Templates</option>
+                    {reportTemplates.map((template) => (
+                      <option key={template.role} value={template.role}>
+                        {template.name}
                       </option>
                     ))}
                   </select>
@@ -532,7 +572,7 @@ const AdminPanel = () => {
               onFilterChange={handleFilterChange}
               onClearFilters={handleClearFilters}
               showAssignedFilter={true}
-              users={users}
+              users={reportUsers}
             />
 
             <TaskList
@@ -559,7 +599,7 @@ const AdminPanel = () => {
               onFilterChange={handleFilterChange}
               onClearFilters={handleClearFilters}
               showAssignedFilter={true}
-              users={users}
+              users={reportUsers}
             />
 
             <TaskList

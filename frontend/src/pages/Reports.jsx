@@ -3,6 +3,7 @@ import ReportForm from "../components/reports/ReportForm";
 import DailyReportView from "../components/reports/DailyReportView";
 import DateRangeReport from "../components/reports/DateRangeReport";
 import ReportHistory from "../components/reports/ReportHistory";
+import reportService from "../services/reportService";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Plus, FileText, Calendar, Clock, BarChart3 } from "lucide-react";
 
@@ -10,6 +11,8 @@ const Reports = () => {
   const [activeTab, setActiveTab] = useState("create");
   const [editingReport, setEditingReport] = useState(null);
   const [lastEditedReportId, setLastEditedReportId] = useState(null);
+  const [templateRole, setTemplateRole] = useState("");
+  const [filterTemplates, setFilterTemplates] = useState([]);
 
   useEffect(() => {
     const titles = {
@@ -20,6 +23,15 @@ const Reports = () => {
     };
     document.title = `${titles[activeTab] || "Reports"} - PCB Automation`;
   }, [activeTab, editingReport]);
+
+  useEffect(() => {
+    reportService
+      .getReportFilterTemplates()
+      .then(setFilterTemplates)
+      .catch((error) =>
+        console.error("Could not load report template filters:", error),
+      );
+  }, []);
 
   const handleEditReport = (report) => {
     setEditingReport(report);
@@ -101,6 +113,27 @@ const Reports = () => {
             </TabsTrigger>
           </TabsList>
 
+          {activeTab !== "create" && (
+            <div className="max-w-sm rounded-lg border bg-muted/40 p-3 space-y-1.5">
+              <label htmlFor="report-template-filter" className="text-xs font-medium">
+                Report Template
+              </label>
+              <select
+                id="report-template-filter"
+                value={templateRole}
+                onChange={(event) => setTemplateRole(event.target.value)}
+                className="w-full h-9 px-3 rounded-md border border-input bg-background text-sm"
+              >
+                <option value="">All Templates</option>
+                {filterTemplates.map((template) => (
+                  <option key={template.role} value={template.role}>
+                    {template.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
           <TabsContent value="create">
             <ReportForm
               editingReport={editingReport}
@@ -110,11 +143,14 @@ const Reports = () => {
           </TabsContent>
 
           <TabsContent value="daily">
-            <DailyReportView />
+            <DailyReportView templateRole={templateRole} />
           </TabsContent>
 
           <TabsContent value="dateRange">
-            <DateRangeReport />
+            <DateRangeReport
+              key={templateRole || "all-templates"}
+              templateRole={templateRole}
+            />
           </TabsContent>
 
           <TabsContent value="history">
@@ -122,6 +158,7 @@ const Reports = () => {
               onEdit={handleEditReport}
               lastEditedReportId={lastEditedReportId}
               onClearLastEdited={() => setLastEditedReportId(null)}
+              templateRole={templateRole}
             />
           </TabsContent>
         </Tabs>

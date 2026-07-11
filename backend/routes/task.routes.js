@@ -11,6 +11,32 @@ const router = express.Router();
 
 const toObjectId = (id) => new mongoose.Types.ObjectId(id);
 
+const validateNewAssignments = async (assignedTo = [], existing = []) => {
+  const existingIds = new Set(existing.map((id) => String(id)));
+  const newIds = [...new Set(assignedTo.map((id) => String(id)))].filter(
+    (id) => !existingIds.has(id),
+  );
+
+  if (newIds.some((id) => !mongoose.isValidObjectId(id))) {
+    const error = new Error("One or more assigned users are invalid.");
+    error.status = 400;
+    throw error;
+  }
+
+  if (!newIds.length) return;
+
+  const activeCount = await User.countDocuments({
+    _id: { $in: newIds },
+    isActive: { $ne: false },
+  });
+
+  if (activeCount !== newIds.length) {
+    const error = new Error("Tasks can only be assigned to active users.");
+    error.status = 400;
+    throw error;
+  }
+};
+
 const buildFilter = (query, userId = null, onlyAssigned = false) => {
   // Use a clean $and array to avoid $or/$and key collisions
   const conditions = [];
@@ -249,7 +275,7 @@ router.get("/public", async (req, res) => {
 // Users list — available to ALL logged-in users (for filter dropdowns)
 router.get("/users", verifyToken, async (req, res) => {
   try {
-    res.json(await User.find({}, "name email").sort({ name: 1 }));
+    res.json(await User.find({}, "name email isActive").sort({ name: 1 }));
   } catch (err) {
     res
       .status(500)
@@ -405,6 +431,7 @@ router.post("/", verifyToken, verifyAdmin, async (req, res) => {
         .status(400)
         .json({ message: "Title, start date, and due date are required" });
     }
+    await validateNewAssignments(assignedTo || []);
     const task = await new Task({
       title,
       description,
@@ -425,7 +452,7 @@ router.post("/", verifyToken, verifyAdmin, async (req, res) => {
     res.status(201).json(await populateTask(Task.findById(task._id)));
   } catch (err) {
     res
-      .status(500)
+      .status(err.status || 500)
       .json({ message: "Error creating task", error: err.message });
   }
 });
@@ -458,7 +485,10 @@ router.put("/admin/:id", verifyToken, verifyAdmin, async (req, res) => {
     if (totalCompletedTask !== undefined)
       task.totalCompletedTask = totalCompletedTask;
     if (status !== undefined) task.status = status;
-    if (assignedTo !== undefined) task.assignedTo = assignedTo;
+    if (assignedTo !== undefined) {
+      await validateNewAssignments(assignedTo, task.assignedTo || []);
+      task.assignedTo = assignedTo;
+    }
     if (status === "Completed" && !task.endDate && endDate === undefined)
       task.endDate = new Date();
     task.lastUpdated = {
@@ -471,7 +501,7 @@ router.put("/admin/:id", verifyToken, verifyAdmin, async (req, res) => {
     res.json(await populateTask(Task.findById(task._id)));
   } catch (err) {
     res
-      .status(500)
+      .status(err.status || 500)
       .json({ message: "Error updating task", error: err.message });
   }
 });
@@ -491,7 +521,12 @@ router.delete("/:id", verifyToken, verifyAdmin, async (req, res) => {
 // Admin-only user list (includes roles)
 router.get("/admin/users", verifyToken, verifyAdmin, async (req, res) => {
   try {
-    res.json(await User.find({}, "name email role").sort({ name: 1 }));
+    res.json(
+      await User.find(
+        { isActive: { $ne: false } },
+        "name email role isActive",
+      ).sort({ name: 1 }),
+    );
   } catch (err) {
     res
       .status(500)

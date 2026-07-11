@@ -31,7 +31,12 @@ import {
   X,
 } from "lucide-react";
 
-const ReportHistory = ({ onEdit, lastEditedReportId, onClearLastEdited }) => {
+const ReportHistory = ({
+  onEdit,
+  lastEditedReportId,
+  onClearLastEdited,
+  templateRole = "",
+}) => {
   const [hourlyReports, setHourlyReports] = useState([]);
   const [filterStartDate, setFilterStartDate] = useState("");
   const [filterEndDate, setFilterEndDate] = useState("");
@@ -50,6 +55,7 @@ const ReportHistory = ({ onEdit, lastEditedReportId, onClearLastEdited }) => {
       const filters = {};
       if (filterStartDate) filters.startDate = filterStartDate;
       if (filterEndDate) filters.endDate = filterEndDate;
+      if (templateRole) filters.templateRole = templateRole;
 
       const response = await reportService.getHourlyReports(filters);
       const sortedReports = [...response.reports].sort((a, b) => {
@@ -94,7 +100,7 @@ const ReportHistory = ({ onEdit, lastEditedReportId, onClearLastEdited }) => {
   useEffect(() => {
     fetchHourlyReports();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [templateRole]);
 
   useEffect(() => {
     if (lastEditedReportId && hourlyReports.length > 0) {

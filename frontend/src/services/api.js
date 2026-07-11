@@ -312,6 +312,15 @@ const put = async (endpoint, data) => {
   return handleResponse(response);
 };
 
+const patch = async (endpoint, data) => {
+  const response = await fetch(`${API_URL}${endpoint}`, {
+    method: "PATCH",
+    headers: getHeaders(),
+    body: JSON.stringify(data),
+  });
+  return handleResponse(response);
+};
+
 const del = async (endpoint) => {
   const response = await fetch(`${API_URL}${endpoint}`, {
     method: "DELETE",
@@ -351,6 +360,7 @@ const authService = {
   get,
   post,
   put,
+  patch,
   delete: del,
 };
 

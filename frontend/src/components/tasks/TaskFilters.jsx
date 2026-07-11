@@ -267,6 +267,7 @@ const TaskFilters = ({
                       onClick={() => handleUserToggle(user._id)}
                     >
                       {user.name}
+                      {user.isActive === false ? " (Inactive)" : ""}
                     </Badge>
                   ))}
                 </div>

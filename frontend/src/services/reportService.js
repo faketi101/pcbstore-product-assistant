@@ -41,6 +41,14 @@ const reportService = {
     return response.data;
   },
 
+  getReportFilterTemplates: async (admin = false) => {
+    const endpoint = admin
+      ? `${API_URL}/admin/filter-templates`
+      : `${API_URL}/filter-templates`;
+    const response = await axios.get(endpoint);
+    return response.data.templates || [];
+  },
+
   getReportTemplates: async () => {
     const response = await axios.get(`${config.API_URL}/report-templates`);
     return response.data;
@@ -72,22 +80,30 @@ const reportService = {
     if (filters.date) params.append("date", filters.date);
     if (filters.startDate) params.append("startDate", filters.startDate);
     if (filters.endDate) params.append("endDate", filters.endDate);
+    if (filters.templateRole)
+      params.append("templateRole", filters.templateRole);
 
     const response = await axios.get(`${API_URL}/hourly?${params.toString()}`);
     return response.data;
   },
 
   // Get aggregated daily report for a specific date
-  getDailyReport: async (date) => {
-    const response = await axios.get(`${API_URL}/daily/${date}`);
+  getDailyReport: async (date, templateRole = "") => {
+    const params = new URLSearchParams();
+    if (templateRole) params.append("templateRole", templateRole);
+    const query = params.toString();
+    const response = await axios.get(
+      `${API_URL}/daily/${date}${query ? `?${query}` : ""}`,
+    );
     return response.data;
   },
 
   // Get multiple daily reports with date range
-  getDailyReports: async (startDate, endDate) => {
+  getDailyReports: async (startDate, endDate, templateRole = "") => {
     const params = new URLSearchParams();
     if (startDate) params.append("startDate", startDate);
     if (endDate) params.append("endDate", endDate);
+    if (templateRole) params.append("templateRole", templateRole);
 
     const response = await axios.get(`${API_URL}/daily?${params.toString()}`);
     return response.data;
@@ -99,6 +115,7 @@ const reportService = {
     if (params.startDate) qs.append("startDate", params.startDate);
     if (params.endDate) qs.append("endDate", params.endDate);
     if (params.userId) qs.append("userId", params.userId);
+    if (params.templateRole) qs.append("templateRole", params.templateRole);
     const query = qs.toString();
     const response = await axios.get(
       `${API_URL}/admin/reports${query ? `?${query}` : ""}`,
@@ -112,6 +129,7 @@ const reportService = {
     if (params.startDate) qs.append("startDate", params.startDate);
     if (params.endDate) qs.append("endDate", params.endDate);
     if (params.userId) qs.append("userId", params.userId);
+    if (params.templateRole) qs.append("templateRole", params.templateRole);
     const query = qs.toString();
     const response = await axios.get(
       `${API_URL}/admin/daily${query ? `?${query}` : ""}`,
@@ -125,6 +143,7 @@ const reportService = {
     if (params.startDate) qs.append("startDate", params.startDate);
     if (params.endDate) qs.append("endDate", params.endDate);
     if (params.userId) qs.append("userId", params.userId);
+    if (params.templateRole) qs.append("templateRole", params.templateRole);
     const query = qs.toString();
     const response = await axios.get(
       `${API_URL}/admin/range${query ? `?${query}` : ""}`,

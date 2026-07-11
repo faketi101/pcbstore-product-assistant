@@ -33,6 +33,16 @@ const TaskFormModal = ({
 
   const [newLink, setNewLink] = useState({ url: "", label: "" });
   const [addCount, setAddCount] = useState("");
+  const activeUserIds = new Set(users.map((user) => String(user._id)));
+  const historicalAssignees = (
+    task?.assignedUsers?.length
+      ? task.assignedUsers
+      : (task?.assignedTo || []).filter(
+          (assignedUser) => assignedUser && typeof assignedUser === "object",
+        )
+  ).filter(
+    (assignedUser) => !activeUserIds.has(String(assignedUser._id)),
+  );
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -386,6 +396,25 @@ const TaskFormModal = ({
             </div>
 
             {/* Assigned Users (Admin Only) */}
+            {isAdmin && historicalAssignees.length > 0 && (
+              <div className="space-y-2">
+                <Label>Historical Assignees</Label>
+                <div className="flex flex-wrap gap-2 p-3 rounded-md border bg-muted/40">
+                  {historicalAssignees.map((assignedUser) => (
+                    <span
+                      key={assignedUser._id}
+                      className="px-3 py-1.5 rounded-md text-sm bg-background text-muted-foreground border"
+                    >
+                      {assignedUser.name} (Inactive)
+                    </span>
+                  ))}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Kept for task history. Inactive users cannot be newly assigned.
+                </p>
+              </div>
+            )}
+
             {isAdmin && users.length > 0 && (
               <div className="space-y-2">
                 <Label>Assign To</Label>

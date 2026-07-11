@@ -1,6 +1,7 @@
 const express = require("express");
 const { v4: uuidv4 } = require("uuid");
 const User = require("../models/User.model");
+const ReportTemplate = require("../models/ReportTemplate.model");
 const verifyToken = require("../middleware/auth.middleware");
 const verifyAdmin = require("../middleware/admin.middleware");
 
@@ -266,9 +267,93 @@ const aggregateDailyReport = (hourlyReports) => {
   return aggregated;
 };
 
+const LEGACY_TEMPLATE_ROLE = "__legacy__";
+
+const reportMatchesTemplate = (report, templateRole) => {
+  if (!templateRole) return true;
+  const reportRole = report?.data?.reportTemplate?.role;
+  if (templateRole === LEGACY_TEMPLATE_ROLE) return !reportRole;
+  return reportRole === templateRole;
+};
+
+const filterReports = (reports = [], filters = {}) => {
+  let filtered = [...reports];
+  if (filters.date) {
+    filtered = filtered.filter((report) => report.date === filters.date);
+  }
+  if (filters.startDate) {
+    filtered = filtered.filter((report) => report.date >= filters.startDate);
+  }
+  if (filters.endDate) {
+    filtered = filtered.filter((report) => report.date <= filters.endDate);
+  }
+  if (filters.templateRole) {
+    filtered = filtered.filter((report) =>
+      reportMatchesTemplate(report, filters.templateRole),
+    );
+  }
+  return filtered;
+};
+
+const buildTemplateOptions = (reports = [], templates = []) => {
+  const options = new Map();
+  templates.forEach((template) => {
+    if (template.role) options.set(template.role, template.name || template.role);
+  });
+
+  let hasLegacyReports = false;
+  reports.forEach((report) => {
+    const template = report?.data?.reportTemplate;
+    if (template?.role) {
+      options.set(template.role, template.name || template.role);
+    } else {
+      hasLegacyReports = true;
+    }
+  });
+
+  const result = [...options.entries()]
+    .map(([role, name]) => ({ role, name }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+  if (hasLegacyReports) {
+    result.push({ role: LEGACY_TEMPLATE_ROLE, name: "Legacy / General" });
+  }
+  return result;
+};
+
 /* ---------------------------------------------
    ROUTES
 ---------------------------------------------- */
+
+router.get("/filter-templates", verifyToken, async (req, res) => {
+  try {
+    const [user, templates] = await Promise.all([
+      User.findById(req.userId, "reports"),
+      ReportTemplate.find({ isActive: true }, "name role").lean(),
+    ]);
+    if (!user) return res.status(404).json({ message: "User not found." });
+    res.json({ templates: buildTemplateOptions(user.reports || [], templates) });
+  } catch (error) {
+    res.status(500).json({ message: "Unable to load report templates." });
+  }
+});
+
+router.get(
+  "/admin/filter-templates",
+  verifyToken,
+  verifyAdmin,
+  async (_req, res) => {
+    try {
+      const [users, templates] = await Promise.all([
+        User.find({}, "reports"),
+        ReportTemplate.find({}, "name role").lean(),
+      ]);
+      const reports = users.flatMap((user) => user.reports || []);
+      res.json({ templates: buildTemplateOptions(reports, templates) });
+    } catch (error) {
+      res.status(500).json({ message: "Unable to load report templates." });
+    }
+  },
+);
 
 // GET hourly reports with optional filters
 router.get("/hourly", verifyToken, async (req, res) => {
@@ -276,23 +361,7 @@ router.get("/hourly", verifyToken, async (req, res) => {
     const user = await User.findById(req.userId);
     if (!user) return res.status(404).json({ message: "User not found." });
 
-    let reports = user.reports || [];
-
-    // Filter by date if provided
-    if (req.query.date) {
-      reports = reports.filter((r) => r.date === req.query.date);
-    }
-
-    // Filter by date range if provided
-    if (req.query.startDate && req.query.endDate) {
-      reports = reports.filter((r) => {
-        return r.date >= req.query.startDate && r.date <= req.query.endDate;
-      });
-    } else if (req.query.startDate) {
-      reports = reports.filter((r) => r.date >= req.query.startDate);
-    } else if (req.query.endDate) {
-      reports = reports.filter((r) => r.date <= req.query.endDate);
-    }
+    const reports = filterReports(user.reports || [], req.query);
 
     // Sort by timestamp descending (newest first)
     reports.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
@@ -348,9 +417,10 @@ router.get("/daily/:date", verifyToken, async (req, res) => {
     const user = await User.findById(req.userId);
     if (!user) return res.status(404).json({ message: "User not found." });
 
-    const hourly = (user.reports || []).filter(
-      (r) => r.date === req.params.date,
-    );
+    const hourly = filterReports(user.reports || [], {
+      date: req.params.date,
+      templateRole: req.query.templateRole,
+    });
     if (!hourly.length)
       return res.status(404).json({ message: "No reports found." });
 
@@ -381,7 +451,7 @@ router.get("/daily", verifyToken, async (req, res) => {
     const user = await User.findById(req.userId);
     if (!user) return res.status(404).json({ message: "User not found." });
 
-    let reports = user.reports || [];
+    const reports = filterReports(user.reports || [], req.query);
 
     // Get unique dates
     const dates = [...new Set(reports.map((r) => r.date))].sort().reverse();
@@ -484,18 +554,18 @@ router.delete("/hourly/:id", verifyToken, async (req, res) => {
 // ADMIN: Get reports from all users with optional date range and userId filter
 router.get("/admin/reports", verifyToken, verifyAdmin, async (req, res) => {
   try {
-    const { startDate, endDate, userId } = req.query;
+    const { startDate, endDate, userId, templateRole } = req.query;
 
     const userQuery = userId ? { _id: userId } : {};
     const users = await User.find(userQuery, "name email reports");
 
     const allReports = [];
     users.forEach((u) => {
-      let reports = u.reports || [];
-
-      // Filter by date range
-      if (startDate) reports = reports.filter((r) => r.date >= startDate);
-      if (endDate) reports = reports.filter((r) => r.date <= endDate);
+      const reports = filterReports(u.reports || [], {
+        startDate,
+        endDate,
+        templateRole,
+      });
 
       reports.forEach((report) => {
         allReports.push({
@@ -526,7 +596,7 @@ router.get("/admin/reports", verifyToken, verifyAdmin, async (req, res) => {
 // ADMIN: Get daily aggregated reports across all users
 router.get("/admin/daily", verifyToken, verifyAdmin, async (req, res) => {
   try {
-    const { startDate, endDate, userId } = req.query;
+    const { startDate, endDate, userId, templateRole } = req.query;
 
     const userQuery = userId ? { _id: userId } : {};
     const users = await User.find(userQuery, "name email reports");
@@ -535,9 +605,11 @@ router.get("/admin/daily", verifyToken, verifyAdmin, async (req, res) => {
     const userDateMap = new Map(); // key: `userId|date`
 
     users.forEach((u) => {
-      let reports = u.reports || [];
-      if (startDate) reports = reports.filter((r) => r.date >= startDate);
-      if (endDate) reports = reports.filter((r) => r.date <= endDate);
+      const reports = filterReports(u.reports || [], {
+        startDate,
+        endDate,
+        templateRole,
+      });
 
       // Group by date for this user
       const dateMap = new Map();
@@ -576,7 +648,7 @@ router.get("/admin/daily", verifyToken, verifyAdmin, async (req, res) => {
 // ADMIN: Get combined range summary across all users
 router.get("/admin/range", verifyToken, verifyAdmin, async (req, res) => {
   try {
-    const { startDate, endDate, userId } = req.query;
+    const { startDate, endDate, userId, templateRole } = req.query;
 
     const userQuery = userId ? { _id: userId } : {};
     const users = await User.find(userQuery, "name email reports");
@@ -585,9 +657,11 @@ router.get("/admin/range", verifyToken, verifyAdmin, async (req, res) => {
     if (userId) {
       const userSummaries = [];
       users.forEach((u) => {
-        let reports = u.reports || [];
-        if (startDate) reports = reports.filter((r) => r.date >= startDate);
-        if (endDate) reports = reports.filter((r) => r.date <= endDate);
+        const reports = filterReports(u.reports || [], {
+          startDate,
+          endDate,
+          templateRole,
+        });
 
         if (reports.length === 0) return;
 
@@ -617,10 +691,14 @@ router.get("/admin/range", verifyToken, verifyAdmin, async (req, res) => {
 
     // "All Users" — return a single combined summary
     const allReports = [];
+    const contributingUserIds = new Set();
     users.forEach((u) => {
-      let reports = u.reports || [];
-      if (startDate) reports = reports.filter((r) => r.date >= startDate);
-      if (endDate) reports = reports.filter((r) => r.date <= endDate);
+      const reports = filterReports(u.reports || [], {
+        startDate,
+        endDate,
+        templateRole,
+      });
+      if (reports.length) contributingUserIds.add(u._id.toString());
       allReports.push(...reports);
     });
 
@@ -642,7 +720,7 @@ router.get("/admin/range", verifyToken, verifyAdmin, async (req, res) => {
       },
       totalDays: allDates.length,
       totalReports: allReports.length,
-      totalUsers: users.length,
+      totalUsers: contributingUserIds.size,
       data,
       formattedText: formatReportForWhatsApp(
         { data },

@@ -45,6 +45,12 @@ router.post("/login", async (req, res) => {
       return res.status(404).json({ message: "User not found." });
     }
 
+    if (user.isActive === false) {
+      return res.status(403).json({
+        message: "This account is inactive. Please contact an administrator.",
+      });
+    }
+
     console.log("User found, comparing password...");
     const passwordIsValid = await user.comparePassword(password);
 

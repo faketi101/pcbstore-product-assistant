@@ -19,7 +19,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Spinner, EmptyState } from "@/components/ui/loading";
 
-const DailyReportView = () => {
+const DailyReportView = ({ templateRole = "" }) => {
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().split("T")[0],
   );
@@ -33,7 +33,10 @@ const DailyReportView = () => {
   const fetchDailyReport = async () => {
     setLoading(true);
     try {
-      const response = await reportService.getDailyReport(selectedDate);
+      const response = await reportService.getDailyReport(
+        selectedDate,
+        templateRole,
+      );
       setDailyReport(response.report);
     } catch (error) {
       console.error("Error fetching daily report:", error);
@@ -61,7 +64,7 @@ const DailyReportView = () => {
   useEffect(() => {
     fetchDailyReport();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDate]);
+  }, [selectedDate, templateRole]);
 
   return (
     <Card>

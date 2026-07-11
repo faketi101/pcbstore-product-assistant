@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
+const User = require("../models/User.model");
 
-const verifyToken = (req, res, next) => {
+const verifyToken = async (req, res, next) => {
   // Get token from Authorization header
   const authHeader = req.headers.authorization;
   const token =
@@ -29,10 +30,27 @@ const verifyToken = (req, res, next) => {
       process.env.JWT_SECRET || "fallback_secret_change_in_production",
     );
 
-    // Attach user info to request
-    req.userId = decoded.userId;
-    req.userRole = decoded.userRole;
-    req.userEmail = decoded.userEmail;
+    // Resolve authorization from the database so role changes and deleted
+    // accounts take effect immediately instead of waiting for the JWT to expire.
+    const user = await User.findById(decoded.userId)
+      .select("email role isActive")
+      .lean();
+
+    if (!user) {
+      return res.status(401).json({
+        message: "This account no longer exists. Please log in again.",
+      });
+    }
+
+    if (user.isActive === false) {
+      return res.status(401).json({
+        message: "This account has been deactivated. Please contact an administrator.",
+      });
+    }
+
+    req.userId = user._id.toString();
+    req.userRole = user.role;
+    req.userEmail = user.email;
 
     next();
   } catch (error) {

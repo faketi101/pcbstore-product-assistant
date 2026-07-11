@@ -27,7 +27,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Spinner, EmptyState, LoadingOverlay } from "@/components/ui/loading";
 
-const DateRangeReport = () => {
+const DateRangeReport = ({ templateRole = "" }) => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [reports, setReports] = useState([]);
@@ -51,7 +51,11 @@ const DateRangeReport = () => {
 
     setLoading(true);
     try {
-      const response = await reportService.getDailyReports(startDate, endDate);
+      const response = await reportService.getDailyReports(
+        startDate,
+        endDate,
+        templateRole,
+      );
       setReports(response.reports || []);
 
       // Aggregate all data
