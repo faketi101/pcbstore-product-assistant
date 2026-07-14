@@ -29,6 +29,7 @@ import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/loading";
 
 const STORAGE_KEY = "pcb_automation_report_form";
+const PRODUCT_MANAGEMENT_ROLE = "product_manager";
 
 const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
   const [reportTemplate, setReportTemplate] = useState(editingReport?.data?.reportTemplate || null);
@@ -165,6 +166,9 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
     generated: false,
     added: true,
   });
+  const isProductManagementReport =
+    !templateLoading &&
+    (!reportTemplate || reportTemplate.role === PRODUCT_MANAGEMENT_ROLE);
 
   // Update form data when editingReport changes
   useEffect(() => {
@@ -270,6 +274,48 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
 
     setFormData((prev) => {
       const next = { ...prev };
+
+      if (reportTemplate) {
+        const templateFields = new Map(
+          reportTemplate.groups.flatMap((group) =>
+            group.fields.map((field) => [
+              field.key,
+              new Set(field.counters.map((counter) => counter.key)),
+            ]),
+          ),
+        );
+        const dynamicFields = { ...(prev.dynamicFields || {}) };
+        const addDynamic = (field, counter, value) => {
+          if (!templateFields.get(field)?.has(counter)) return;
+          dynamicFields[field] = {
+            ...(dynamicFields[field] || {}),
+            [counter]: (dynamicFields[field]?.[counter] || 0) + value,
+          };
+        };
+        const addDynamicDual = (field, value) => {
+          if (statsFillMode.generated) addDynamic(field, "generated", value);
+          if (statsFillMode.added) addDynamic(field, "added", value);
+        };
+
+        addDynamicDual("keyFeatures", shortDesc);
+        addDynamicDual("description", descItems);
+        addDynamicDual("faq", faqs);
+        addDynamicDual("specifications", specItems);
+        addDynamicDual("metaTitleDescription", descItems);
+
+        addDynamic("warrantyClaimReasons", "added", warranties);
+        addDynamic("category", "added", categories);
+        addDynamic("attributes", "added", attributes);
+
+        addDynamic("titleFixed", "added", descItems);
+        addDynamic("deliveryCharge", "added", descItems);
+        addDynamic("warranty", "added", descItems);
+        addDynamic("brand", "added", descItems);
+        addDynamic("price", "added", descItems);
+
+        next.dynamicFields = dynamicFields;
+        return next;
+      }
 
       // Helper: add to generated/added fields based on selection
       const addDual = (field, value) => {
@@ -544,8 +590,8 @@ const ReportForm = ({ editingReport, setEditingReport, onSuccess }) => {
             </div>
           </div>
 
-          {/* Stats Filler is specific to the legacy product report. */}
-          {!reportTemplate && <>
+          {/* Stats Filler is specific to Product Management reports. */}
+          {isProductManagementReport && <>
           <div className="mb-6 border border-border rounded-xl overflow-hidden bg-card">
             <button
               type="button"

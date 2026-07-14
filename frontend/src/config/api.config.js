@@ -4,7 +4,7 @@ const config = {
   // Examples:
   // - localhost: 'http://localhost:5000'
   // - local network: 'http://192.168.1.100:5000'
-  API_BASE_URL: import.meta.env.VITE_API_URL || "http://localhost:5000",
+  API_BASE_URL: import.meta.env.VITE_API_URL || "https://pcbserver.bitobi.co.uk",
   API_ENDPOINT: "/api",
 
   // Computed API URL
