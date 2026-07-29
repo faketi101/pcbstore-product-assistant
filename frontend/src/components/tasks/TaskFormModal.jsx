@@ -33,16 +33,13 @@ const TaskFormModal = ({
 
   const [newLink, setNewLink] = useState({ url: "", label: "" });
   const [addCount, setAddCount] = useState("");
-  const activeUserIds = new Set(users.map((user) => String(user._id)));
   const historicalAssignees = (
     task?.assignedUsers?.length
       ? task.assignedUsers
       : (task?.assignedTo || []).filter(
           (assignedUser) => assignedUser && typeof assignedUser === "object",
         )
-  ).filter(
-    (assignedUser) => !activeUserIds.has(String(assignedUser._id)),
-  );
+  ).filter((assignedUser) => assignedUser.isActive === false);
 
   const handleSubmit = (e) => {
     e.preventDefault();

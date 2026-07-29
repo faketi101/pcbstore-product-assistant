@@ -177,7 +177,12 @@ const POPULATE = [
         $map: {
           input: "$assignedUsers",
           as: "u",
-          in: { _id: "$$u._id", name: "$$u.name", email: "$$u.email" },
+          in: {
+            _id: "$$u._id",
+            name: "$$u.name",
+            email: "$$u.email",
+            isActive: { $ne: ["$$u.isActive", false] },
+          },
         },
       },
       creator: {
@@ -249,7 +254,7 @@ const queryTasks = async (filter, query) => {
 
 const populateTask = (q) =>
   q
-    .populate("assignedTo", "name email")
+    .populate("assignedTo", "name email isActive")
     .populate("createdBy", "name email")
     .populate("lastUpdated.updatedBy", "name email");
 

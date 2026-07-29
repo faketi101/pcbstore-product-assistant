@@ -100,17 +100,51 @@ const AdminPanel = () => {
     usersLoaded.current = true;
     document.title = "Admin Panel - PCB Automation";
     const loadUsers = async () => {
-      try {
-        const [activeUsers, managedUsers, templates] = await Promise.all([
+      const [activeUsersResult, managedUsersResult, templatesResult] =
+        await Promise.allSettled([
           taskService.getAdminUsers(),
           userService.getUsers(),
           reportService.getReportFilterTemplates(true),
         ]);
-        setUsers(activeUsers);
-        setReportUsers(managedUsers.users || []);
-        setReportTemplates(templates);
-      } catch (error) {
-        console.error("Error fetching users:", error);
+
+      const managedUsers =
+        managedUsersResult.status === "fulfilled"
+          ? managedUsersResult.value.users || []
+          : [];
+
+      if (activeUsersResult.status === "fulfilled") {
+        setUsers(activeUsersResult.value);
+      } else if (managedUsersResult.status === "fulfilled") {
+        setUsers(
+          managedUsers.filter((managedUser) => managedUser.isActive !== false),
+        );
+        console.error(
+          "Error fetching task assignment users:",
+          activeUsersResult.reason,
+        );
+      } else {
+        console.error(
+          "Error fetching task assignment users:",
+          activeUsersResult.reason,
+        );
+      }
+
+      if (managedUsersResult.status === "fulfilled") {
+        setReportUsers(managedUsers);
+      } else {
+        console.error(
+          "Error fetching managed users:",
+          managedUsersResult.reason,
+        );
+      }
+
+      if (templatesResult.status === "fulfilled") {
+        setReportTemplates(templatesResult.value);
+      } else {
+        console.error(
+          "Error fetching report filter templates:",
+          templatesResult.reason,
+        );
       }
     };
     loadUsers();
