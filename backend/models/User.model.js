@@ -113,16 +113,6 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-    prompts: {
-      staticPrompt: {
-        type: String,
-        default: "",
-      },
-      mainPromptTemplate: {
-        type: String,
-        default: "",
-      },
-    },
     reports: [reportSchema],
   },
   {

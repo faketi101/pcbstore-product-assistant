@@ -7,7 +7,6 @@ const MongoStore = require("connect-mongo");
 const morgan = require("morgan");
 const connectDB = require("./config/database");
 const authRoutes = require("./routes/auth.routes");
-const promptRoutes = require("./routes/prompt.routes");
 const promptTemplateRoutes = require("./routes/promptTemplate.routes");
 const reportRoutes = require("./routes/report.routes");
 const reportTemplateRoutes = require("./routes/reportTemplate.routes");
@@ -133,7 +132,6 @@ app.use((req, res, next) => {
 
 // Routes
 app.use("/api", authRoutes);
-app.use("/api/prompts", promptRoutes);
 app.use("/api/prompt-templates", promptTemplateRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/report-templates", reportTemplateRoutes);

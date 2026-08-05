@@ -106,44 +106,6 @@ Content-Type: application/json
 ```
 *Requires authentication*
 
-### Prompts
-
-#### Get User Prompts
-```
-GET /api/prompts
-```
-*Requires authentication*
-
-#### Save Prompts
-```
-POST /api/prompts
-Content-Type: application/json
-
-{
-  "staticPrompt": "...",
-  "mainPromptTemplate": "..."
-}
-```
-*Requires authentication*
-
-#### Reset All Prompts to Default
-```
-DELETE /api/prompts
-```
-*Requires authentication*
-
-#### Reset Main Prompt Only
-```
-DELETE /api/prompts/main
-```
-*Requires authentication*
-
-#### Reset Static Prompt Only
-```
-DELETE /api/prompts/static
-```
-*Requires authentication*
-
 ### Reports
 
 #### Create Hourly Report
@@ -200,8 +162,7 @@ Morgan logger is configured:
 ```
 backend/
 ├── config/
-│   ├── database.js          # MongoDB connection
-│   └── defaultPrompts.js    # Default prompt templates
+│   └── database.js          # MongoDB connection
 ├── data/
 │   └── users.json           # Legacy user data (for migration)
 ├── middleware/
@@ -210,7 +171,7 @@ backend/
 │   └── User.model.js        # Mongoose User schema
 ├── routes/
 │   ├── auth.routes.js       # Authentication endpoints
-│   ├── prompt.routes.js     # Prompt management
+│   ├── promptTemplate.routes.js # Dynamic prompt templates
 │   └── report.routes.js     # Report management
 ├── scripts/
 │   ├── migrateToMongoDB.js  # Migration script

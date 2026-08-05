@@ -157,12 +157,7 @@ Both launchers detect a LAN IP and offer localhost or network access. They updat
 
 ## Initial data and migrations
 
-The dynamic prompt system needs prompt-template documents. For an existing installation that still stores product/category prompts on users, run:
-
-```bash
-cd backend
-node scripts/migratePrompts.js
-```
+The dynamic prompt system needs prompt-template documents. Administrators can create and manage them from the template manager in the Admin panel.
 
 Useful maintenance commands include:
 
@@ -223,8 +218,6 @@ Roles are stored as normalized strings. `admin` grants access to the admin APIs 
 | `/tasks/public` | Public | Read-only public task board |
 | `/admin` | Admin | Tasks, reports, templates, and users |
 
-The legacy `/product-prompt` frontend path redirects to its dynamic prompt route.
-
 ## API overview
 
 All endpoints are under `/api`. Except for login and the public task board, application endpoints require a bearer token. Admin routes require the `admin` role.
@@ -249,8 +242,6 @@ All endpoints are under `/api`. Except for login and the public task board, appl
 | `DELETE` | `/api/prompt-templates/:id/overrides/:promptKey` | Authenticated | Reset one prompt override |
 | `GET/POST` | `/api/prompt-templates` | Admin | List or create templates |
 | `GET/PUT/DELETE` | `/api/prompt-templates/:id` | Admin | Read, update, or delete a template |
-
-The legacy `/api/prompts` endpoint remains available for the older product prompt storage format.
 
 ### Reports and report templates
 

@@ -53,10 +53,6 @@ function App() {
             }
           />
           <Route
-            path="/product-prompt"
-            element={<Navigate to="/prompts/product-prompt" replace />}
-          />
-          <Route
             path="/prompts/:slug"
             element={
               <PrivateRoute>

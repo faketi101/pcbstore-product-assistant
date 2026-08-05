@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
-import { FileText, BarChart3, FolderOpen, Cpu, ListTodo } from "lucide-react";
+import { FileText, BarChart3, Cpu, ListTodo } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -20,17 +20,9 @@ const Home = () => {
       title: "SEO Product Prompt",
       description: "Generate AI prompts for product descriptions",
       icon: FileText,
-      path: "/product-prompt",
+      path: "/prompts/product-prompt",
       color: "text-blue-600 dark:text-blue-400",
       bg: "bg-blue-100 dark:bg-blue-900/30",
-    },
-    {
-      title: "Category Prompt",
-      description: "Generate prompts for category content",
-      icon: FolderOpen,
-      path: "/prompts/category-prompt",
-      color: "text-emerald-600 dark:text-emerald-400",
-      bg: "bg-emerald-100 dark:bg-emerald-900/30",
     },
     {
       title: "Reports & Updates",

@@ -95,47 +95,6 @@ const getCurrentUser = () => {
   }
 };
 
-const getPrompts = async () => {
-  const response = await fetch(`${API_URL}/prompts`, {
-    method: "GET",
-    headers: getHeaders(),
-  });
-  return handleResponse(response);
-};
-
-const savePrompts = async (prompts) => {
-  const response = await fetch(`${API_URL}/prompts`, {
-    method: "POST",
-    headers: getHeaders(),
-    body: JSON.stringify(prompts),
-  });
-  return handleResponse(response);
-};
-
-const resetPrompts = async () => {
-  const response = await fetch(`${API_URL}/prompts`, {
-    method: "DELETE",
-    headers: getHeaders(),
-  });
-  return handleResponse(response);
-};
-
-const resetMainPrompt = async () => {
-  const response = await fetch(`${API_URL}/prompts/main`, {
-    method: "DELETE",
-    headers: getHeaders(),
-  });
-  return handleResponse(response);
-};
-
-const resetStaticPrompt = async () => {
-  const response = await fetch(`${API_URL}/prompts/static`, {
-    method: "DELETE",
-    headers: getHeaders(),
-  });
-  return handleResponse(response);
-};
-
 const changePassword = async (currentPassword, newPassword) => {
   const response = await fetch(`${API_URL}/change-password`, {
     method: "POST",
@@ -291,11 +250,6 @@ const authService = {
   login,
   logout,
   getCurrentUser,
-  getPrompts,
-  savePrompts,
-  resetPrompts,
-  resetMainPrompt,
-  resetStaticPrompt,
   changePassword,
   // Prompt Templates (new dynamic system)
   getActiveTemplates,
