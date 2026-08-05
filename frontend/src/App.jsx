@@ -57,10 +57,6 @@ function App() {
             element={<Navigate to="/prompts/product-prompt" replace />}
           />
           <Route
-            path="/category-prompt"
-            element={<Navigate to="/prompts/category-prompt" replace />}
-          />
-          <Route
             path="/prompts/:slug"
             element={
               <PrivateRoute>

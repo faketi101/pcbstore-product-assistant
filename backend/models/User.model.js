@@ -123,16 +123,6 @@ const userSchema = new mongoose.Schema(
         default: "",
       },
     },
-    categoryPrompts: {
-      categoryPrompt1: {
-        type: String,
-        default: "",
-      },
-      categoryPrompt2: {
-        type: String,
-        default: "",
-      },
-    },
     reports: [reportSchema],
   },
   {

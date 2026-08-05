@@ -223,7 +223,7 @@ Roles are stored as normalized strings. `admin` grants access to the admin APIs 
 | `/tasks/public` | Public | Read-only public task board |
 | `/admin` | Admin | Tasks, reports, templates, and users |
 
-The legacy `/product-prompt` and `/category-prompt` frontend paths redirect to their dynamic prompt routes.
+The legacy `/product-prompt` frontend path redirects to its dynamic prompt route.
 
 ## API overview
 
@@ -250,7 +250,7 @@ All endpoints are under `/api`. Except for login and the public task board, appl
 | `GET/POST` | `/api/prompt-templates` | Admin | List or create templates |
 | `GET/PUT/DELETE` | `/api/prompt-templates/:id` | Admin | Read, update, or delete a template |
 
-The legacy `/api/prompts` and `/api/category-prompts` endpoints remain available for the older product/category prompt storage format.
+The legacy `/api/prompts` endpoint remains available for the older product prompt storage format.
 
 ### Reports and report templates
 
