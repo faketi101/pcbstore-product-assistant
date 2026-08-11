@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PCB Product Upload Assistant
 // @namespace    http://tampermonkey.net/
-// @version      4.9
+// @version      5.0
 // @description  All-in-one productivity assistant: Short desc formatter, description paste cleaner, keyword highlighter, meta counters, field status dashboard, FAQ/Spec/Warranty importer
 // @author       faketi101
 // @match        https://admin.pcbstore.net/admin/product/*
@@ -707,18 +707,236 @@
     return str;
   };
 
-  const triggerQuillSync = (containerSel) => {
-    const c = document.querySelector(containerSel);
-    if (!c) return;
-    const ed = c.querySelector(".ql-editor");
-    if (ed) ed.dispatchEvent(new Event("input", { bubbles: true }));
-    if (containerSel === "#editor") {
-      const h = document.getElementById("description");
-      if (h && ed) h.value = correctULTagFromQuill(ed.innerHTML);
-    } else if (containerSel === "#specificationEditor") {
-      const h = document.getElementById("specification");
-      if (h && ed) h.value = correctULTagFromQuill(ed.innerHTML);
+  const RICH_EDITOR_EDITABLE_SELECTOR =
+    '.ql-editor, .ck-editor__editable[contenteditable="true"]';
+
+  // Quill keeps its editable inside the original container. CKEditor 5 hides
+  // that container and renders a sibling .ck-editor wrapper instead.
+  const getRichEditorEditable = (containerSel) => {
+    const container = document.querySelector(containerSel);
+    if (!container) return null;
+
+    const nested = container.querySelector(RICH_EDITOR_EDITABLE_SELECTOR);
+    if (nested) return nested;
+
+    let sibling = container.nextElementSibling;
+    while (sibling && !sibling.matches('input[type="hidden"]')) {
+      const editable = sibling.matches(RICH_EDITOR_EDITABLE_SELECTOR)
+        ? sibling
+        : sibling.querySelector(RICH_EDITOR_EDITABLE_SELECTOR);
+      if (editable) return editable;
+      sibling = sibling.nextElementSibling;
     }
+
+    // Fallback for pages that wrap the generated CKEditor markup differently.
+    return container.parentElement?.querySelector(
+      '.ck-editor__editable[contenteditable="true"]',
+    );
+  };
+
+  const editorHasContent = (containerSel, hiddenId) => {
+    const editable = getRichEditorEditable(containerSel);
+    if (
+      editable &&
+      (editable.textContent.trim().length > 0 ||
+        editable.querySelector("img, video, table, iframe, hr"))
+    ) {
+      return true;
+    }
+
+    const hidden = document.getElementById(hiddenId);
+    if (!hidden?.value?.trim()) return false;
+    const parsed = document.createElement("div");
+    parsed.innerHTML = hidden.value;
+    return (
+      parsed.textContent.trim().length > 0 ||
+      !!parsed.querySelector("img, video, table, iframe, hr")
+    );
+  };
+
+  const syncHiddenEditorField = (editable, hiddenId) => {
+    if (!editable) return;
+    editable.dispatchEvent(new Event("input", { bubbles: true }));
+    editable.dispatchEvent(new Event("change", { bubbles: true }));
+    const hidden = document.getElementById(hiddenId);
+    if (!hidden) return;
+    hidden.value = editable.classList.contains("ql-editor")
+      ? correctULTagFromQuill(editable.innerHTML)
+      : editable.innerHTML;
+    hidden.dispatchEvent(new Event("input", { bubbles: true }));
+    hidden.dispatchEvent(new Event("change", { bubbles: true }));
+  };
+
+  // Set editor data in the page context so both legacy Quill and the new
+  // CKEditor 5 fields update their editor model as well as the hidden input.
+  const setRichEditorData = (containerSel, hiddenId, html) => {
+    const editable = getRichEditorEditable(containerSel);
+    if (!editable) return false;
+
+    let transfer = document.getElementById("pa-rich-editor-transfer");
+    if (!transfer) {
+      transfer = document.createElement("textarea");
+      transfer.id = "pa-rich-editor-transfer";
+      transfer.hidden = true;
+      document.body.appendChild(transfer);
+    }
+    transfer.value = html;
+    transfer.dataset.container = containerSel;
+    transfer.dataset.hiddenId = hiddenId;
+    transfer.dataset.completed = "";
+
+    const script = document.createElement("script");
+    script.textContent = `
+      (function () {
+        var transfer = document.getElementById('pa-rich-editor-transfer');
+        if (!transfer) return;
+        var html = transfer.value;
+        var container = document.querySelector(transfer.dataset.container);
+        var hidden = document.getElementById(transfer.dataset.hiddenId);
+        if (!container) return;
+
+        function findEditable(source) {
+          var nested = source.querySelector('.ql-editor, .ck-editor__editable[contenteditable="true"]');
+          if (nested) return nested;
+          var sibling = source.nextElementSibling;
+          while (sibling && !sibling.matches('input[type="hidden"]')) {
+            var found = sibling.matches('.ql-editor, .ck-editor__editable[contenteditable="true"]')
+              ? sibling
+              : sibling.querySelector('.ql-editor, .ck-editor__editable[contenteditable="true"]');
+            if (found) return found;
+            sibling = sibling.nextElementSibling;
+          }
+          return source.parentElement
+            ? source.parentElement.querySelector('.ck-editor__editable[contenteditable="true"]')
+            : null;
+        }
+
+        var ed = findEditable(container);
+        if (!ed) return;
+        var success = false;
+        var instance = null;
+
+        if (ed.classList.contains('ck-editor__editable')) {
+          var boundCandidates = [];
+          [container, ed, ed.closest('.ck-editor')].forEach(function (element) {
+            if (!element) return;
+            try {
+              if (element.ckeditorInstance) boundCandidates.push(element.ckeditorInstance);
+              if (element.editor) boundCandidates.push(element.editor);
+            } catch (_) {}
+          });
+
+          function editableFor(candidate) {
+            try {
+              if (candidate.ui && typeof candidate.ui.getEditableElement === 'function') {
+                return candidate.ui.getEditableElement();
+              }
+              return candidate.ui && candidate.ui.view && candidate.ui.view.editable
+                ? candidate.ui.view.editable.element
+                : null;
+            } catch (_) { return null; }
+          }
+
+          instance = boundCandidates.find(function (candidate) {
+            return candidate && typeof candidate.setData === 'function' &&
+              (!editableFor(candidate) || editableFor(candidate) === ed);
+          }) || null;
+
+          if (!instance) {
+            try {
+              Object.keys(window).some(function (key) {
+                try {
+                  var candidate = window[key];
+                  if (candidate && typeof candidate.setData === 'function' &&
+                      typeof candidate.getData === 'function' && editableFor(candidate) === ed) {
+                    instance = candidate;
+                    return true;
+                  }
+                } catch (_) {}
+                return false;
+              });
+            } catch (_) {}
+          }
+
+          if (instance) {
+            try {
+              instance.setData(html);
+              success = true;
+            } catch (error) {
+              console.warn('[PA] CKEditor setData failed:', error);
+            }
+          }
+
+          // Some integrations do not expose their CKEditor instance. Keep the
+          // visible editor and submitted hidden input usable in that case.
+          if (!success) {
+            ed.innerHTML = html || '<p><br data-cke-filler="true"></p>';
+            ed.dispatchEvent(new Event('input', { bubbles: true }));
+            ed.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+        } else {
+          var quill = null;
+          try { if (container.__quill) quill = container.__quill; } catch (_) {}
+          if (!quill && typeof Quill !== 'undefined' && Quill.find) {
+            try { quill = Quill.find(container) || Quill.find(ed); } catch (_) {}
+          }
+          if (!quill && ed.__blot) {
+            try {
+              var blot = ed.__blot.blot || ed.__blot;
+              var parent = blot.scroll && blot.scroll.domNode
+                ? blot.scroll.domNode.parentNode
+                : null;
+              if (parent && parent.__quill) quill = parent.__quill;
+            } catch (_) {}
+          }
+          if (quill && quill.clipboard &&
+              typeof quill.clipboard.dangerouslyPasteHTML === 'function') {
+            try {
+              quill.setText('\\n', 'silent');
+              quill.clipboard.dangerouslyPasteHTML(0, html, 'user');
+              success = true;
+            } catch (error) {
+              console.warn('[PA] Quill paste failed:', error);
+            }
+          }
+          if (!success) {
+            ed.innerHTML = html;
+            ed.dispatchEvent(new Event('input', { bubbles: true }));
+          }
+        }
+
+        var submittedHtml = instance && typeof instance.getData === 'function'
+          ? instance.getData()
+          : ed.innerHTML;
+        if (hidden) {
+          hidden.value = submittedHtml;
+          hidden.dispatchEvent(new Event('input', { bubbles: true }));
+          hidden.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        transfer.value = submittedHtml;
+        transfer.dataset.completed = 'true';
+      })();
+    `;
+    document.documentElement.appendChild(script);
+    script.remove();
+
+    // Also synchronize from the userscript context if page-script injection is
+    // blocked. Prefer CKEditor's getData() result when the page script ran,
+    // because editable.innerHTML can contain CKEditor-only rendering spans.
+    if (transfer.dataset.completed === "true") {
+      const hidden = document.getElementById(hiddenId);
+      if (hidden) {
+        hidden.value = editable.classList.contains("ql-editor")
+          ? correctULTagFromQuill(transfer.value)
+          : transfer.value;
+        hidden.dispatchEvent(new Event("input", { bubbles: true }));
+        hidden.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+      transfer.value = "";
+    } else {
+      syncHiddenEditorField(editable, hiddenId);
+    }
+    return true;
   };
 
   const cleanBackgroundFromHtml = (html) => {
@@ -974,7 +1192,7 @@
   };
 
   // ─── 1. SHORT DESCRIPTION FORMATTER ─────────────────────────
-  const formatShortDescription = (rawText) => {
+  const formatShortDescription = (rawText, useQuillMarkup = false) => {
     const lines = rawText
       .split("\n")
       .map((l) => l.trim())
@@ -984,11 +1202,13 @@
     const bullets = lines.slice(1);
     let html = `<h2><strong>${escapeHtml(heading)}</strong></h2>`;
     if (bullets.length > 0) {
-      html += "<ol>";
+      html += useQuillMarkup ? "<ol>" : "<ul>";
       bullets.forEach((b) => {
-        html += `<li data-list="bullet"><span class="ql-ui" contenteditable="false"></span>${escapeHtml(b)}</li>`;
+        html += useQuillMarkup
+          ? `<li data-list="bullet"><span class="ql-ui" contenteditable="false"></span>${escapeHtml(b)}</li>`
+          : `<li>${escapeHtml(b)}</li>`;
       });
-      html += "</ol>";
+      html += useQuillMarkup ? "</ol>" : "</ul>";
     }
     return html;
   };
@@ -1014,15 +1234,17 @@
         "error",
       );
     }
-    const html = formatShortDescription(rawText);
-    if (!html) return showToast("No text to format", 2500, "warning");
-    const ed = document.querySelector("#editor .ql-editor");
+    const ed = getRichEditorEditable("#editor");
     if (!ed)
       return showToast("Short description editor not found", 2500, "error");
-    ed.innerHTML = html;
-    const h = document.getElementById("description");
-    if (h) h.value = correctULTagFromQuill(html);
-    triggerQuillSync("#editor");
+    const html = formatShortDescription(
+      rawText,
+      ed.classList.contains("ql-editor"),
+    );
+    if (!html) return showToast("No text to format", 2500, "warning");
+    if (!setRichEditorData("#editor", "description", html)) {
+      return showToast("Short description editor not found", 2500, "error");
+    }
     // Clear the input textarea after filling
     const inp = document.getElementById("pa-sd-input");
     if (inp) showFillSuccess(inp);
@@ -1055,11 +1277,8 @@
     if (!pasteEditor || pasteEditor.textContent.trim().length === 0) {
       return showToast("Paste content into the editor first", 2500, "warning");
     }
-    const container = document.querySelector("#specificationEditor");
-    if (!container)
-      return showToast("Specification editor not found", 2500, "error");
-    const ed = container.querySelector(".ql-editor");
-    if (!ed) return showToast("Specification editor not found", 2500, "error");
+    const ed = getRichEditorEditable("#specificationEditor");
+    if (!ed) return showToast("Description editor not found", 2500, "error");
 
     // Clean backgrounds, inline text colors, and normalize whitespace
     let html = cleanBackgroundFromHtml(pasteEditor.innerHTML);
@@ -1088,151 +1307,9 @@
       "<p>$1</p>",
     );
 
-    // Transfer the cleaned HTML via a hidden element so the injected
-    // page-context script can read it (avoids Tampermonkey scope issues).
-    let transfer = document.getElementById("pa-html-transfer");
-    if (!transfer) {
-      transfer = document.createElement("div");
-      transfer.id = "pa-html-transfer";
-      transfer.style.display = "none";
-      document.body.appendChild(transfer);
+    if (!setRichEditorData("#specificationEditor", "specification", html)) {
+      return showToast("Description editor not found", 2500, "error");
     }
-    transfer.innerHTML = html;
-
-    // Inject a <script> that runs in the PAGE's JS context where Quill lives.
-    const script = document.createElement("script");
-    script.textContent = `
-      (function() {
-        var container = document.querySelector('#specificationEditor');
-        var transfer = document.getElementById('pa-html-transfer');
-        if (!container || !transfer) return;
-        var html = transfer.innerHTML;
-        transfer.innerHTML = '';
-        var ed = container.querySelector('.ql-editor');
-        if (!ed) return;
-
-        // ── Find Quill instance ──
-        var quill = null;
-
-        // Method 1: __quill on container
-        if (container.__quill) quill = container.__quill;
-
-        // Method 2: Quill.find()
-        if (!quill && typeof Quill !== 'undefined' && Quill.find) {
-          try { quill = Quill.find(container); } catch(e) {}
-        }
-
-        // Method 3: scan window for Quill instances
-        if (!quill) {
-          var keys = Object.keys(window);
-          for (var i = 0; i < keys.length; i++) {
-            try {
-              var obj = window[keys[i]];
-              if (obj && obj.constructor && obj.constructor.name === 'Quill' &&
-                  obj.container === container) {
-                quill = obj;
-                break;
-              }
-            } catch(e) {}
-          }
-        }
-
-        // Method 4: __blot on editor element
-        if (!quill && ed.__blot) {
-          try {
-            var blot = ed.__blot.blot || ed.__blot;
-            if (blot.scroll && blot.scroll.domNode && blot.scroll.domNode.parentNode) {
-              var scrollContainer = blot.scroll.domNode.parentNode;
-              if (scrollContainer.__quill) quill = scrollContainer.__quill;
-            }
-          } catch(e) {}
-        }
-
-        console.log('PA-inject: Quill found:', !!quill);
-        if (quill) {
-          console.log('PA-inject: Quill version:', typeof Quill !== 'undefined' ? Quill.version : 'unknown');
-          console.log('PA-inject: has setContents:', typeof quill.setContents);
-          console.log('PA-inject: has clipboard:', !!quill.clipboard);
-          console.log('PA-inject: has dangerouslyPasteHTML:', quill.clipboard ? typeof quill.clipboard.dangerouslyPasteHTML : 'no clipboard');
-        }
-
-        var success = false;
-
-        // ── STRATEGY 1: clipboard.dangerouslyPasteHTML (full replace) ──
-        if (quill && quill.clipboard && typeof quill.clipboard.dangerouslyPasteHTML === 'function') {
-          try {
-            quill.setText('\\n', 'silent');
-            quill.clipboard.dangerouslyPasteHTML(0, html, 'user');
-            success = true;
-            console.log('PA-inject: dangerouslyPasteHTML SUCCESS');
-          } catch(e) {
-            console.log('PA-inject: dangerouslyPasteHTML error:', e);
-          }
-        }
-
-        // ── STRATEGY 2: clipboard.convert + setContents ──
-        if (!success && quill && typeof quill.setContents === 'function' && quill.clipboard) {
-          try {
-            // Quill v1: convert(html), Quill v2: convert({html})
-            var delta;
-            try { delta = quill.clipboard.convert(html); } catch(e1) {
-              try { delta = quill.clipboard.convert({html: html}); } catch(e2) {}
-            }
-            if (delta && delta.ops && delta.ops.length > 0) {
-              quill.setContents(delta, 'user');
-              success = true;
-              console.log('PA-inject: setContents SUCCESS, ops:', delta.ops.length);
-            }
-          } catch(e) {
-            console.log('PA-inject: setContents error:', e);
-          }
-        }
-
-        // ── STRATEGY 3: Synthetic paste event ──
-        if (!success && quill) {
-          try {
-            ed.focus();
-            quill.setSelection(0, quill.getLength(), 'silent');
-            var dt = new DataTransfer();
-            dt.setData('text/html', html);
-            var tmp = document.createElement('div');
-            tmp.innerHTML = html;
-            dt.setData('text/plain', tmp.textContent);
-            var evt = new ClipboardEvent('paste', {
-              bubbles: true, cancelable: true, clipboardData: dt
-            });
-            ed.dispatchEvent(evt);
-            success = true;
-            console.log('PA-inject: synthetic paste dispatched');
-          } catch(e) {
-            console.log('PA-inject: synthetic paste error:', e);
-          }
-        }
-
-        // ── STRATEGY 4: Direct innerHTML (no Quill found) ──
-        if (!success) {
-          console.log('PA-inject: all strategies failed, using innerHTML');
-          ed.innerHTML = html;
-        }
-
-        // Sync hidden input
-        var hidden = document.getElementById('specification');
-        if (hidden) {
-          setTimeout(function() {
-            hidden.value = ed.innerHTML;
-            console.log('PA-inject: hidden field synced, length:', hidden.value.length);
-          }, 300);
-        }
-      })();
-    `;
-    document.body.appendChild(script);
-    script.remove();
-
-    // Update hidden field from our side too
-    const hidden = document.getElementById("specification");
-    setTimeout(() => {
-      if (hidden) hidden.value = correctULTagFromQuill(ed.innerHTML);
-    }, 500);
 
     // Count each description fill as 1
     const stats = getStats();
@@ -1440,8 +1517,7 @@
       sel: "#editor",
       check: () => {
         try {
-          const e = document.querySelector("#editor .ql-editor");
-          return e && e.textContent.trim().length > 0;
+          return editorHasContent("#editor", "description");
         } catch {
           return false;
         }
@@ -1452,8 +1528,7 @@
       sel: "#specificationEditor",
       check: () => {
         try {
-          const e = document.querySelector("#specificationEditor .ql-editor");
-          return e && e.textContent.trim().length > 0;
+          return editorHasContent("#specificationEditor", "specification");
         } catch {
           return false;
         }
@@ -1693,11 +1768,19 @@
 
   const scrollToField = (selector) => {
     try {
-      const el = document.querySelector(selector);
+      let el = document.querySelector(selector);
       if (!el) return;
+      if (selector === "#editor" || selector === "#specificationEditor") {
+        const editable = getRichEditorEditable(selector);
+        if (editable) el = editable.closest(".ck-editor") || editable;
+      }
       el.scrollIntoView({ behavior: "smooth", block: "center" });
       el.classList.add("pa-flash-highlight");
-      if (el.focus && el.tagName !== "DIV") el.focus();
+      const focusTarget = el.matches?.(RICH_EDITOR_EDITABLE_SELECTOR)
+        ? el
+        : el.querySelector?.(RICH_EDITOR_EDITABLE_SELECTOR);
+      if (focusTarget?.focus) focusTarget.focus();
+      else if (el.focus && el.tagName !== "DIV") el.focus();
       setTimeout(() => el.classList.remove("pa-flash-highlight"), 2500);
     } catch (e) {
       console.warn("[PA] scroll error:", e);
@@ -1909,13 +1992,13 @@
       true,
     );
 
-    // 3. MutationObserver for Quill editors (they change innerHTML without input events)
-    const quillEditors = document.querySelectorAll(
-      "#editor .ql-editor, #specificationEditor .ql-editor",
-    );
-    if (quillEditors.length > 0) {
+    // 3. MutationObserver for Quill/CKEditor content changes.
+    const richEditors = ["#editor", "#specificationEditor"]
+      .map(getRichEditorEditable)
+      .filter(Boolean);
+    if (richEditors.length > 0) {
       const observer = new MutationObserver(debouncedRefresh);
-      quillEditors.forEach((ed) => {
+      richEditors.forEach((ed) => {
         observer.observe(ed, {
           childList: true,
           subtree: true,
@@ -2326,8 +2409,8 @@
     if (words.length === 0)
       return showToast("No keywords to highlight", 2500, "warning");
 
-    const ed = document.querySelector("#specificationEditor .ql-editor");
-    if (!ed) return showToast("Specification editor not found", 2500, "error");
+    const ed = getRichEditorEditable("#specificationEditor");
+    if (!ed) return showToast("Description editor not found", 2500, "error");
 
     if (!window.CSS?.highlights) {
       return showToast(
